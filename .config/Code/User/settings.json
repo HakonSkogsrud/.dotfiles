@@ -1,9 +1,7 @@
 {
-  "window.titleBarStyle": "native",
-  "window.customTitleBarVisibility": "never",
   "window.zoomLevel": 1,
   "chat.editor.fontSize": 13,
-  "editor.fontSize": 13,
+  "editor.fontSize": 14,
   "editor.scrollbar.verticalScrollbarSize": 6,
   "editor.scrollbar.horizontalScrollbarSize": 6,
   "terminal.integrated.fontSize": 13,
@@ -11,8 +9,8 @@
   "git.confirmSync": false,
   "git.autofetch": true,
   "explorer.confirmDelete": false,
-  "editor.fontFamily": "Noto Sans Mono",
-  "terminal.integrated.fontFamily": "Noto Sans Mono",
+  "editor.fontFamily": "Adwaita Mono",
+  "terminal.integrated.fontFamily": "Adwaita Mono",
   "git.enableSmartCommit": true,
   "terminal.integrated.defaultProfile.linux": "fish",
   "terminal.integrated.sendKeybindingsToShell": true,
@@ -36,81 +34,6 @@
     "markdown": false,
     "scminput": false
   },
-  "workbench.colorCustomizations": {
-    "[Silver Primer]": {
-      //========================================================
-      // General Window & Layout
-      //========================================================
-      "titleBar.activeBackground": "#D7D7D7",
-      "titleBar.inactiveBackground": "#D7D7D7",
-      "activityBar.background": "#D7D7D7",
-      "activityBar.border": "#D7D7D7",
-      "statusBar.background": "#D7D7D7",
-      "statusBar.border": "#D7D7D7",
-      //========================================================
-      // Side Bar
-      //========================================================
-      "sideBar.background": "#D7D7D7",
-      "sideBar.border": "#fbfbfb",
-      "sideBarSectionHeader.background": "#D7D7D7",
-      //========================================================
-      // Editor & Tabs
-      //========================================================
-      "editorGroupHeader.tabsBackground": "#D7D7D7",
-      "editor.background": "#D7D7D7",
-      "tab.activeBackground": "#C0C0C0",
-      "tab.activeBorder": "#C0C0C0",
-      "tab.inactiveBackground": "#D7D7D7",
-      "tab.border": "#D7D7D7",
-      //========================================================
-      // Panel (Terminal, Output, Problems)
-      //========================================================
-      //"panel.background": "#D7D7D7",
-      //========================================================
-      // Lists & Selections
-      //========================================================
-      //"list.activeSelectionBackground": "#fbfbfb",
-      //"list.inactiveSelectionBackground": "#fbfbfb"
-    },
-    "[Default Dark Modern]": {
-      //========================================================
-      // General Window & Layout
-      //========================================================
-      "titleBar.activeBackground": "#1b1b1b",
-      "titleBar.border": "#1b1b1b",
-      "window.activeBorder": "#1b1b1b",
-      "window.inactiveBorder": "#1b1b1b",
-      //"titleBar.inactiveBackground": "#eff0f1", // Note: This is a light color, might be a mistake
-      "activityBar.background": "#1b1b1b",
-      "activityBar.border": "#1b1b1b",
-      "statusBar.background": "#1b1b1b",
-      "statusBar.border": "#1b1b1b",
-      //========================================================
-      // Side Bar
-      //========================================================
-      "sideBar.background": "#1b1b1b",
-      "sideBar.border": "#1b1b1b",
-      "sideBarSectionHeader.background": "#1b1b1b",
-      //========================================================
-      // Editor & Tabs
-      //========================================================
-      "editor.background": "#1b1b1b",
-      "editorGroupHeader.tabsBackground": "#1b1b1b",
-      "tab.activeBackground": "#1f1f1f",
-      "tab.activeBorder": "#1f1f1f",
-      "tab.inactiveBackground": "#1b1b1b",
-      //========================================================
-      // Panel (Terminal, Output, Problems)
-      //========================================================
-      "panel.background": "#1b1b1b",
-      "terminal.background": "#1b1b1b",
-      //========================================================
-      // Lists & Selections
-      //========================================================
-      "list.activeSelectionBackground": "#1b1b1b",
-      "list.inactiveSelectionBackground": "#1b1b1b"
-    }
-  },
-  "window.menuBarVisibility": "toggle",
   "editor.multiCursorModifier": "ctrlCmd",
+  "workbench.preferredLightColorTheme": "Default Dark Modern",
 }

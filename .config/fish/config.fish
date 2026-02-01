@@ -1,3 +1,5 @@
+source ~/.config/fish/cachyos-config.fish
+
 function fish_greeting
     # smth smth
 end
