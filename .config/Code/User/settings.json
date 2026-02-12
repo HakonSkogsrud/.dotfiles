@@ -1,7 +1,8 @@
 {
-  "window.zoomLevel": 1,
+  "window.zoomLevel": 0.5,
+  "window.titleBarStyle": "native",
   "chat.editor.fontSize": 13,
-  "editor.fontSize": 14,
+  "editor.fontSize": 13,
   "editor.scrollbar.verticalScrollbarSize": 6,
   "editor.scrollbar.horizontalScrollbarSize": 6,
   "terminal.integrated.fontSize": 13,
@@ -9,8 +10,8 @@
   "git.confirmSync": false,
   "git.autofetch": true,
   "explorer.confirmDelete": false,
-  "editor.fontFamily": "AdwaitaMono Nerd Font",
-  "terminal.integrated.fontFamily": "AdwaitaMono Nerd Font",
+  "editor.fontFamily": "Hack Nerd Font",
+  "terminal.integrated.fontFamily": "Hack Nerd Font",
   "git.enableSmartCommit": true,
   "terminal.integrated.defaultProfile.linux": "fish",
   "terminal.integrated.sendKeybindingsToShell": true,
@@ -35,5 +36,79 @@
     "scminput": false
   },
   "editor.multiCursorModifier": "ctrlCmd",
-  "workbench.preferredLightColorTheme": "Default Dark Modern",
+  "window.customTitleBarVisibility": "never",
+  "window.menuBarVisibility": "toggle",
+  "workbench.preferredLightColorTheme": "Night Owl Light",
+  "workbench.colorCustomizations": {
+    "[Night Owl Light]": {
+      //========================================================
+      // General Window & Layout
+      //========================================================
+      "titleBar.activeBackground": "#f5f5f5",
+      "titleBar.inactiveBackground": "#eff0f1",
+      "activityBar.background": "#f5f5f5",
+      "activityBar.border": "#f5f5f5",
+      "statusBar.background": "#f5f5f5",
+      "statusBar.border": "#f5f5f5",
+      //========================================================
+      // Side Bar
+      //========================================================
+      "sideBar.background": "#f5f5f5",
+      "sideBar.border": "#fbfbfb",
+      "sideBarSectionHeader.background": "#f5f5f5",
+      //========================================================
+      // Editor & Tabs
+      //========================================================
+      "editorGroupHeader.tabsBackground": "#f5f5f5",
+      "tab.activeBackground": "#fbfbfb",
+      "tab.activeBorder": "#fbfbfb",
+      "tab.inactiveBackground": "#f5f5f5",
+      //========================================================
+      // Panel (Terminal, Output, Problems)
+      //========================================================
+      "panel.background": "#f5f5f5",
+      //========================================================
+      // Lists & Selections
+      //========================================================
+      "list.activeSelectionBackground": "#fbfbfb",
+      "list.inactiveSelectionBackground": "#fbfbfb"
+    },
+    "[Default Dark Modern]": {
+      //========================================================
+      // General Window & Layout
+      //========================================================
+      "titleBar.activeBackground": "#292c30",
+      "titleBar.inactiveBackground": "#eff0f1", // Note: This is a light color, might be a mistake
+      "activityBar.background": "#292c30",
+      "activityBar.border": "#292c30",
+      "statusBar.background": "#292c30",
+      "statusBar.border": "#292c30",
+      //========================================================
+      // Side Bar
+      //========================================================
+      "sideBar.background": "#292c30",
+      "sideBar.border": "#1f1f1f",
+      "sideBarSectionHeader.background": "#292c30",
+      //========================================================
+      // Editor & Tabs
+      //========================================================
+      "editor.background": "#1f1f1f",
+      "editorGroupHeader.tabsBackground": "#292c30",
+      "tab.activeBackground": "#1f1f1f",
+      "tab.activeBorder": "#1f1f1f",
+      "tab.inactiveBackground": "#292c30",
+      //========================================================
+      // Panel (Terminal, Output, Problems)
+      //========================================================
+      "panel.background": "#292c30",
+      "terminal.background": "#292c30",
+      //========================================================
+      // Lists & Selections
+      //========================================================
+      "list.activeSelectionBackground": "#1f1f1f",
+      "list.inactiveSelectionBackground": "#1f1f1f"
+    }
+  },
+  "redhat.telemetry.enabled": false,
+  "hediet.vscode-drawio.resizeImages": null,
 }
