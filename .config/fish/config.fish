@@ -19,6 +19,6 @@ alias loki="ssh haaksk@10.0.0.83"
 alias grafana="ssh haaksk@10.0.0.84"
 alias pihole="ssh haaksk@10.0.0.77"
 alias venv="source .venv/bin/activate.fish"
-alias vim="vim"
-export EDITOR="vim"
+alias vim="nvim"
+export EDITOR="nvim"
 # END ANSIBLE MANAGED BLOCK - ALIASES

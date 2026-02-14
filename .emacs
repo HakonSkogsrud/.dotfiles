@@ -35,7 +35,7 @@
 (setq frame-resize-pixelwise t)
 (setq frame-title-format '("")) ; Clean title bar
 
-(set-face-attribute 'default nil :font "Hack Nerd Font-12")
+(set-face-attribute 'default nil :font "Hack Nerd Font-11")
 (load-theme 'modus-operandi-tinted t)
 (setq ring-bell-function 'ignore)
 
