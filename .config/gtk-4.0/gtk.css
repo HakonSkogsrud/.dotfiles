@@ -1,0 +1,11 @@
+/* Remove the separator line below the header bar in Black Box */
+window.blackbox-terminal headerbar {
+    border-bottom: none;
+    box-shadow: none;
+}
+
+/* If Black Box uses the new AdwToolbarView */
+/*headerbar {
+    border-bottom: 0;
+    box-shadow: none;
+}*/
