@@ -1,5 +1,7 @@
 source ~/.config/fish/cachyos-config.fish
-
+zoxide init fish | source
+fzf --fish | source
+alias play="ansible-playbook (ls playbooks/*.yml | fzf)"
 function fish_greeting
     # smth smth
 end
