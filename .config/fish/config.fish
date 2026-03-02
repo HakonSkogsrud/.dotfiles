@@ -9,6 +9,7 @@ end
 # BEGIN ANSIBLE MANAGED BLOCK - ALIASES
 set -g VIRTUAL_ENV_DISABLE_PROMPT 1
 alias restart="source ~/.config/fish/config.fish"
+alias lg="lazygit"
 alias proxmox="ssh root@10.0.0.41"
 alias proxmox2="ssh root@10.0.0.33"
 alias services="ssh haaksk@10.0.0.44"
