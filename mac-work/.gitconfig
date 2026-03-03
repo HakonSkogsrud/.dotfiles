@@ -5,7 +5,7 @@
 	helper = 
 	helper = !/opt/homebrew/bin/gh auth git-credential
 [user]
-	email = haaksk@gmail.com
+	email = hakon.skogsrud@gjensidige.no
 	name = Håkon Skogsrud
 [push]
 	autoSetupRemote = true
