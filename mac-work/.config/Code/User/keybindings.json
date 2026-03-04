@@ -1,6 +1,40 @@
+// Place your key bindings in this file to override the defaults
 [
     {
-        "key": "alt+[Semicolon]",
+        "key": "ctrl+t ctrl+t",
+        "command": "workbench.action.terminal.kill"
+    },
+    {
+        "key": "cmd+backspace",
+        "command": "-workbench.action.terminal.killActiveTab",
+        "when": "terminalHasBeenCreated && terminalTabsFocus || terminalIsOpen && terminalTabsFocus || terminalProcessSupported && terminalTabsFocus"
+    },
+    {
+        "key": "cmd+[Minus]",
+        "command": "editor.action.fontZoomIn"
+    },
+    {
+        "key": "cmd+-",
+        "command": "editor.action.fontZoomOut"
+    },
+    {
+        "key": "shift+cmd+[Minus]",
+        "command": "workbench.action.zoomIn"
+    },
+    {
+        "key": "shift+cmd+0",
+        "command": "-workbench.action.zoomIn"
+    },
+    {
+        "key": "shift+cmd+-",
+        "command": "workbench.action.zoomOut"
+    },
+    {
+        "key": "cmd+numpad_subtract",
+        "command": "-workbench.action.zoomOut"
+    },
+    {
+        "key": "cmd+[Semicolon]",
         "command": "workbench.action.terminal.toggleTerminal",
         "when": "terminal.active"
     },
@@ -10,12 +44,22 @@
         "when": "terminal.active"
     },
     {
-        "key": "ctrl+w",
-        "command": "-workbench.action.terminal.killEditor",
-        "when": "terminalEditorFocus && terminalFocus && terminalHasBeenCreated || terminalEditorFocus && terminalFocus && terminalProcessSupported"
+        "key": "shift+f5",
+        "command": "workbench.action.debug.start",
+        "when": "debuggersAvailable && debugState == 'inactive'"
     },
     {
-        "key": "ctrl+t ctrl+t",
-        "command": "workbench.action.terminal.kill"
+        "key": "ctrl+[Backslash]",
+        "command": "editor.action.commentLine",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "shift+cmd+7",
+        "command": "-editor.action.commentLine",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+shift+d",
+        "command": "multiCommand.debugUvicornAndSplit"
     }
 ]

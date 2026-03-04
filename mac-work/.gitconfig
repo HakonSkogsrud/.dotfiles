@@ -7,5 +7,13 @@
 [user]
 	email = hakon.skogsrud@gjensidige.no
 	name = Håkon Skogsrud
+	signingkey = 473B181C141C24A2
 [push]
 	autoSetupRemote = true
+[core]
+	excludesfile = /Users/Hakon.Skogsrud/.gitignore_global
+
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true
