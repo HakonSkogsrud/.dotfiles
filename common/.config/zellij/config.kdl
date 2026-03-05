@@ -90,6 +90,9 @@ keybinds clear-defaults=true {
 // Plugin aliases - can be used to change the implementation of Zellij
 // changing these requires a restart to take effect
 plugins {
+    autoname_tab location="file:~/.config/zellij/plugins/zellij-autoname-tab.wasm" {
+        mapping "opencode" "🤖 OpenCode"
+    }
     about location="zellij:about"
     compact-bar location="zellij:compact-bar"
     configuration location="zellij:configuration"
@@ -110,6 +113,7 @@ plugins {
 // eg. "file:/path/to/my-plugin.wasm"
 // eg. "https://example.com/my-plugin.wasm"
 load_plugins {
+    autoname_tab
 }
 web_client {
     font "monospace"

@@ -1,0 +1,105 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "oh-my-opencode@latest"
+  ],
+  "permission": {
+      "bash": {
+            "*": "ask",
+            "sudo *": "deny",
+            "npm *": "allow",
+            "npm install *": "ask",
+            "mvn *": "allow",
+            "mvn install *": "ask",
+            "nvm *": "allow",
+            "npx *": "allow",
+            "npx install *": "ask",
+            "echo *": "allow",
+            "./mvnw *": "allow",
+            "./mvnw install *": "ask",
+            "make *": "allow",
+            "sqlfluff *": "allow",
+            "cat *": "allow",
+            "ls *": "allow",
+            "head *": "allow",
+            "tail *": "allow",
+            "test *": "allow",
+            "grep *": "allow",
+            "true *": "allow",
+            "which *":"allow",
+            "find *": "allow",
+            "mkdir *": "allow",
+            "sort *": "allow",
+            "sed *": "allow",
+            "tee *": "allow",
+            "base64 *": "allow",
+            "ps *": "allow",
+            "wc *": "allow",
+            "jq *": "allow",
+            "rg *": "allow",
+            "jar tf *": "allow",
+            "jar xf *": "allow",
+            "javap *": "allow",
+            "printf *": "allow",
+            "rm -rf*": "ask",
+            "az *": "ask",
+            "gh *": "allow",
+            "gh *delete*": "deny",
+            "gh *DELETE*": "deny",
+            "gh *Delete*": "deny",
+            "gh org *": "deny",
+            "gh secret *": "deny",
+            "acli *": "allow",
+            "acli *delete*": "deny",
+            "acli *DELETE*": "deny",
+            "acli *Delete*": "deny",      
+          },
+      "external_directory": "ask",
+      "doom_loop": "ask"
+    },
+  "share": "disabled",
+  "lsp": {
+      "markdown": {
+            "command": ["marksman", "server"],
+            "extensions": [".md"]
+          },
+      "jsonnet": {
+            "command": ["jsonnet-language-server", "--stdio"],
+            "extensions": [".jsonnet", ".libsonnet"]
+          },
+      "yaml": {
+            "command": ["yaml-language-server", "--stdio"],
+            "extensions": [".yaml", ".yml"]
+          },
+      "python-basedpyright": {
+         "command": ["basedpyright-langserver", "--stdio"],
+         "extensions": [".py"]
+          },
+      "python-ruff": {
+          "command": ["ruff-lsp"],
+          "extensions": [".py"]
+        },
+      "postgres": {
+            "command": ["postgres-language-server", "lsp-proxy", "--stdio"],
+            "extensions": [".sql", ".pgsql"]
+          }
+    },
+  "command": {
+      "create-pr": {
+            "template": "Create a draft PR for the changes in the current branch. The PR should be created against the main branch. The PR title should be a concise summary of the changes, and the PR description should include a detailed explanation of the changes, the reasoning behind them, and any relevant context. If there are any specific areas of the code that require attention or review, please highlight them in the description.",
+            "description": "Create a draft PR for the current branch"
+          },
+      "review-code": {
+            "template": "Ask @oracle to do a code review. Create an actionable plan with your recommendations and suggestions based on the findins. Ask for my feedback and approval before updating any code based on the plan.",
+            "description": "Do a code review with @oracle"
+          },
+      "review-pr-comments": {
+            "template": "Use the receiving-code-review skill to review PR comments. IMPORTANT: Ask for feedback and approval before updating any code based on the received reviews. IMPORTANT: Always reply on the PR comment thread for all comments received AFTER feedback and approval and any fixes have been implemented.",
+            "description": "Review PR comments"
+          },
+      "review-pr": {
+            "template": "Ask @oracle to review the code introduced in PR $1. If any actionable issues are found, add one comment to the PR for each issue with a summary and possible discussion points for the PR authtor. When adding comments, always try to add them to the correct line(s) in the PR code diff.",
+            "description": "Review PR"
+          }
+    }
+}
