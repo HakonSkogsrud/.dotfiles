@@ -26,17 +26,17 @@ function oc
         
         # Optional: Reset pane name after OpenCode closes
         zellij action rename-pane "fish"
-    else
-        # We are outside Zellij: Start a new session with a layout
-        # This layout includes your command AND the autoname plugin
+            else
+        # We add 'tab name="OpenCode"' to the layout string
         zellij --session "$session" --layout "
             layout {
-                pane name=\"OpenCode\" command=\"sh\" {
-                    args \"-c\" \"OPENCODE_PORT=$port opencode --port $port $argv; exec $SHELL\"
-                }
-                // This loads the autoname plugin you added to config.kdl
-                pane size=0 {
-                    plugin location=\"autoname_tab\"
+                tab name=\"OpenCode\" {  // This renames the green bar at the bottom
+                    pane name=\"OC: $session\" command=\"sh\" {
+                        args \"-c\" \"OPENCODE_PORT=$port opencode --port $port $argv; exec $SHELL\"
+                    }
+                    pane size=0 {
+                        plugin location=\"autoname_tab\"
+                    }
                 }
             }
         "
