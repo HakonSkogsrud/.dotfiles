@@ -4,6 +4,9 @@ window-width = 110
 window-padding-balance = true
 window-padding-x = 4
 window-padding-y = 4
-theme = Horizon
+theme = Adwaita Dark
 window-theme = ghostty
-
+cursor-style-blink = true
+cursor-style = block
+linux-cgroup = always
+shell-integration = fish

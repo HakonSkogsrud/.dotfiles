@@ -2,7 +2,7 @@ source ~/.config/fish/cachyos-config.fish
 zoxide init fish | source
 fzf --fish | source
 
-alias play="ansible-playbook (ls playbooks/*.yml | fzf)"
+alias play="ansible-playbook (printf '%s\n' playbooks/*.yml | fzf)"
 
 function fish_greeting
     # smth smth
@@ -12,7 +12,7 @@ set -g VIRTUAL_ENV_DISABLE_PROMPT 1
 alias restart="source ~/.config/fish/config.fish"
 alias lg="lazygit"
 alias venv="source .venv/bin/activate.fish"
-
+alias vim="nvim"
 alias proxmox="ssh root@10.0.0.41"
 alias proxmox2="ssh root@10.0.0.33"
 alias services="ssh haaksk@10.0.0.44"
