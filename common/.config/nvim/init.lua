@@ -121,8 +121,21 @@ require("lazy").setup({
     },
 
     -- Autocomplete
-    { "saghen/blink.cmp", version = "v0.*", opts = { keymap = { preset = "default" } } },
-
+    {
+        "saghen/blink.cmp",
+        version = "v0.*",
+        opts = {
+            keymap = {
+                preset = "none",
+                ["<Tab>"] = { "select_and_accept", "fallback" },
+                ["<Up>"] = { "select_prev", "fallback" },
+                ["<Down>"] = { "select_next", "fallback" },
+                ["<C-p>"] = { "select_prev", "fallback" },
+                ["<C-n>"] = { "select_next", "fallback" },
+                ["<Esc>"] = { "hide", "fallback" },
+            },
+        },
+    },
     -- Formatting (Best for Go and Python)
     {
         "stevearc/conform.nvim",
@@ -206,10 +219,10 @@ function _G.toggle_terminal()
 end
 
 -- 1. Map for Normal Mode
-vim.keymap.set("n", "<leader>t", "<cmd>lua toggle_terminal()<CR>", { desc = "Toggle Terminal" })
+vim.keymap.set("n", "<leader>tt", "<cmd>lua toggle_terminal()<CR>", { desc = "Toggle Terminal" })
 
 -- 2. Map for Terminal Mode (Allows toggling OFF while typing in Fish)
-vim.keymap.set("t", "<leader>t", [[<C-\><C-n><cmd>lua toggle_terminal()<CR>]], { desc = "Toggle Terminal" })
+vim.keymap.set("t", "<leader>tt", [[<C-\><C-n><cmd>lua toggle_terminal()<CR>]], { desc = "Toggle Terminal" })
 -- Telescope Search Suite
 local builtin = require("telescope.builtin")
 vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "Search Help" })
@@ -222,6 +235,7 @@ vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = "Search Recent File
 vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "Find buffers" })
 vim.keymap.set("n", "<leader>/", builtin.current_buffer_fuzzy_find, { desc = "Fuzzy search buffer" })
 vim.keymap.set({ "n", "v" }, "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
+vim.keymap.set("n", "gl", vim.diagnostic.open_float, { desc = "Show line diagnostics" })
 
 -- Terminal and Explorer
 vim.keymap.set("n", "<leader>e", ":Neotree toggle<CR>")
@@ -240,6 +254,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end,
 })
 
+-- go
+vim.keymap.set("n", "<leader>ta", "<cmd>!go test ./...<CR>", { desc = "Run All Tests" })
 -- Debugging
 local dap = require("dap")
 vim.keymap.set("n", "<F5>", dap.continue)
