@@ -4,7 +4,7 @@
     "oh-my-opencode@latest"
   ],
   "permission": {
-      "bash": {
+      "fish": {
             "*": "ask",
             "sudo *": "deny",
             "npm *": "allow",

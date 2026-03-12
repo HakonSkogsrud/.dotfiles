@@ -160,12 +160,11 @@ require("lazy").setup({
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         config = function()
-            -- FIXED: Use require('nvim-treesitter').setup directly (v1.0.0 fix)
             require("nvim-treesitter").setup({
                 ensure_installed = { "python", "go", "ansible", "yaml", "lua", "bash", "markdown" },
-                highlight = { enable = true },
-                indent = { enable = true },
             })
+            -- Enable treesitter-based indentation (v1.0.0+ uses native vim option)
+            vim.o.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
         end,
     },
 })
