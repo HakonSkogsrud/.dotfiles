@@ -240,7 +240,7 @@ vim.keymap.set("n", "gl", vim.diagnostic.open_float, { desc = "Show line diagnos
 -- Terminal and Explorer
 vim.keymap.set("n", "<leader>e", ":Neotree toggle<CR>")
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>")
+vim.keymap.set("t", "jk", "<C-\\><C-n>")
 vim.keymap.set("n", "<C-Up>", ":resize +4<CR>")
 vim.keymap.set("n", "<C-Down>", ":resize -4<CR>")
 vim.keymap.set("n", "<C-Left>", ":vertical resize -4<CR>")
@@ -266,9 +266,36 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "TermOpen" }, {
 -- go
 vim.keymap.set("n", "<leader>ta", "<cmd>!go test ./...<CR>", { desc = "Run All Tests" })
 -- Debugging
+-- Debugging
 local dap = require("dap")
-vim.keymap.set("n", "<F5>", dap.continue)
-vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint)
+local dapui = require("dapui")
+
+-- Basic Debugger Controls
+vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
+vim.keymap.set("n", "<F10>", dap.step_over, { desc = "Debug: Step Over" })
+vim.keymap.set("n", "<F11>", dap.step_into, { desc = "Debug: Step Into" })
+vim.keymap.set("n", "<F12>", dap.step_out, { desc = "Debug: Step Out" })
+
+-- Toggle UI and Breakpoints
+vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
+vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Debug: Toggle UI" })
+
+-- Close Debugger (Important!)
+vim.keymap.set("n", "<leader>dq", function()
+    dap.terminate()
+    dapui.close()
+end, { desc = "Debug: Terminate and Close UI" })
+vim.keymap.set("n", "<leader>dc", function()
+    require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))
+end, { desc = "Debug: Set Conditional Breakpoint" })
+-- Go Specific Debugging
+vim.keymap.set("n", "<leader>dt", function()
+    require("dap-go").debug_test()
+end, { desc = "Debug Nearest Test" })
+
+vim.keymap.set("n", "<leader>dl", function()
+    require("dap-go").debug_last()
+end, { desc = "Debug Last Test" })
 
 -- 5. TRANSPARENCY
 local function set_transparent()
