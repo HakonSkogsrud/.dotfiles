@@ -25,7 +25,6 @@ vim.o.inccommand = "split"
 vim.o.cursorline = true
 vim.o.scrolloff = 10
 vim.o.confirm = true
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 vim.opt.expandtab = true -- Use spaces instead of tabs
 vim.opt.shiftwidth = 4 -- Use 2 spaces for indent (common for Lua/YAML)
@@ -121,18 +120,29 @@ require("lazy").setup({
     },
 
     -- Autocomplete
+    -- Autocomplete
     {
         "saghen/blink.cmp",
         version = "v0.*",
         opts = {
             keymap = {
                 preset = "none",
-                ["<Tab>"] = { "select_and_accept", "fallback" },
+                -- Selection (Next/Prev)
+                ["<C-n>"] = { "select_next", "fallback" },
+                ["<C-p>"] = { "select_prev", "fallback" },
+                ["<Tab>"] = { "select_next", "fallback" },
+                ["<S-Tab>"] = { "select_prev", "fallback" },
+
+                -- The "Fish Shell" Accept
+                ["<C-f>"] = { "accept", "fallback" },
+
+                -- Standard controls
                 ["<Up>"] = { "select_prev", "fallback" },
                 ["<Down>"] = { "select_next", "fallback" },
-                ["<C-p>"] = { "select_prev", "fallback" },
-                ["<C-n>"] = { "select_next", "fallback" },
-                ["<Esc>"] = { "hide", "fallback" },
+            },
+            completion = {
+                list = { selection = { preselect = true, auto_insert = false } },
+                ghost_text = { enabled = true }, -- THIS is what makes C-f feel right
             },
         },
     },
@@ -279,7 +289,7 @@ vim.keymap.set("n", "<F12>", dap.step_out, { desc = "Debug: Step Out" })
 -- Toggle UI and Breakpoints
 vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
 vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Debug: Toggle UI" })
-
+vim.keymap.set("i", "jk", "<Esc>", { desc = "Exit Insert Mode" })
 -- Close Debugger (Important!)
 vim.keymap.set("n", "<leader>dq", function()
     dap.terminate()
