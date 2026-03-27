@@ -38,7 +38,6 @@
   "editor.multiCursorModifier": "ctrlCmd",
   "window.customTitleBarVisibility": "never",
   "window.menuBarVisibility": "toggle",
-  "workbench.preferredLightColorTheme": "Night Owl Light",
   "workbench.colorCustomizations": {
     "[Night Owl Light]": {
       //========================================================

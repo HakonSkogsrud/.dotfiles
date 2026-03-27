@@ -1,7 +1,0 @@
-# This file contains fish universal variable definitions.
-# VERSION: 3.0
-SETUVAR __done_min_cmd_duration:10000
-SETUVAR __done_notification_urgency_level:low
-SETUVAR __fish_initialized:3800
-SETUVAR fish_key_bindings:fish_default_key_bindings
-SETUVAR fish_user_paths:/Users/Hakon\x2eSkogsrud/\x2elocal/bin\x1e/Users/Hakon\x2eSkogsrud/\x2ecargo/bin\x1e/home/haaksk/\x2elocal/bin

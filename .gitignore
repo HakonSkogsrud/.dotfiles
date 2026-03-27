@@ -1,1 +1,35 @@
 .ssh
+/linux-home/.config/Code/Cache
+/linux-home/.config/Code/CachedConfigurations/defaults/__default__profile__-configurationDefaultsOverrides
+/linux-home/.config/Code/CachedData/cfbea10c5ffb233ea9177d34726e6056e89913dc/chrome
+/linux-home/.config/Code/CachedExtensionVSIXs
+/linux-home/.config/Code/CachedProfilesData/__default__profile__
+/linux-home/.config/Code/Code Cache/js
+/linux-home/.config/Code/Code Cache/wasm
+/linux-home/.config/Code/Crashpad
+/linux-home/.config/Code/DawnGraphiteCache
+/linux-home/.config/Code/DawnWebGPUCache
+/linux-home/.config/Code/Dictionaries
+/linux-home/.config/Code/GPUCache
+/linux-home/.config/Code/Local Storage/leveldb
+/linux-home/.config/Code/Session Storage
+/linux-home/.config/Code/Shared Dictionary
+/linux-home/.config/Code/User/History/-7aefabf6
+/linux-home/.config/Code/User/globalStorage
+/linux-home/.config/Code/User/workspaceStorage/1774641523814
+/linux-home/.config/Code/User/chatLanguageModels.json
+/linux-home/.config/Code/logs/20260327T205843
+/linux-home/.config/Code/Cookies
+/linux-home/.config/Code/Cookies-journal
+/linux-home/.config/Code/DIPS
+/linux-home/.config/Code/Network Persistent State
+/linux-home/.config/Code/Preferences
+/linux-home/.config/Code/SharedStorage
+/linux-home/.config/Code/TransportSecurity
+/linux-home/.config/Code/Trust Tokens
+/linux-home/.config/Code/Trust Tokens-journal
+/linux-home/.config/Code/languagepacks.json
+/linux-home/.config/Code/machineid
+/common/.config/nvim/lazy-lock.json
+/common/.config/fish/fish_variables
+*fish_variables*
