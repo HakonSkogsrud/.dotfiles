@@ -12,7 +12,7 @@
   "explorer.confirmDelete": false,
   "editor.fontFamily": "CommitMono Nerd Font Mono",
   "terminal.integrated.fontFamily": "CommitMono Nerd Font Mono",
-  "terminal.integrated.sendKeybindingsToShell": false,
+  "terminal.integrated.sendKeybindingsToShell": true,
   "terminal.integrated.copyOnSelection": true,
   "editor.selectionClipboard": false,
   "git.enableSmartCommit": true,

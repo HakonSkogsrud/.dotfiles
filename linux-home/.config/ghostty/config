@@ -10,3 +10,4 @@ cursor-style-blink = true
 cursor-style = block
 linux-cgroup = always
 shell-integration = fish
+clipboard-paste-protection = false
