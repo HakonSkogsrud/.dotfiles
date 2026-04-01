@@ -99,7 +99,7 @@
   :config
   (add-to-list 'eglot-server-programs
                '(yaml-ts-mode . ("ansible-language-server" "--stdio"))))
-
+(add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
 ;; Auto-formatting on save
 (use-package apheleia
   :config (apheleia-global-mode +1))
@@ -190,6 +190,23 @@
 ;; Backups
 (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
 (setq select-enable-clipboard t)
+
+(defun my/newline-below ()
+  "Insert a newline below the current line and jump to it."
+  (interactive)
+  (end-of-line)
+  (newline-and-indent))
+
+(defun my/newline-above ()
+  "Insert a newline above the current line and jump to it."
+  (interactive)
+  (beginning-of-line)
+  (newline)
+  (forward-line -1)
+  (indent-according-to-mode))
+
+(global-set-key (kbd "S-<return>") 'my/newline-below)    ;; Shift + Enter
+(global-set-key (kbd "M-S-<return>") 'my/newline-above)  ;; Alt + Shift + Enter
 
 ;;; init.el ends here
 
