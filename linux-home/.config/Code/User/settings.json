@@ -41,4 +41,6 @@
   "workbench.preferredLightColorTheme": "Light Modern",
   "workbench.preferredDarkColorTheme": "Adwaita Dark & Github syntax highlighting",
   "terminal.integrated.allowChords": false,
+  "explorer.confirmDragAndDrop": false,
+  "hediet.vscode-drawio.resizeImages": null,
 }
