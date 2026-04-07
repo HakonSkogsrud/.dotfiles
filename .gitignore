@@ -1,4 +1,5 @@
 .ssh
+<<<<<<< Updated upstream
 /linux-home/.config/Code/Cache
 /linux-home/.config/Code/CachedConfigurations/defaults/__default__profile__-configurationDefaultsOverrides
 /linux-home/.config/Code/CachedData/cfbea10c5ffb233ea9177d34726e6056e89913dc/chrome
@@ -33,3 +34,6 @@
 /common/.config/nvim/lazy-lock.json
 /common/.config/fish/fish_variables
 *fish_variables*
+=======
+fish_variables
+>>>>>>> Stashed changes
