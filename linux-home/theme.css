@@ -1,0 +1,41 @@
+/* 1. DARK MODE COLORS */
+.theme-dark {
+    --breeze-bg: #262A2F;
+    --breeze-border: #262A2F; /* Slightly darker for subtle borders if needed */
+
+    /* Override Obsidian internal variables for deep integration */
+    --titlebar-background: var(--breeze-bg);
+    --titlebar-background-focused: var(--breeze-bg);
+    --background-secondary: var(--breeze-bg); /* Left sidebar background */
+    --background-secondary-alt: var(--breeze-bg);
+}
+
+/* 2. LIGHT MODE COLORS */
+.theme-light {
+    --breeze-bg: #f5f5f5;
+    --breeze-border: #e5e5e5;
+
+    --titlebar-background: var(--breeze-bg);
+    --background-secondary: var(--breeze-bg);
+}
+
+/* 3. APPLY TO INTERFACE */
+.titlebar,
+.workspace-ribbon.mod-left,              /* Far left narrow ribbon */
+.workspace-split.mod-left-split,         /* Left File Explorer Panel */
+.workspace-tab-header-container,         /* The container for tabs */
+.workspace-tabs.mod-top-left-space,
+.nav-header {
+    background-color: var(--breeze-bg) !important;
+}
+
+/* Fix for the top-most window frame on Linux/Windows */
+.titlebar-inner {
+    background-color: var(--breeze-bg) !important;
+}
+
+/* Removes the thin border between titlebar and sidebar for a flat look */
+.titlebar, .workspace-ribbon, .workspace-split {
+    border-right: none !important;
+    border-bottom: none !important;
+}

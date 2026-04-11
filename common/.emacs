@@ -23,6 +23,8 @@
 ;; ==========================================
 ;; 2. MINIMALIST UI & UX
 ;; ==========================================
+(cua-mode 1)
+(set-face-attribute 'default nil :font "NotoMono Nerd Font-11")
 
 (setq inhibit-startup-screen t
       initial-scratch-message nil

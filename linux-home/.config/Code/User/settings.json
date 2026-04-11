@@ -1,5 +1,5 @@
 {
-  "window.zoomLevel": 1,
+  "window.zoomLevel": 0.8,
   "window.titleBarStyle": "native",
   "chat.editor.fontSize": 13,
   "editor.fontSize": 13,
@@ -39,8 +39,81 @@
   "window.menuBarVisibility": "toggle",
   "python.analysis.typeCheckingMode": "basic",
   "workbench.preferredLightColorTheme": "Light Modern",
-  "workbench.preferredDarkColorTheme": "Adwaita Dark & Github syntax highlighting",
   "terminal.integrated.allowChords": false,
   "explorer.confirmDragAndDrop": false,
   "hediet.vscode-drawio.resizeImages": null,
+  "workbench.colorCustomizations": {
+    "[Light Modern]": {
+      //========================================================
+      // General Window & Layout
+      //========================================================
+      "titleBar.activeBackground": "#f5f5f5",
+      "titleBar.inactiveBackground": "#eff0f1",
+      "titleBar.border": "#f5f5f5",
+      "activityBar.background": "#f5f5f5",
+      "activityBar.border": "#f5f5f5",
+      "statusBar.background": "#f5f5f5",
+      "statusBar.border": "#f5f5f5",
+      //========================================================
+      // Side Bar
+      //========================================================
+      "sideBar.background": "#f5f5f5",
+      "sideBar.border": "#fbfbfb",
+      "sideBarSectionHeader.background": "#f5f5f5",
+      //========================================================
+      // Editor & Tabs
+      //========================================================
+      "editorGroupHeader.tabsBackground": "#f5f5f5",
+      "editorGroupHeader.noTabsBackground": "#f5f5f5",
+      "editorGroupHeader.tabsBorder": "#f5f5f5",
+      "tab.activeBackground": "#fbfbfb",
+      "tab.activeBorder": "#fbfbfb",
+      "tab.inactiveBackground": "#f5f5f5",
+      //========================================================
+      // Panel (Terminal, Output, Problems)
+      //========================================================
+      "panel.background": "#f5f5f5",
+      //========================================================
+      // Lists & Selections
+      //========================================================
+      "list.activeSelectionBackground": "#fbfbfb",
+      "list.inactiveSelectionBackground": "#fbfbfb"
+    },
+    "[Dark Modern]": {
+      //========================================================
+      // General Window & Layout
+      //========================================================
+      "titleBar.activeBackground": "#262A2F",
+      "titleBar.inactiveBackground": "#eff0f1",
+      "activityBar.background": "#262A2F",
+      "activityBar.border": "#262A2F",
+      "statusBar.background": "#262A2F",
+      "statusBar.border": "#262A2F",
+      //========================================================
+      // Side Bar
+      //========================================================
+      "sideBar.background": "#262A2F",
+      "sideBar.border": "#1f1f1f",
+      "sideBarSectionHeader.background": "#262A2F",
+      //========================================================
+      // Editor & Tabs
+      //========================================================
+      "editor.background": "#1f1f1f",
+      "editorGroupHeader.tabsBackground": "#262A2F",
+      "tab.activeBackground": "#1f1f1f",
+      "tab.activeBorder": "#1f1f1f",
+      "tab.inactiveBackground": "#262A2F",
+      //========================================================
+      // Panel (Terminal, Output, Problems)
+      //========================================================
+      "panel.background": "#262A2F",
+      "terminal.background": "#262A2F",
+      //========================================================
+      // Lists & Selections
+      //========================================================
+      //"list.activeSelectionBackground": "#1f1f1f",
+      //"list.inactiveSelectionBackground": "#1f1f1f"
+    }
+  },
+  "workbench.preferredDarkColorTheme": "Dark Modern",
 }
