@@ -23,6 +23,12 @@
 ;; ==========================================
 ;; 2. MINIMALIST UI & UX
 ;; ==========================================
+(use-package auto-dark
+  :init
+  (setq auto-dark-light-theme 'modus-operandi)
+  (setq auto-dark-dark-theme 'modus-vivendi)
+  :config (auto-dark-mode t))
+
 (cua-mode 1)
 (set-face-attribute 'default nil :font "NotoMono Nerd Font-11")
 
@@ -168,6 +174,10 @@
 
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
+
+(use-package magit
+  :bind ("C-x g" . magit-status)) ;; The "Magic" key
+
 
 ;; ==========================================
 ;; 7. GLOBAL KEYBINDINGS & HOUSEKEEPING
