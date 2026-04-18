@@ -124,4 +124,5 @@
   "window.autoDetectColorScheme": true,
   "files.autoSave": "afterDelay",
   "files.autoSaveWhenNoErrors": true,
+  "security.workspace.trust.untrustedFiles": "open",
 }

@@ -1,12 +1,12 @@
-;;; init.el --- Modern Python Development Environment (Minimalist)
+;;; .emacs --- Modern Python Development Environment
 
 ;; ==========================================
 ;; 1. PERFORMANCE & FOUNDATION
 ;; ==========================================
 
-(setq gc-cons-threshold 100000000) ; 100MB GC for LSP performance
-(setq read-process-output-max (* 1024 1024)) ; 1MB chunks
-(setq eglot-events-buffer-size 0) ; Disable LSP logging for speed
+(setq gc-cons-threshold 100000000   ; 100MB GC for LSP performance
+      read-process-output-max (* 1024 1024) ; 1MB chunks
+      eglot-events-buffer-size 0)           ; Disable LSP logging for speed
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -15,18 +15,25 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;; Ensure Emacs matches your shell's $PATH (crucial for Mac/Linux)
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns x pgtk))
   :config (exec-path-from-shell-initialize))
 
 ;; ==========================================
-;; 2. MINIMALIST UI & UX
+;; 2. UI & UX
 ;; ==========================================
+
+(use-package doom-themes)
+
+(setq custom-safe-themes
+      '("0325a6b5eea7e5febae709dab35ec8648908af12cf2d2b569bedc8da0a3a81c1"
+        "5c7720c63b729140ed88cf35413f36c728ab7c70f8cd8422d9ee1cedeb618de5"
+        default))
+
 (use-package auto-dark
   :init
-  (setq auto-dark-light-theme 'modus-operandi)
-  (setq auto-dark-dark-theme 'modus-vivendi)
+  (setq auto-dark-themes           '((doom-one) (doom-one-light))
+        auto-dark-detection-method 'dbus)
   :config (auto-dark-mode t))
 
 (cua-mode 1)
@@ -43,34 +50,31 @@
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-(set-fringe-mode 10)
+(set-fringe-mode 0)
 (column-number-mode t)
 (savehist-mode 1)
 (recentf-mode 1)
 
-;; High-quality built-in light theme
-(load-theme 'modus-operandi t)
+(add-hook 'dired-mode-hook 'dired-hide-details-mode)
+(setq dired-kill-when-opening-new-dired-buffer t
+      dired-auto-revert-buffer t)
 
 ;; ==========================================
-;; 3. SEARCH & COMPLETION (Vertico + Corfu)
+;; 3. SEARCH & COMPLETION
 ;; ==========================================
 
-;; Vertical completion for M-x and finding files
 (use-package vertico
   :init (vertico-mode)
   :config (setq vertico-cycle t))
 
-;; "Fuzzy" matching logic
 (use-package orderless
   :custom
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles partial-completion)))))
 
-;; Metadata in the margins (file sizes, docstrings)
 (use-package marginalia
   :init (marginalia-mode))
 
-;; In-buffer completion popups (IDE-like)
 (use-package corfu
   :init (global-corfu-mode)
   :custom
@@ -81,39 +85,59 @@
   (corfu-quit-at-boundary t))
 
 ;; ==========================================
-;; 4. TREESITTER & LSP (The Engine)
+;; 4. TREESITTER & LSP
 ;; ==========================================
 
 (setq treesit-font-lock-level 4)
 
-;; Automatically use Treesitter modes for these languages
 (setq major-mode-remap-alist
       '((python-mode . python-ts-mode)
-        (go-mode . go-ts-mode)
-        (yaml-mode . yaml-ts-mode)
-        (bash-mode . bash-ts-mode)
-        (json-mode . json-ts-mode)))
+        (go-mode     . go-ts-mode)
+        (yaml-mode   . yaml-ts-mode)
+        (bash-mode   . bash-ts-mode)
+        (json-mode   . json-ts-mode)))
+
+(add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
 
 (use-package eglot
   :hook ((python-ts-mode . eglot-ensure)
-         (go-ts-mode . eglot-ensure)
-         (yaml-ts-mode . eglot-ensure)
-         (bash-ts-mode . eglot-ensure))
+         (go-ts-mode     . eglot-ensure)
+         (yaml-ts-mode   . eglot-ensure)
+         (bash-ts-mode   . eglot-ensure))
   :bind (:map eglot-mode-map
               ("C-c r" . eglot-rename)
               ("C-c a" . eglot-code-actions)
-              ("M-." . xref-find-definitions)
-              ("M-?" . xref-find-references))
+              ("M-."   . xref-find-definitions)
+              ("M-?"   . xref-find-references))
   :config
   (add-to-list 'eglot-server-programs
                '(yaml-ts-mode . ("ansible-language-server" "--stdio"))))
-(add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
-;; Auto-formatting on save
+
 (use-package apheleia
   :config (apheleia-global-mode +1))
 
 ;; ==========================================
-;; 5. PYTHON SPECIFIC (Venv, Run, Test, Debug)
+;; 4b. ANSIBLE / YAML
+;; ==========================================
+
+(defun my/ansible-find-variable ()
+  "Search project for the Ansible variable definition around point.
+Extracts content between {{ and }}, takes the root key (before first dot),
+and searches for 'root_key:' — the YAML definition form."
+  (interactive)
+  (let* ((start (save-excursion (search-backward "{{" nil t) (+ (point) 2)))
+         (end   (save-excursion (search-forward  "}}" nil t) (- (point) 2)))
+         (raw   (when (and start end (< start end))
+                  (string-trim (buffer-substring-no-properties start end))))
+         (root  (when raw (car (split-string raw "\\."))))
+         (var   (read-string "Find variable: " (concat (or root "") ":"))))
+    (project-find-regexp (regexp-quote var))))
+
+(with-eval-after-load 'yaml-ts-mode
+  (define-key yaml-ts-mode-map (kbd "C-c v") 'my/ansible-find-variable))
+
+;; ==========================================
+;; 5. PYTHON
 ;; ==========================================
 
 (use-package pyvenv
@@ -147,22 +171,19 @@
               ("C-c C-c" . my/python-run)
               ("C-c C-t" . my/python-test-run)))
 
-;; Debugging (Dape is the modern, faster DAP client)
 (use-package dape
-  :preface
-  (setq dape-buffer-window-arrangement 'right)
-  :config
-  (setq dape-python-client "python3") ; Uses the pyvenv active python
+  :preface (setq dape-buffer-window-arrangement 'right)
+  :config  (setq dape-python-client "python3")
   :bind (:map python-ts-mode-map
               ("C-c C-d" . dape)
-              ("C-c b" . dape-breakpoint-toggle)))
+              ("C-c b"   . dape-breakpoint-toggle)))
 
 ;; ==========================================
-;; 6. SHELL & TERMINAL
+;; 6. SHELL & GIT
 ;; ==========================================
 
-(setq shell-file-name "/usr/bin/fish")
-(setq explicit-shell-file-name "/usr/bin/fish")
+(setq shell-file-name "/usr/bin/fish"
+      explicit-shell-file-name "/usr/bin/fish")
 
 (defun my/toggle-shell ()
   "Toggle a shell at project root."
@@ -176,32 +197,28 @@
 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
 
 (use-package magit
-  :bind ("C-x g" . magit-status)) ;; The "Magic" key
-
+  :bind ("C-x g" . magit-status))
 
 ;; ==========================================
-;; 7. GLOBAL KEYBINDINGS & HOUSEKEEPING
+;; 7. KEYBINDINGS & HOUSEKEEPING
 ;; ==========================================
 
-;; Navigation
 (global-set-key (kbd "M-h") 'windmove-left)
 (global-set-key (kbd "M-j") 'windmove-down)
 (global-set-key (kbd "M-k") 'windmove-up)
 (global-set-key (kbd "M-l") 'windmove-right)
 
-;; Project & Files
 (global-set-key (kbd "C-c t") 'my/toggle-shell)
 (global-set-key (kbd "C-c p") 'project-switch-project)
 (global-set-key (kbd "C-c e") 'dired-jump)
-(global-set-key (kbd "C-c s") (lambda () (interactive) (project-find-regexp (thing-at-point 'symbol t))))
+(global-set-key (kbd "C-c s") (lambda () (interactive)
+                                 (project-find-regexp (thing-at-point 'symbol t))))
 
-;; Undo/Redo
 (global-set-key (kbd "C-/") 'undo-only)
 (global-set-key (kbd "M-/") 'undo-redo)
 
-;; Backups
-(setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
-(setq select-enable-clipboard t)
+(setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
+      select-enable-clipboard t)
 
 (defun my/newline-below ()
   "Insert a newline below the current line and jump to it."
@@ -217,79 +234,19 @@
   (forward-line -1)
   (indent-according-to-mode))
 
-(global-set-key (kbd "S-<return>") 'my/newline-below)    ;; Shift + Enter
-(global-set-key (kbd "M-S-<return>") 'my/newline-above)  ;; Alt + Shift + Enter
+(global-set-key (kbd "S-<return>")   'my/newline-below)
+(global-set-key (kbd "M-S-<return>") 'my/newline-above)
 
-;;; init.el ends here
-
-;; =============================================================================
-;; QUICK REFERENCE: KEYBINDINGS & SHORTCUTS
-;; =============================================================================
-
-;; --- PROJECTS (Built-in project.el) ---
-;; C-x p f      -> Find file in project (Fuzzy via Vertico)
-;; C-x p p      -> Switch project (Choose from known project roots)
-;; C-x p d      -> Open Dired (File Manager) at project root
-;; C-x p g      -> Search for regexp string in project (grep/ripgrep)
-;; C-c p        -> Switch project (Custom shortcut)
-
-;; --- SEARCHING & NAVIGATION ---
-;; C-x C-f      -> Open/Find file (Fuzzy via Vertico)
-;; C-x b        -> Switch buffer (Fuzzy via Vertico)
-;; M-x          -> Run command (Fuzzy with Orderless filtering)
-;; C-s / C-r    -> Search forward/backward in current buffer
-;; M-g i        -> "Imenu": Jump to any function/class/variable in buffer
-;; C-c s        -> Search for word-under-cursor across whole project
-;; C-c e        -> "Explore": Open Dired in the current file's directory
-
-;; --- PYTHON DEVELOPMENT ---
-;; C-c C-c      -> Run current file (uv run or python3)
-;; C-c C-t      -> Run pytest (uv run pytest or pytest)
-;; M-x pyvenv-workon -> Manually switch/select a virtual environment
-;; Files are auto-formatted on save via Apheleia (Black/Ruff)
-
-;; --- LSP & INTELLISENSE (Eglot) ---
-;; M-.          -> Go to Definition
-;; M-?          -> Find References (Usage of symbol)
-;; M-,          -> Jump back from definition
-;; C-c r        -> Rename symbol (Refactor)
-;; C-c a        -> Code Actions (Quick fixes/Imports)
-;; K            -> Show documentation at point (Eldoc)
-;; C-M-i        -> Trigger completion manually (if Corfu isn't open)
-
-;; --- DEBUGGING (Dape) ---
-;; C-c b        -> Toggle Breakpoint
-;; C-c C-d      -> Start/Select Debugging session
-;; Inside Debugging:
-;;   n -> Next line (Step over)
-;;   i -> Step In
-;;   o -> Step Out (Return)
-;;   c -> Continue to next breakpoint
-;;   q -> Stop/Quit debugger
-;;   r -> Restart session
-
-;; --- TERMINAL & SHELL ---
-;; C-c t        -> Toggle Fish Shell (opens at project root)
-;; M-!          -> Run a single shell command
-;; In Shell:
-;;   C-c C-c    -> Interrupt process (Standard Ctrl-C)
-;;   C-d        -> Exit shell
-
-;; --- WINDOWS & INTERFACE ---
-;; M-h/j/k/l    -> Move focus Left/Down/Up/Right
-;; C-x 2        -> Split window horizontally (Top/Bottom)
-;; C-x 3        -> Split window vertically (Left/Right)
-;; C-x 0        -> Close current window
-;; C-x 1        -> Close all other windows (Maximize current)
-;; C-/          -> Undo
-;; M-/          -> Redo (Custom)
-
-;; =============================================================================
+;;; .emacs ends here
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("5c7720c63b729140ed88cf35413f36c728ab7c70f8cd8422d9ee1cedeb618de5"
+     "0325a6b5eea7e5febae709dab35ec8648908af12cf2d2b569bedc8da0a3a81c1"
+     default))
  '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
