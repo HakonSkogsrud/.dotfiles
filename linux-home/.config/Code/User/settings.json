@@ -37,7 +37,7 @@
   "window.customTitleBarVisibility": "never",
   "window.menuBarVisibility": "toggle",
   "python.analysis.typeCheckingMode": "basic",
-  "workbench.preferredLightColorTheme": "Dark Modern",
+  "workbench.preferredLightColorTheme": "Light Modern",
   "workbench.preferredDarkColorTheme": "Dark Modern",
   "terminal.integrated.allowChords": false,
   "explorer.confirmDragAndDrop": false,

@@ -47,7 +47,7 @@
 (setq-default indent-tabs-mode nil
               tab-width 4)
 
-(menu-bar-mode -1)
+;;(menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (set-fringe-mode 0)
@@ -90,6 +90,13 @@
 
 (setq treesit-font-lock-level 4)
 
+(setq treesit-language-source-alist
+      '((yaml   . ("https://github.com/ikatyang/tree-sitter-yaml"))
+        (python . ("https://github.com/tree-sitter/tree-sitter-python"))
+        (go     . ("https://github.com/tree-sitter/tree-sitter-go"))
+        (bash   . ("https://github.com/tree-sitter/tree-sitter-bash"))
+        (json   . ("https://github.com/tree-sitter/tree-sitter-json"))))
+
 (setq major-mode-remap-alist
       '((python-mode . python-ts-mode)
         (go-mode     . go-ts-mode)
@@ -111,7 +118,11 @@
               ("M-?"   . xref-find-references))
   :config
   (add-to-list 'eglot-server-programs
-               '(yaml-ts-mode . ("ansible-language-server" "--stdio"))))
+               '(yaml-ts-mode . ("ansible-language-server" "--stdio")))
+  (add-to-list 'eglot-server-programs
+               '(python-ts-mode . ("basedpyright-langserver" "--stdio")))
+  (add-to-list 'eglot-server-programs
+               '(go-ts-mode . ("gopls"))))
 
 (use-package apheleia
   :config (apheleia-global-mode +1))
@@ -212,7 +223,7 @@ and searches for 'root_key:' — the YAML definition form."
 (global-set-key (kbd "C-c p") 'project-switch-project)
 (global-set-key (kbd "C-c e") 'dired-jump)
 (global-set-key (kbd "C-c s") (lambda () (interactive)
-                                 (project-find-regexp (thing-at-point 'symbol t))))
+                                (project-find-regexp (thing-at-point 'symbol t))))
 
 (global-set-key (kbd "C-/") 'undo-only)
 (global-set-key (kbd "M-/") 'undo-redo)
