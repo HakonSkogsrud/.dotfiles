@@ -100,5 +100,5 @@
   },
   // ── Extensions ──────────────────────────────────────────
   "hediet.vscode-drawio.resizeImages": null,
-  "workbench.colorTheme": "Dark Modern"
+  "workbench.colorTheme": "Light Modern"
 }
