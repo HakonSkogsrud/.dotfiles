@@ -7,6 +7,14 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "scrollbar": {
+    "show": "never",
+    "cursors": true,
+    "git_diff": false,
+    "search_results": true,
+    "diagnostics": "all",
+    "selected_symbol": true
+  },
   "telemetry": {
     "diagnostics": false,
     "metrics": false
@@ -20,7 +28,7 @@
   "ui_font_size": 16,
   "buffer_font_size": 15,
   "theme": {
-    "mode": "light",
+    "mode": "system",
     "light": "One Light",
     "dark": "One Dark"
   },
@@ -53,6 +61,44 @@
       "border.variant": "#2A2E32",
       "toolbar.background": "#232323",
       "editor.gutter.background": "#232323"
+    }
+  },
+  "git": {
+    "git_gutter": "hide",
+    "inline_blame": {
+      "enabled": false
+    }
+  },
+  "format_on_save": "on",
+  "languages": {
+    "Python": {
+      "language_servers": [
+        "basedpyright",
+        "ruff"
+      ],
+      "formatter": {
+        "language_server": {
+          "name": "ruff"
+        }
+      }
+    }
+  },
+  "lsp": {
+    "basedpyright": {
+      "settings": {
+        "basedpyright": {
+          "analysis": {
+            "typeCheckingMode": "standard"
+          }
+        }
+      }
+    },
+    "ruff": {
+      "initialization_options": {
+        "settings": {
+          "lineLength": 88
+        }
+      }
     }
   }
 }
