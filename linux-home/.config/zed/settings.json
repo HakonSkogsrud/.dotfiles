@@ -1,0 +1,58 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+  "icon_theme": {
+    "mode": "light",
+    "light": "Zed (Default)",
+    "dark": "Zed (Default)"
+  },
+  "base_keymap": "VSCode",
+  "ui_font_size": 16,
+  "buffer_font_size": 15,
+  "theme": {
+    "mode": "light",
+    "light": "One Light",
+    "dark": "One Dark"
+  },
+  "theme_overrides": {
+    "One Light": {
+      "editor.background": "#ffffff",
+      "toolbar.background": "#ffffff",
+      "editor.gutter.background": "#ffffff",
+      "title_bar.background": "#f5f5f5",
+      "title_bar.inactive_background": "#f5f5f5",
+      "status_bar.background": "#f5f5f5",
+      "tab_bar.background": "#f5f5f5",
+      "tab.active_background": "#fafafa",
+      "tab.inactive_background": "#f5f5f5",
+      "element.selected": "#e0e0e0",
+      "panel.background": "#f5f5f5",
+      "border": "#f5f5f5",
+      "border.variant": "#f5f5f5"
+    },
+    "One Dark": {
+      "editor.background": "#232323",
+      "title_bar.background": "#2A2E32",
+      "title_bar.inactive_background": "#2A2E32",
+      "status_bar.background": "#2A2E32",
+      "tab_bar.background": "#2A2E32",
+      "tab.active_background": "#323639",
+      "tab.inactive_background": "#2A2E32",
+      "panel.background": "#2A2E32",
+      "border": "#2A2E32",
+      "border.variant": "#2A2E32",
+      "toolbar.background": "#232323",
+      "editor.gutter.background": "#232323"
+    }
+  }
+}

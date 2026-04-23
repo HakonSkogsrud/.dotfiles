@@ -1,5 +1,6 @@
 {
   // ── Window ──────────────────────────────────────────────
+  "window.autoDetectColorScheme": true,
   "window.zoomLevel": 0.8,
   "window.titleBarStyle": "native",
   "window.customTitleBarVisibility": "never",
@@ -100,5 +101,14 @@
   },
   // ── Extensions ──────────────────────────────────────────
   "hediet.vscode-drawio.resizeImages": null,
-  "workbench.colorTheme": "Light Modern"
+  "workbench.colorTheme": "Light Modern",
+  "chat.tools.urls.autoApprove": {
+    "https://code.visualstudio.com": true,
+    "https://github.com/microsoft/vscode/wiki/*": true,
+    "https://github.com": {
+      "approveRequest": false,
+      "approveResponse": true
+    },
+    "https://zed.dev": true
+  }
 }
