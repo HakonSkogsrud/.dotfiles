@@ -1,2 +1,3 @@
 .ssh
 **/fish_variables
+/common/.config/fish/conf.d/project_env.fish
