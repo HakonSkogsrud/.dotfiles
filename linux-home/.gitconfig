@@ -9,3 +9,5 @@
 	name = Håkon Skogsrud
 [push]
 	autoSetupRemote = true
+[credential]
+	helper = !gh auth git-credential
