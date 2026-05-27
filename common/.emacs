@@ -1,4 +1,4 @@
-                                        ; .emacs --- Modern Python Development Environment
+;; .emacs --- Emacs configuration
 
 ;; ==========================================
 ;; 1. PERFORMANCE & FOUNDATION
@@ -7,6 +7,9 @@
 (setq gc-cons-threshold 100000000   ; 100MB GC for LSP performance
       read-process-output-max (* 1024 1024) ; 1MB chunks
       eglot-events-buffer-size 0)           ; Disable LSP logging for speed
+
+(setq custom-file (locate-user-emacs-file "custom.el"))
+(load custom-file 'noerror)
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -36,17 +39,21 @@
   :config (auto-dark-mode t))
 
 (cua-mode 1)
-(set-face-attribute 'default nil :font "IBM Plex Mono-11")
+(set-face-attribute 'default nil :font "JetbrainsMono Nerd Font-12")
 
 (setq inhibit-startup-screen t
       initial-scratch-message nil
       sentence-end-double-space nil
-      ring-bell-function 'ignore)
+      ring-bell-function 'ignore
+      scroll-conservatively 101
+      scroll-margin 3
+      fast-but-imprecise-scrolling nil
+      mouse-wheel-scroll-amount '(2 ((shift) . 5))
+      mouse-wheel-progressive-speed nil)
 
 (setq-default indent-tabs-mode nil
               tab-width 4)
 
-;;(menu-bar-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
@@ -104,8 +111,13 @@
         (bash   . ("https://github.com/tree-sitter/tree-sitter-bash"))
         (json   . ("https://github.com/tree-sitter/tree-sitter-json"))))
 
+(dolist (lang (mapcar #'car treesit-language-source-alist))
+  (unless (treesit-language-available-p lang)
+    (treesit-install-language-grammar lang)))
+
 (setq major-mode-remap-alist
-      '((go-mode     . go-ts-mode)
+      '((python-mode . python-ts-mode)
+        (go-mode     . go-ts-mode)
         (yaml-mode   . yaml-ts-mode)
         (bash-mode   . bash-ts-mode)
         (json-mode   . json-ts-mode)))
@@ -117,10 +129,10 @@
 (add-to-list 'auto-mode-alist '("\\.j2\\'" nil t))
 
 (use-package eglot
-  :hook ((python-mode    . eglot-ensure)
-         (go-ts-mode     . eglot-ensure)
+  :hook ((python-ts-mode  . eglot-ensure)
+         (go-ts-mode      . eglot-ensure)
          (ansible-ts-mode . eglot-ensure)
-         (bash-ts-mode   . eglot-ensure))
+         (bash-ts-mode    . eglot-ensure))
   :bind (:map eglot-mode-map
               ("C-c r" . eglot-rename)
               ("C-c a" . eglot-code-actions)
@@ -138,16 +150,13 @@
   :config (apheleia-global-mode +1))
 
 ;; ==========================================
-;; 4b. ANSIBLE / YAML
+;; 5. ANSIBLE / YAML
 ;; ==========================================
+;; ansible-ts-mode derives from yaml-ts-mode so eglot can target it separately.
 
-;; Define ansible-ts-mode as a yaml-ts-mode derivative so eglot can
-;; target it separately from plain yaml files.
 (define-derived-mode ansible-ts-mode yaml-ts-mode "Ansible"
   "Major mode for Ansible YAML files.")
 
-;; Auto-activate ansible-ts-mode when the file lives in an Ansible project
-;; (detected by ansible.cfg anywhere up the directory tree).
 (defun my/ansible-maybe-activate ()
   (unless (derived-mode-p 'ansible-ts-mode)
     (when (locate-dominating-file default-directory "ansible.cfg")
@@ -174,12 +183,7 @@ and searches for 'root_key:' — the YAML definition form."
                 (append (bound-and-true-p eglot-workspace-configuration)
                         '((:basedpyright
                            . ((typeCheckingMode . "standard")
-                              (reportUnknownVariableType . "none")
-                              ;;(reportUnknownMemberType . "none")
-                              ;;(reportUnknownParameterType . "none")
-                              ;;(reportUnknownArgumentType . "none")
-                              ;;(reportMissingTypeArgument . "none")
-                              ))
+                              (reportUnknownVariableType . "none")))
                           (:ansible . ((ansible . ((path . "ansible")
                                                    (useFullyQualifiedCollectionNames . t)))
                                        (validation . ((enabled . t)
@@ -189,10 +193,10 @@ and searches for 'root_key:' — the YAML definition form."
                                                       (provideModuleOptionAliases . t)))))))))
 
 ;; ==========================================
-;; 5. GO
+;; 6. GO
 ;; ==========================================
+;; Help eglot find the Go module root (nearest go.mod).
 
-;; Help eglot find the Go module root (nearest go.mod)
 (require 'project)
 
 (defun project-find-go-module (dir)
@@ -213,7 +217,7 @@ and searches for 'root_key:' — the YAML definition form."
 (add-hook 'go-ts-mode-hook #'my/go-organize-imports-before-save)
 
 ;; ==========================================
-;; 6. PYTHON
+;; 7. PYTHON
 ;; ==========================================
 
 (defun my/python-uv-venv-activate ()
@@ -243,8 +247,9 @@ and searches for 'root_key:' — the YAML definition form."
     (compile cmd)))
 
 (use-package pyvenv
-  :hook (python-mode . my/python-uv-venv-activate)
-  :bind (:map python-mode-map
+  :hook ((python-mode    . my/python-uv-venv-activate)
+         (python-ts-mode . my/python-uv-venv-activate))
+  :bind (:map python-ts-mode-map
               ("C-c C-c" . my/python-run)
               ("C-c C-t" . my/python-test-run)))
 
@@ -304,7 +309,7 @@ and searches for 'root_key:' — the YAML definition form."
   (define-key python-ts-mode-map (kbd "C-c b")   #'dape-breakpoint-toggle))
 
 ;; ==========================================
-;; 7. SHELL & GIT
+;; 8. SHELL & GIT
 ;; ==========================================
 
 ;; Dynamically locate Fish on the NixOS system path to avoid hardcoded FHS issues
@@ -327,7 +332,7 @@ and searches for 'root_key:' — the YAML definition form."
   :bind ("C-x g" . magit-status))
 
 ;; ==========================================
-;; 8. KEYBINDINGS & HOUSEKEEPING
+;; 9. KEYBINDINGS & HOUSEKEEPING
 ;; ==========================================
 
 (global-set-key (kbd "M-h") 'windmove-left)
@@ -365,26 +370,3 @@ and searches for 'root_key:' — the YAML definition form."
 (global-set-key (kbd "M-S-<return>") 'my/newline-above)
 
 ;;; .emacs ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("dd4582661a1c6b865a33b89312c97a13a3885dc95992e2e5fc57456b4c545176"
-     "be0d9f0e72a4ebc4a59c382168921b082b4dc15844bdaf1353c08157806b3321"
-     "3061706fa92759264751c64950df09b285e3a2d3a9db771e99bcbb2f9b470037"
-     "921f165deb8030167d44eaa82e85fcef0254b212439b550a9b6c924f281b5695"
-     "b5fd9c7429d52190235f2383e47d340d7ff769f141cd8f9e7a4629a81abc6b19"
-     "720838034f1dd3b3da66f6bd4d053ee67c93a747b219d1c546c41c4e425daf93"
-     "77fff78cc13a2ff41ad0a8ba2f09e8efd3c7e16be20725606c095f9a19c24d3d"
-     "5c7720c63b729140ed88cf35413f36c728ab7c70f8cd8422d9ee1cedeb618de5"
-     "0325a6b5eea7e5febae709dab35ec8648908af12cf2d2b569bedc8da0a3a81c1"
-     default))
- '(package-selected-packages nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )

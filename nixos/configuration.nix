@@ -127,11 +127,11 @@
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/privacy-badger17/latest.xpi";
           installation_mode = "force_installed";
         };
-	"{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
+        "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi";
           installation_mode = "force_installed";
         };
-	"{d04b0b40-3dab-4f0b-97a6-04ec3eddbfb0}" = {
+        "{d04b0b40-3dab-4f0b-97a6-04ec3eddbfb0}" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/ecosia-the-green-search/latest.xpi";
           installation_mode = "force_installed";
         };
@@ -141,11 +141,6 @@
   };
 
   programs.fish.enable = true;
-
-  programs.neovim = {
-    enable = true;
-    withNodeJs = true;
-  };
 
   # ============================================================================
   # PACKAGE MANAGEMENT
@@ -158,7 +153,6 @@
   # ============================================================================
   
   environment.systemPackages = with pkgs; [
-    vim
     rapidraw
     localsend
     adw-gtk3
@@ -166,6 +160,7 @@
     lazygit
     ghostty
     fzf
+    fd
     emacs-pgtk
     (vscode.override { commandLineArgs = "--ozone-platform=x11"; })
     xclip  # Required for VS Code X11 clipboard to sync with Wayland
@@ -175,8 +170,10 @@
     eza
     git
     gh
+    neovim
     uv
     stow
+    gcc
     brave
     onlyoffice-desktopeditors
     tailscale
@@ -188,6 +185,7 @@
     python3              
     ansible-language-server 
     ansible-lint
+    ansible
     lua-language-server  
     gnomeExtensions.legacy-gtk3-theme-scheme-auto-switcher
   ];
@@ -256,7 +254,11 @@
     gnome-music
     gnome-contacts
     decibels
+    epiphany
+    gnome-tour
   ];
+
+  services.xserver.excludePackages = [ pkgs.xterm ];
 
   # ============================================================================
   # NETWORKING & FIREWALL
@@ -351,10 +353,10 @@
   # ============================================================================
   
   nix.gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 10d";
-    };
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 10d";
+  };
 
   nix.settings = {
     auto-optimise-store = true;
@@ -374,5 +376,7 @@
     randomizedDelaySec = "30min"; 
   };
 
+  # DO NOT change this value. It does NOT track your current NixOS version.
+  # It records which version you originally installed on (for backwards compatibility).
   system.stateVersion = "25.11";
 }
