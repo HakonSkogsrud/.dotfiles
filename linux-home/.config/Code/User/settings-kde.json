@@ -49,6 +49,24 @@
       "list.activeSelectionBackground": "#fbfbfb",
       "list.inactiveSelectionBackground": "#fbfbfb"
     },
+    "[Dark Modern]": {
+      "titleBar.activeBackground": "#262A2F",
+      "titleBar.inactiveBackground": "#eff0f1",
+      "activityBar.background": "#262A2F",
+      "activityBar.border": "#262A2F",
+      "statusBar.background": "#262A2F",
+      "statusBar.border": "#262A2F",
+      "sideBar.background": "#262A2F",
+      "sideBar.border": "#1f1f1f",
+      "sideBarSectionHeader.background": "#262A2F",
+      "editor.background": "#1f1f1f",
+      "editorGroupHeader.tabsBackground": "#262A2F",
+      "tab.activeBackground": "#1f1f1f",
+      "tab.activeBorder": "#1f1f1f",
+      "tab.inactiveBackground": "#262A2F",
+      "panel.background": "#1f1f1f",
+      "terminal.background": "#1f1f1f"
+    }
   },
   // ── Files & Explorer ────────────────────────────────────
   "files.autoSave": "afterDelay",
@@ -81,5 +99,6 @@
     "scminput": false
   },
   // ── Extensions ──────────────────────────────────────────
-  "hediet.vscode-drawio.resizeImages": null
+  "hediet.vscode-drawio.resizeImages": null,
+  "workbench.colorTheme": "Dark Modern"
 }

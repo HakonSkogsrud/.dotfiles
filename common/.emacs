@@ -36,7 +36,7 @@
   :config (auto-dark-mode t))
 
 (cua-mode 1)
-(set-face-attribute 'default nil :font "NotoMono Nerd Font-11")
+(set-face-attribute 'default nil :font "IBM Plex Mono-11")
 
 (setq inhibit-startup-screen t
       initial-scratch-message nil
@@ -48,6 +48,7 @@
 
 ;;(menu-bar-mode -1)
 (tool-bar-mode -1)
+(menu-bar-mode -1)
 (scroll-bar-mode -1)
 (set-fringe-mode 0)
 (column-number-mode t)
@@ -306,8 +307,10 @@ and searches for 'root_key:' — the YAML definition form."
 ;; 7. SHELL & GIT
 ;; ==========================================
 
-(setq shell-file-name "/usr/bin/fish"
-      explicit-shell-file-name "/usr/bin/fish")
+;; Dynamically locate Fish on the NixOS system path to avoid hardcoded FHS issues
+(when-let ((fish-path (executable-find "fish")))
+  (setq shell-file-name fish-path
+        explicit-shell-file-name fish-path))
 
 (defun my/toggle-shell ()
   "Toggle a shell at project root."
@@ -378,10 +381,7 @@ and searches for 'root_key:' — the YAML definition form."
      "5c7720c63b729140ed88cf35413f36c728ab7c70f8cd8422d9ee1cedeb618de5"
      "0325a6b5eea7e5febae709dab35ec8648908af12cf2d2b569bedc8da0a3a81c1"
      default))
- '(package-selected-packages
-   '(ansible ansible-doc apheleia auto-dark consult corfu dape
-             doom-themes exec-path-from-shell fzf magit marginalia
-             orderless pyvenv vertico)))
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

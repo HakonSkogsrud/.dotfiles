@@ -27,9 +27,9 @@ vim.o.scrolloff = 10
 vim.o.confirm = true
 
 vim.opt.expandtab = true -- Use spaces instead of tabs
-vim.opt.shiftwidth = 4 -- Use 2 spaces for indent (common for Lua/YAML)
-vim.opt.tabstop = 4 -- A tab character looks like 2 spaces
-vim.opt.softtabstop = 4 -- Number of spaces a tab counts for while editing
+vim.opt.shiftwidth = 4   -- Use 2 spaces for indent (common for Lua/YAML)
+vim.opt.tabstop = 4      -- A tab character looks like 2 spaces
+vim.opt.softtabstop = 4  -- Number of spaces a tab counts for while editing
 
 vim.filetype.add({
     extension = {
@@ -77,6 +77,24 @@ require("lazy").setup({
             vim.cmd.colorscheme("tokyonight")
         end,
     },
+    -- The universal transparency plugin
+    {
+        "xiyaowong/transparent.nvim",
+        lazy = false, -- Critical: prevents lazy-loading issues
+        opts = {
+            extra_groups = {
+                "NormalFloat",
+                "NvimTreeNormal",
+                "NeoTreeNormal",
+                "NeoTreeNormalNC",
+                "NeoTreeWinSeparator",
+            },
+        },
+        config = function(_, opts)
+            require("transparent").setup(opts)
+            vim.cmd("TransparentEnable") -- Automatically triggers the transparency logic
+        end,
+    },
     { "nvim-tree/nvim-web-devicons" },
     { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" }, opts = {} },
     {
@@ -86,18 +104,16 @@ require("lazy").setup({
         opts = {},
     },
 
-    -- LSP Configuration
+    -- LSP Configuration (Modern Neovim 0.12.x native setup)
     {
         "neovim/nvim-lspconfig",
         dependencies = {
-            { "mason-org/mason.nvim", opts = {} },
-            "williamboman/mason-lspconfig.nvim",
             "saghen/blink.cmp",
         },
         config = function()
             local caps = require("blink.cmp").get_lsp_capabilities()
-            local lspconfig = require("lspconfig")
 
+            -- Define your target servers
             local servers = {
                 basedpyright = { settings = { basedpyright = { analysis = { typeCheckingMode = "basic" } } } },
                 gopls = {},
@@ -106,20 +122,18 @@ require("lazy").setup({
                 lua_ls = {},
             }
 
-            require("mason-lspconfig").setup({
-                ensure_installed = vim.tbl_keys(servers),
-                handlers = {
-                    function(server_name)
-                        local server = servers[server_name] or {}
-                        server.capabilities = vim.tbl_deep_extend("force", {}, caps, server.capabilities or {})
-                        lspconfig[server_name].setup(server)
-                    end,
-                },
-            })
+            -- Set up and enable each server natively using the 0.11+ vim.lsp API
+            for server_name, server in pairs(servers) do
+                server.capabilities = vim.tbl_deep_extend("force", {}, caps, server.capabilities or {})
+
+                -- 1. Register the server settings natively
+                vim.lsp.config(server_name, server)
+
+                -- 2. Enable/Activate the server natively
+                vim.lsp.enable(server_name)
+            end
         end,
     },
-
-    -- Autocomplete
     -- Autocomplete
     {
         "saghen/blink.cmp",
@@ -184,7 +198,7 @@ require("lazy").setup({
         build = ":TSUpdate",
         config = function()
             require("nvim-treesitter").setup({
-                ensure_installed = { "python", "go", "ansible", "yaml", "lua", "bash", "markdown" },
+                ensure_installed = { "python", "go", "ansible", "yaml", "lua", "bash", "markdown", "nix" },
             })
             -- Enable treesitter-based indentation (v1.0.0+ uses native vim option)
             vim.o.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
@@ -306,13 +320,3 @@ end, { desc = "Debug Nearest Test" })
 vim.keymap.set("n", "<leader>dl", function()
     require("dap-go").debug_last()
 end, { desc = "Debug Last Test" })
-
--- 5. TRANSPARENCY
-local function set_transparent()
-    local groups = { "Normal", "NormalFloat", "NormalNC", "SignColumn", "NeoTreeNormal", "NeoTreeNormalNC" }
-    for _, hl in ipairs(groups) do
-        vim.api.nvim_set_hl(0, hl, { bg = "none" })
-    end
-end
-set_transparent()
-vim.api.nvim_create_autocmd("ColorScheme", { callback = set_transparent })
