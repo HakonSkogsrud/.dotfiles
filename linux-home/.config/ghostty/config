@@ -6,6 +6,6 @@ cursor-style = block
 linux-cgroup = always
 shell-integration = fish
 clipboard-paste-protection = false
-font-family = IBM Plex Mono
+font-family = JetbrainsMono Nerd Font
 font-size = 12
 scrollbar = never

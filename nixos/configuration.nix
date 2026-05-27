@@ -5,29 +5,36 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  # ============================================================================
+  # IMPORTS
+  # ============================================================================
+  imports = [
+    /etc/nixos/hardware-configuration.nix
+  ];
 
-  # Bootloader.
+  # ============================================================================
+  # BOOT & SYSTEM CORE
+  # ============================================================================
+  
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
-  # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  networking.hostName = "nixos"; # Define your hostname.
-
-  # Enable networking
+  # ============================================================================
+  # NETWORKING & HOSTNAME
+  # ============================================================================
+  
+  networking.hostName = "nixos";
   networking.networkmanager.enable = true;
 
-  # Set your time zone.
-  time.timeZone = "Europe/Oslo";
+  # ============================================================================
+  # LOCALE & TIMEZONE
+  # ============================================================================
   
-  # Select internationalisation properties.
+  time.timeZone = "Europe/Oslo";
   i18n.defaultLocale = "en_US.UTF-8";
 
+  
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "nb_NO.UTF-8";
     LC_IDENTIFICATION = "nb_NO.UTF-8";
@@ -40,31 +47,24 @@
     LC_TIME = "nb_NO.UTF-8";
   };
 
-  # Enable the X11 windowing system.
+  # ============================================================================
+  # DISPLAY & DESKTOP ENVIRONMENT (X11 + GNOME)
+  # ============================================================================
+  
   services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
 
-  # Configure keymap in X11
+  # Keyboard configuration
   services.xserver.xkb = {
     layout = "no";
     variant = "nodeadkeys";
   };
-
-  # Configure console keymap
   console.keyMap = "no";
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-  environment.sessionVariables = {
-    NIXOS_OZONE_WL = "1";
-    LIBVA_DRIVER_NAME = "iHD"; 
-  };
-
-  # Enable sound with pipewire.
+  # ============================================================================
+  # AUDIO & SOUND (PipeWire)
+  # ============================================================================  
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -74,7 +74,19 @@
     pulse.enable = true;
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # ============================================================================
+  # ENVIRONMENT & SESSION VARIABLES
+  # ============================================================================
+  
+  environment.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    LIBVA_DRIVER_NAME = "iHD"; 
+  };
+
+  # ============================================================================
+  # USERS
+  # ============================================================================
+  
   users.users.haaksk = {
     isNormalUser = true;
     description = "Håkon Skogsrud";
@@ -82,20 +94,28 @@
     shell = pkgs.fish;
   };
 
+  # ============================================================================
+  # FONTS
+  # ============================================================================
+  
   fonts.packages = with pkgs; [
     ibm-plex
     nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
+    
     cantarell-fonts # Clean native GNOME UI font fallback
   ];
 
-  # Enable browsers and shells via native programs module
+  # ============================================================================
+  # PROGRAMS & APPLICATIONS
+  # ============================================================================
+  
+  # Firefox with declarative enterprise policies
   programs.firefox = {
     enable = true;
     
-    # Declarative Enterprise Policies
     policies = {
-      # 1. Automatically install Extensions
+      # Automatically install extensions
       ExtensionSettings = {
         # uBlock Origin
         "uBlock0@raymondhill.net" = {
@@ -119,12 +139,24 @@
 
     };
   };
+
   programs.fish.enable = true;
 
-  # Allow unfree packages
+  programs.neovim = {
+    enable = true;
+    withNodeJs = true;
+  };
+
+  # ============================================================================
+  # PACKAGE MANAGEMENT
+  # ============================================================================
+  
   nixpkgs.config.allowUnfree = true;
 
-  # List packages installed in system profile.
+  # ============================================================================
+  # SYSTEM PACKAGES
+  # ============================================================================
+  
   environment.systemPackages = with pkgs; [
     vim
     rapidraw
@@ -135,7 +167,8 @@
     ghostty
     fzf
     emacs-pgtk
-    vscode
+    (vscode.override { commandLineArgs = "--ozone-platform=x11"; })
+    xclip  # Required for VS Code X11 clipboard to sync with Wayland
     obsidian
     syncthing
     zoxide
@@ -148,18 +181,21 @@
     onlyoffice-desktopeditors
     tailscale
     morewaita-icon-theme 
-    gopls                   # Go LSP
-    go                      # Go language compiler (for testing/compiling)
-    basedpyright            # Python LSP
-    ruff                    # Python formatter/linter
-    python3                 # Python interpreter (for runtimes)
-    ansible-language-server # Ansible LSP
+    gopls                  
+    go                     
+    basedpyright       
+    ruff                   
+    python3              
+    ansible-language-server 
     ansible-lint
-    lua-language-server     # Lua LSP
+    lua-language-server  
     gnomeExtensions.legacy-gtk3-theme-scheme-auto-switcher
   ];
 
-  # GNOME Declarative Settings
+  # ============================================================================
+  # GNOME DESKTOP SETTINGS
+  # ============================================================================
+  
   programs.dconf.enable = true;
   programs.dconf.profiles.user.databases = [
     # ----------------------------------------------------
@@ -222,10 +258,12 @@
     decibels
   ];
 
-  # Enable the Tailscale service daemon
+  # ============================================================================
+  # NETWORKING & FIREWALL
+  # ============================================================================
+  
   services.tailscale.enable = true;
 
-  # Configure the firewall to allow Tailscale traffic
   networking.firewall = {
     enable = true;
     # Trust the virtual tailscale interface
@@ -235,7 +273,8 @@
     allowedUDPPorts = [ config.services.tailscale.port 53317 ];
     checkReversePath = "loose"; 
   };
-  # Force traffic to the local home network to bypass Tailscale policy rules
+
+  # Policy routing to prioritize local LAN traffic over Tailscale
   systemd.services.tailscale-local-route-override = {
     description = "Add policy routing rule to prioritize local LAN traffic over Tailscale";
     after = [ "tailscaled.service" "network-online.target" ];
@@ -248,19 +287,21 @@
     };
   };
 
-  # Enable Hardware Video Acceleration for your Intel GPU
+  # ============================================================================
+  # HARDWARE
+  # ============================================================================
+  
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
-      intel-media-driver  # Modern Intel VA-API driver
+      intel-media-driver
     ];
   };
 
-  programs.neovim = {
-    enable = true;
-    withNodeJs = true; # Generates node-client host providers for Neovim
-  };
-
+  # ============================================================================
+  # SERVICES
+  # ============================================================================
+  
   services.syncthing = {
     enable = true;
 
@@ -303,35 +344,35 @@
     };
   };
 
-  system.stateVersion = "25.11";
   services.fwupd.enable = true;
+
+  # ============================================================================
+  # NIX PACKAGE MANAGER
+  # ============================================================================
+  
   nix.gc = {
       automatic = true;
       dates = "weekly";
       options = "--delete-older-than 10d";
     };
 
-    # Recommended: Automatically deduplicate files in your Nix store to save even more space
-    nix.settings = {
-      # Automatically deduplicate files in your Nix store
-      auto-optimise-store = true;
-    
-      # Enable Flakes and the modern nix CLI tool
-      experimental-features = [ "nix-command" "flakes" ];
-    };
+  nix.settings = {
+    auto-optimise-store = true;
+    experimental-features = [ "nix-command" "flakes" ];
+  };
 
+  # ============================================================================
+  # SYSTEM UPDATES & STATE
+  # ============================================================================
+  
   system.autoUpgrade = {
     enable = true;
     dates = "04:00";
     channel = "https://nixos.org/channels/nixos-unstable";
     allowReboot = false; 
-    
-    # --- ADD THIS FOR LAPTOPS ---
-    # If the laptop was off at 4:00 AM, run the update immediately on boot
-    persistent = true; 
-
-    # (Optional) Add a randomized delay so the update doesn't slam your 
-    # internet connection the exact second you boot up and log in.
+    persistent = true;
     randomizedDelaySec = "30min"; 
   };
- }
+
+  system.stateVersion = "25.11";
+}
