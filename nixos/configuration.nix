@@ -168,6 +168,8 @@
     ghostty
     fzf
     fd
+    bat
+    ripgrep
     emacs-pgtk
     (vscode.override { commandLineArgs = "--ozone-platform=x11"; })
     xclip  # Required for VS Code X11 clipboard to sync with Wayland
