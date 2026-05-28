@@ -29,8 +29,9 @@ complete -c ansible-playbook -e
 alias find="fd"
 set -x FZF_DEFAULT_COMMAND "fd --type f --hidden --exclude .git"
 set -x FZF_CTRL_T_COMMAND "$FZF_DEFAULT_COMMAND"
+set -x FZF_CTRL_T_OPTS "--preview 'bat --color=always --line-range :50 {}' --preview-window=right:50%:wrap"
 set -x FZF_ALT_C_COMMAND "fd --type d --hidden --exclude .git"
-set -x FZF_DEFAULT_OPTS "--height 40% --layout=reverse --border --preview 'bat --color=always --line-range :50 {}' --preview-window=right:50%:wrap"
+set -x FZF_DEFAULT_OPTS "--height 40% --layout=reverse --border"
 
 function fish_greeting
     # smth smth
