@@ -1,3 +1,10 @@
+# ============================================================================
+# MANUAL WORK REQUIRED AFTER FRESH INSTALL
+# ============================================================================
+# 1. Run `nixos-generate-config` to generate hardware-configuration.nix
+# 2. Update the Brave PWA .desktop ID in the GNOME favorite-apps list
+#    (the ID is generated from the installed PWA and profile name)
+# ============================================================================
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
@@ -227,6 +234,8 @@
             "org.gnome.Nautilus.desktop"
             "obsidian.desktop"
             "emacs.desktop"
+            "code.desktop"
+            "onlyoffice-desktopeditors.desktop"
           ];
         };
       };
