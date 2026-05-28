@@ -214,7 +214,7 @@
           region = "nb_NO.UTF-8";
         };
         "org/gnome/desktop/peripherals/mouse" = {
-          speed = -0.5; 
+          speed = 0.0; 
         };
         "org/gnome/desktop/wm/preferences" = {
           button-layout = "appmenu:minimize,maximize,close";
@@ -288,6 +288,17 @@
       ExecStop = "${pkgs.iproute2}/bin/ip rule del to 10.0.0.0/24 priority 2500 lookup main";
     };
   };
+
+  # ============================================================================
+  # INPUT DEVICES
+  # ============================================================================
+
+  # Scale down the BT-400 mouse speed at driver level (before GNOME settings)
+  # Higher DPI value = libinput scales movement DOWN
+  services.udev.extraHwdb = ''
+    mouse:bluetooth:v1915p0040:name:*:
+     MOUSE_DPI=1800@1000
+  '';
 
   # ============================================================================
   # HARDWARE
