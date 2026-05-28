@@ -5,11 +5,39 @@
 # 2. Update the Brave PWA .desktop ID in the GNOME favorite-apps list
 #    (the ID is generated from the installed PWA and profile name)
 # ============================================================================
+# TO REVERT TO STOCK NIXOS KERNEL:
+# ============================================================================
+# Search for "CACHYOS" comments in this file and:
+# 1. Delete/comment the let...in block (lines 14-31)
+# 2. Uncomment boot.kernelPackages = pkgs.linuxPackages_latest
+# 3. Delete/comment boot.kernelPackages = pkgs.cachyosKernels...
+# 4. Delete/comment nixpkgs.overlays = [ cachyos-overlay... ]
+# 5. Remove "https://attic.xuyh0120.win/lantian" from substituters
+# 6. Remove "lantian:..." key from trusted-public-keys
+# Then run: sudo nixos-rebuild switch && systemctl reboot
+# ============================================================================
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }:
+
+# ============================================================================
+# CACHYOS KERNEL CONFIGURATION - START
+# ============================================================================
+# To revert to stock NixOS kernel:
+# 1. Delete or comment out this entire let...in block (lines below)
+# 2. Search for "CACHYOS" comments in this file and revert those sections
+# ============================================================================
+let
+  cachyos-kernel = builtins.fetchTarball {
+    url = "https://github.com/xddxdd/nix-cachyos-kernel/archive/release.tar.gz";
+  };
+  cachyos-overlay = import "${cachyos-kernel}/default.nix";
+in
+# ============================================================================
+# CACHYOS KERNEL CONFIGURATION - END
+# ============================================================================
 
 {
   # ============================================================================
@@ -25,9 +53,15 @@
   
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  
+  # ──────────────────────────────────────────────────────────────────────────
+  # CACHYOS: Kernel selection
+  # To revert to stock: uncomment next line, comment/delete the cachyos line
+  # ──────────────────────────────────────────────────────────────────────────
+  # boot.kernelPackages = pkgs.linuxPackages_latest;  # Stock NixOS kernel
+  boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-bore-lto-x86_64-v4;  # CachyOS optimized
 
-  # ============================================================================
+  # ==================================================  ==========================
   # NETWORKING & HOSTNAME
   # ============================================================================
   
@@ -154,6 +188,14 @@
   # ============================================================================
   
   nixpkgs.config.allowUnfree = true;
+  
+  # ──────────────────────────────────────────────────────────────────────────
+  # CACHYOS: Overlay to expose pkgs.cachyosKernels.*
+  # To revert to stock: delete or comment out the nixpkgs.overlays block below
+  # ──────────────────────────────────────────────────────────────────────────
+  nixpkgs.overlays = [
+    cachyos-overlay.overlays.default
+  ];
 
   # ============================================================================
   # SYSTEM PACKAGES
@@ -383,14 +425,29 @@
   nix.settings = {
     auto-optimise-store = true;
     experimental-features = [ "nix-command" "flakes" ];
+    
+    # ────────────────────────────────────────────────────────────────────────
+    # CACHYOS: Binary cache configuration
+    # To revert to stock: remove the cachyos lines below, keep only cache.nixos.org
+    # ────────────────────────────────────────────────────────────────────────
+    substituters = [ 
+      "https://cache.nixos.org"  # Default NixOS cache
+      "https://attic.xuyh0120.win/lantian"  # CACHYOS: Binary cache
+    ];
+    trusted-public-keys = [ 
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="  # Default
+      "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="  # CACHYOS: Cache key
+    ];
   };
 
   # ============================================================================
   # SYSTEM UPDATES & STATE
   # ============================================================================
   
+  # Disabled auto-upgrade to avoid frequent kernel recompilations
+  # Run 'sudo nixos-rebuild switch' manually when you want to update
   system.autoUpgrade = {
-    enable = true;
+    enable = false;
     dates = "04:00";
     channel = "https://nixos.org/channels/nixos-unstable";
     allowReboot = false; 
