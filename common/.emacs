@@ -91,9 +91,14 @@
   (corfu-preselect 'first)
   (corfu-quit-at-boundary t))
 
+(defun my/find-file-home ()
+  "Search for files under home directory with fd."
+  (interactive)
+  (consult-fd "~/"))
+
 (use-package consult
   :bind (("C-c f" . project-find-file)
-         ("C-c F" . consult-fd))
+         ("C-c h" . my/find-file-home))
   :config
   (setq consult-fd-args '((if (executable-find "fdfind") "fdfind" "fd")
                           "--full-path --color=never --hidden --exclude .git")))
@@ -109,7 +114,8 @@
         (python . ("https://github.com/tree-sitter/tree-sitter-python"))
         (go     . ("https://github.com/tree-sitter/tree-sitter-go"))
         (bash   . ("https://github.com/tree-sitter/tree-sitter-bash"))
-        (json   . ("https://github.com/tree-sitter/tree-sitter-json"))))
+        (json   . ("https://github.com/tree-sitter/tree-sitter-json"))
+        (nix    . ("https://github.com/nix-community/tree-sitter-nix"))))
 
 (dolist (lang (mapcar #'car treesit-language-source-alist))
   (unless (treesit-language-available-p lang)
@@ -120,9 +126,13 @@
         (go-mode     . go-ts-mode)
         (yaml-mode   . yaml-ts-mode)
         (bash-mode   . bash-ts-mode)
-        (json-mode   . json-ts-mode)))
+        (json-mode   . json-ts-mode)
+        (nix-mode    . nix-ts-mode)))
 
 (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
+
+(use-package nix-ts-mode
+  :mode "\\.nix\\'")
 
 ;; Recognize .j2 files by the extension before it: foo.yml.j2 → yaml-ts-mode, etc.
 ;; The (nil t) form strips .j2 and re-checks auto-mode-alist on the remainder.
