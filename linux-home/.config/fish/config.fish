@@ -38,9 +38,17 @@ function fish_greeting
 end
 
 set -g VIRTUAL_ENV_DISABLE_PROMPT 1
+function cd
+    if test (count $argv) -eq 0
+        builtin cd ~
+    else
+        z $argv
+    end
+end
 alias restart="source ~/.config/fish/config.fish"
 alias lg="lazygit"
 alias venv="source .venv/bin/activate.fish"
+alias pc="uv run pre-commit run --all-files"
 alias vim="nvim"
 alias proxmox="ssh root@10.0.0.41"
 alias proxmox2="ssh root@10.0.0.33"
@@ -54,3 +62,7 @@ alias loki="ssh haaksk@10.0.0.83"
 alias grafana="ssh haaksk@10.0.0.84"
 alias pihole="ssh haaksk@10.0.0.77"
 alias subnet-router="ssh haaksk@10.0.0.78"
+
+# Remap fzf file widget from Ctrl+T (captured by VS Code) to Ctrl+F
+bind ctrl-f fzf-file-widget
+bind -M insert ctrl-f fzf-file-widget

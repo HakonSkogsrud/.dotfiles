@@ -217,6 +217,7 @@ in
     xclip  # Required for VS Code X11 clipboard to sync with Wayland
     obsidian
     syncthing
+    gthumb
     zoxide
     eza
     git
