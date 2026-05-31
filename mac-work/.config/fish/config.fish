@@ -50,6 +50,6 @@ set -x FZF_CTRL_T_OPTS "--preview 'bat --color=always --line-range :50 {}' --pre
 set -x FZF_ALT_C_COMMAND "fd --type d --hidden --exclude .git"
 set -x FZF_DEFAULT_OPTS "--height 40% --layout=reverse --border"
 
-# Remap fzf file widget from Ctrl+T (captured by VS Code) to Ctrl+F
-bind ctrl-f fzf-file-widget
-bind -M insert ctrl-f fzf-file-widget
+# Remap fzf file widget from Ctrl+T (captured by VS Code) to Ctrl+G
+bind ctrl-g fzf-file-widget
+bind -M insert ctrl-g fzf-file-widget

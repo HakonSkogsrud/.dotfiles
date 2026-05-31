@@ -156,6 +156,14 @@ in
     enable = true;
     
     policies = {
+      Preferences = {
+        # Persist the one Firefox video setting that was consistently useful.
+        "media.ffmpeg.vaapi.enabled" = {
+          Value = true;
+          Status = "user";
+        };
+      };
+
       # Automatically install extensions
       ExtensionSettings = {
         # uBlock Origin
@@ -217,7 +225,7 @@ in
     xclip  # Required for VS Code X11 clipboard to sync with Wayland
     obsidian
     syncthing
-    gthumb
+    darktable
     zoxide
     eza
     git
@@ -230,11 +238,11 @@ in
     onlyoffice-desktopeditors
     tailscale
     morewaita-icon-theme 
-    gopls                  
-    go                     
-    basedpyright       
-    ruff                   
-    python3              
+    gopls
+    go
+    basedpyright
+    ruff
+    python3
     ansible-language-server 
     ansible-lint
     ansible
@@ -266,7 +274,7 @@ in
           region = "nb_NO.UTF-8";
         };
         "org/gnome/desktop/peripherals/mouse" = {
-          speed = 0.0; 
+          speed = -0.2; 
         };
         "org/gnome/desktop/wm/preferences" = {
           button-layout = "appmenu:minimize,maximize,close";

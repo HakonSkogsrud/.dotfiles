@@ -63,6 +63,6 @@ alias grafana="ssh haaksk@10.0.0.84"
 alias pihole="ssh haaksk@10.0.0.77"
 alias subnet-router="ssh haaksk@10.0.0.78"
 
-# Remap fzf file widget from Ctrl+T (captured by VS Code) to Ctrl+F
-bind ctrl-f fzf-file-widget
-bind -M insert ctrl-f fzf-file-widget
+# Remap fzf file widget from Ctrl+T (captured by VS Code) to Ctrl+G
+bind ctrl-g fzf-file-widget
+bind -M insert ctrl-g fzf-file-widget
