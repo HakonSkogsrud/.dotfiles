@@ -103,6 +103,23 @@ require("lazy").setup({
         dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
         opts = {},
     },
+    {
+        "lewis6991/gitsigns.nvim",
+        opts = {
+            signs = {
+                add = { text = "│" },
+                change = { text = "│" },
+                delete = { text = "_" },
+                topdelete = { text = "‾" },
+                changedelete = { text = "~" },
+            },
+        },
+    },
+    {
+        "sindrets/diffview.nvim",
+        dependencies = { "nvim-lua/plenary.nvim", "nvim-tree/nvim-web-devicons" },
+        opts = {},
+    },
 
     -- LSP Configuration (Modern Neovim 0.12.x native setup)
     {
@@ -116,7 +133,6 @@ require("lazy").setup({
             -- Define your target servers
             local servers = {
                 basedpyright = { settings = { basedpyright = { analysis = { typeCheckingMode = "basic" } } } },
-                gopls = {},
                 ansiblels = {},
                 ruff = {},
                 lua_ls = {},
@@ -160,7 +176,6 @@ require("lazy").setup({
             },
         },
     },
-    -- Formatting (Best for Go and Python)
     {
         "stevearc/conform.nvim",
         opts = {
@@ -168,7 +183,6 @@ require("lazy").setup({
             formatters_by_ft = {
                 lua = { "stylua" },
                 python = { "ruff_format" },
-                go = { "goimports", "gofmt" },
             },
         },
     },
@@ -179,16 +193,17 @@ require("lazy").setup({
         dependencies = {
             "rcarriga/nvim-dap-ui",
             "mfussenegger/nvim-dap-python",
-            "leoluz/nvim-dap-go",
             "nvim-neotest/nvim-nio",
         },
         config = function()
             local dap, dapui = require("dap"), require("dapui")
-            require("dap-python").setup("python3")
-            require("dap-go").setup()
+            local dap_python = require("dap-python")
+            dap_python.setup("uv")
+            dap_python.test_runner = "pytest"
             dapui.setup()
             dap.listeners.after.event_initialized["dapui_config"] = dapui.open
             dap.listeners.before.event_terminated["dapui_config"] = dapui.close
+            dap.listeners.before.event_exited["dapui_config"] = dapui.close
         end,
     },
 
@@ -198,7 +213,7 @@ require("lazy").setup({
         build = ":TSUpdate",
         config = function()
             require("nvim-treesitter").setup({
-                ensure_installed = { "python", "go", "ansible", "yaml", "lua", "bash", "markdown", "nix" },
+                ensure_installed = { "python", "ansible", "yaml", "lua", "bash", "markdown", "nix" },
             })
             -- Enable treesitter-based indentation (v1.0.0+ uses native vim option)
             vim.o.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
@@ -269,6 +284,16 @@ vim.keymap.set("n", "<C-Up>", ":resize +4<CR>")
 vim.keymap.set("n", "<C-Down>", ":resize -4<CR>")
 vim.keymap.set("n", "<C-Left>", ":vertical resize -4<CR>")
 vim.keymap.set("n", "<C-Right>", ":vertical resize +4<CR>")
+vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen HEAD<CR>", { desc = "Git: Diff against HEAD" })
+vim.keymap.set("n", "<leader>gD", "<cmd>DiffviewOpen --cached<CR>", { desc = "Git: Staged diff" })
+vim.keymap.set("n", "<leader>gw", "<cmd>DiffviewOpen<CR>", { desc = "Git: Worktree vs index" })
+vim.keymap.set("n", "<leader>gf", "<cmd>DiffviewFileHistory %<CR>", { desc = "Git: File history" })
+vim.keymap.set("n", "<leader>gF", "<cmd>DiffviewFileHistory<CR>", { desc = "Git: Branch history" })
+vim.keymap.set("n", "<leader>gq", "<cmd>DiffviewClose<CR>", { desc = "Git: Close diff view" })
+vim.keymap.set("n", "<leader>gp", "<cmd>Gitsigns preview_hunk_inline<CR>", { desc = "Git: Preview hunk" })
+vim.keymap.set("n", "<leader>gb", "<cmd>Gitsigns blame_line<CR>", { desc = "Git: Blame line" })
+vim.keymap.set("n", "<leader>gs", "<cmd>Gitsigns stage_hunk<CR>", { desc = "Git: Stage hunk" })
+vim.keymap.set("n", "<leader>gr", "<cmd>Gitsigns reset_hunk<CR>", { desc = "Git: Reset hunk" })
 -- LSP Attach Mappings
 vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(event)
@@ -287,9 +312,6 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "TermOpen" }, {
         vim.cmd("startinsert")
     end,
 })
--- go
-vim.keymap.set("n", "<leader>ta", "<cmd>!go test ./...<CR>", { desc = "Run All Tests" })
--- Debugging
 -- Debugging
 local dap = require("dap")
 local dapui = require("dapui")
@@ -312,11 +334,16 @@ end, { desc = "Debug: Terminate and Close UI" })
 vim.keymap.set("n", "<leader>dc", function()
     require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))
 end, { desc = "Debug: Set Conditional Breakpoint" })
--- Go Specific Debugging
+
+vim.keymap.set("n", "<leader>ta", "<cmd>!python -m pytest<CR>", { desc = "Run All Tests (pytest)" })
 vim.keymap.set("n", "<leader>dt", function()
-    require("dap-go").debug_test()
-end, { desc = "Debug Nearest Test" })
+    require("dap-python").test_method()
+end, { desc = "Debug: Nearest Test Method" })
+
+vim.keymap.set("n", "<leader>dT", function()
+    require("dap-python").test_class()
+end, { desc = "Debug: Nearest Test Class" })
 
 vim.keymap.set("n", "<leader>dl", function()
-    require("dap-go").debug_last()
-end, { desc = "Debug Last Test" })
+    require("dap").run_last()
+end, { desc = "Debug: Re-run Last Session" })
