@@ -1,7 +1,6 @@
 -- 1. SETTINGS
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-vim.g.have_nerd_font = true
 vim.o.number = true
 vim.o.relativenumber = true
 vim.o.mouse = "a"
@@ -84,7 +83,6 @@ require("lazy").setup({
         opts = {
             extra_groups = {
                 "NormalFloat",
-                "NvimTreeNormal",
                 "NeoTreeNormal",
                 "NeoTreeNormalNC",
                 "NeoTreeWinSeparator",
@@ -96,12 +94,11 @@ require("lazy").setup({
         end,
     },
     { "nvim-tree/nvim-web-devicons" },
-    { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" }, opts = {} },
+    { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
     {
         "nvim-neo-tree/neo-tree.nvim",
         branch = "v3.x",
         dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
-        opts = {},
     },
     {
         "lewis6991/gitsigns.nvim",
@@ -118,7 +115,6 @@ require("lazy").setup({
     {
         "sindrets/diffview.nvim",
         dependencies = { "nvim-lua/plenary.nvim", "nvim-tree/nvim-web-devicons" },
-        opts = {},
     },
 
     -- LSP Configuration (Modern Neovim 0.12.x native setup)
@@ -253,7 +249,6 @@ function _G.toggle_terminal()
             term_buf = vim.api.nvim_get_current_buf()
         end
         term_win = vim.api.nvim_get_current_win()
-        vim.cmd("startinsert")
     end
 end
 
