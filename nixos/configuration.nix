@@ -162,6 +162,10 @@ in
           Value = true;
           Status = "user";
         };
+        "widget.wayland-dmabuf-vaapi.enabled" = {
+          Value = true;
+          Status = "user";
+        };
       };
 
       # Automatically install extensions
@@ -214,6 +218,7 @@ in
     localsend
     adw-gtk3
     wget
+    bella
     lazygit
     ghostty
     fzf
@@ -275,6 +280,9 @@ in
         };
         "org/gnome/desktop/peripherals/mouse" = {
           speed = -0.2; 
+        };
+        "org/gnome/desktop/peripherals/touchpad" = {
+          tap-and-drag = false;
         };
         "org/gnome/desktop/wm/preferences" = {
           button-layout = "appmenu:minimize,maximize,close";
