@@ -143,7 +143,6 @@ in
     ibm-plex
     nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
-    
     cantarell-fonts # Clean native GNOME UI font fallback
   ];
 
@@ -195,6 +194,15 @@ in
 
   programs.fish.enable = true;
 
+  # Git configuration
+  programs.git = {
+    enable = true;
+    config = {
+      user.name = "Håkon Skogsrud";
+      user.email = "haakon.skogsrud@pm.me";
+    };
+  };
+
   # ============================================================================
   # PACKAGE MANAGEMENT
   # ============================================================================
@@ -214,7 +222,6 @@ in
   # ============================================================================
   
   environment.systemPackages = with pkgs; [
-    rapidraw
     localsend
     adw-gtk3
     wget
@@ -286,6 +293,11 @@ in
         };
         "org/gnome/desktop/wm/preferences" = {
           button-layout = "appmenu:minimize,maximize,close";
+        };
+        "org/gnome/desktop/background" = {
+          picture-uri = "https://raw.githubusercontent.com/NixOS/nixos-artwork/master/wallpapers/nix-wallpaper-nineish-dark-gray.svg";
+          picture-uri-dark = "https://raw.githubusercontent.com/NixOS/nixos-artwork/master/wallpapers/nix-wallpaper-nineish-dark-gray.svg";
+          picture-options = "zoom";
         };
         "org/gnome/shell" = {
           favorite-apps = [
