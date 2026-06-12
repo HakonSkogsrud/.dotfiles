@@ -375,11 +375,14 @@ in
   # INPUT DEVICES
   # ============================================================================
 
-  # Scale down the BT-400 mouse speed at driver level (before GNOME settings)
+  # Scale down mouse speed at driver level (before GNOME settings)
   # Higher DPI value = libinput scales movement DOWN
   services.udev.extraHwdb = ''
-    mouse:bluetooth:v1915p0040:name:*:
-     MOUSE_DPI=1800@1000
+mouse:bluetooth:v1915p0040:name:*:
+ MOUSE_DPI=2000@1000
+
+mouse:bluetooth:v046Dp0B020:name:*:
+ MOUSE_DPI=1800@1000
   '';
 
   # ============================================================================
@@ -458,14 +461,16 @@ in
     # ────────────────────────────────────────────────────────────────────────
     # CACHYOS: Binary cache configuration
     # To revert to stock: remove the cachyos lines below, keep only cache.nixos.org
+    # NOTE: Uncommenting the lantian lines below will use pre-compiled kernels
+    # instead of compiling from source. Keep commented for security.
     # ────────────────────────────────────────────────────────────────────────
     substituters = [ 
       "https://cache.nixos.org"  # Default NixOS cache
-      "https://attic.xuyh0120.win/lantian"  # CACHYOS: Binary cache
+      # "https://attic.xuyh0120.win/lantian"  # CACHYOS: Binary cache
     ];
     trusted-public-keys = [ 
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="  # Default
-      "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="  # CACHYOS: Cache key
+      # "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="  # CACHYOS: Cache key
     ];
   };
 
