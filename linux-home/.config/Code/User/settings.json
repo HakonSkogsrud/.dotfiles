@@ -60,5 +60,6 @@
   "files.autoSaveDelay": 10,
   "window.customTitleBarVisibility": "never",
   "terminal.integrated.enableMultiLinePasteWarning": "never",
-  "window.autoDetectColorScheme": true
+  "window.autoDetectColorScheme": true,
+  "window.openFoldersInNewWindow": "on"
 }

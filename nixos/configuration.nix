@@ -8,12 +8,10 @@
 # TO REVERT TO STOCK NIXOS KERNEL:
 # ============================================================================
 # Search for "CACHYOS" comments in this file and:
-# 1. Delete/comment the let...in block (lines 14-31)
+# 1. Delete/comment the let...in block near the top of this file
 # 2. Uncomment boot.kernelPackages = pkgs.linuxPackages_latest
 # 3. Delete/comment boot.kernelPackages = pkgs.cachyosKernels...
 # 4. Delete/comment nixpkgs.overlays = [ cachyos-overlay... ]
-# 5. Remove "https://attic.xuyh0120.win/lantian" from substituters
-# 6. Remove "lantian:..." key from trusted-public-keys
 # Then run: sudo nixos-rebuild switch && systemctl reboot
 # ============================================================================
 # Edit this configuration file to define what should be installed on
@@ -26,12 +24,13 @@
 # CACHYOS KERNEL CONFIGURATION - START
 # ============================================================================
 # To revert to stock NixOS kernel:
-# 1. Delete or comment out this entire let...in block (lines below)
+# 1. Delete or comment out this entire let...in block
 # 2. Search for "CACHYOS" comments in this file and revert those sections
 # ============================================================================
 let
   cachyos-kernel = builtins.fetchTarball {
-    url = "https://github.com/xddxdd/nix-cachyos-kernel/archive/release.tar.gz";
+    url = "https://github.com/xddxdd/nix-cachyos-kernel/archive/3ea1942599d8d0a124bdb9ec1304b3e6f63e8b1f.tar.gz";
+    sha256 = "0824ax6fa28jqqaj9xkldly4afmkwn4j6njmasbj7bdvp6y9llsi";
   };
   cachyos-overlay = import "${cachyos-kernel}/default.nix";
 in
@@ -156,7 +155,7 @@ in
     
     policies = {
       Preferences = {
-        # Persist the one Firefox video setting that was consistently useful.
+        # Persist the Firefox VA-API preferences that were consistently useful.
         "media.ffmpeg.vaapi.enabled" = {
           Value = true;
           Status = "user";
@@ -233,14 +232,16 @@ in
     bat
     ripgrep
     emacs-pgtk
-    (vscode.override { commandLineArgs = "--ozone-platform=x11"; })
-    xclip  # Required for VS Code X11 clipboard to sync with Wayland
+    (vscode.override {
+      commandLineArgs = "--enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland";
+    })
     obsidian
     syncthing
     darktable
     zoxide
     eza
     git
+    exiftool
     gh
     neovim
     uv
@@ -248,6 +249,7 @@ in
     gcc
     brave
     onlyoffice-desktopeditors
+    freeoffice
     tailscale
     morewaita-icon-theme 
     gopls
@@ -291,13 +293,13 @@ in
         "org/gnome/desktop/peripherals/touchpad" = {
           tap-and-drag = false;
         };
+        "org/gnome/desktop/background" = {
+          picture-uri = "file:///home/haaksk/.local/share/backgrounds/nix-wallpaper-nineish-dark-gray.svg";
+          picture-uri-dark = "file:///home/haaksk/.local/share/backgrounds/nix-wallpaper-nineish-dark-gray.svg";
+          picture-options = "zoom";
+        };
         "org/gnome/desktop/wm/preferences" = {
           button-layout = "appmenu:minimize,maximize,close";
-        };
-        "org/gnome/desktop/background" = {
-          picture-uri = "https://raw.githubusercontent.com/NixOS/nixos-artwork/master/wallpapers/nix-wallpaper-nineish-dark-gray.svg";
-          picture-uri-dark = "https://raw.githubusercontent.com/NixOS/nixos-artwork/master/wallpapers/nix-wallpaper-nineish-dark-gray.svg";
-          picture-options = "zoom";
         };
         "org/gnome/shell" = {
           favorite-apps = [
@@ -442,6 +444,13 @@ mouse:bluetooth:v046Dp0B020:name:*:
     };
   };
 
+  # Enable systemd-resolved to fix Tailscale suspend/reboot DNS hangs
+  services.resolved = {
+    enable = true;
+    # Ensures a global fallback is used if Tailscale's DNS drops
+    domains = [ "~." ];
+  };
+
   services.fwupd.enable = true;
 
   # ============================================================================
@@ -457,21 +466,6 @@ mouse:bluetooth:v046Dp0B020:name:*:
   nix.settings = {
     auto-optimise-store = true;
     experimental-features = [ "nix-command" "flakes" ];
-    
-    # ────────────────────────────────────────────────────────────────────────
-    # CACHYOS: Binary cache configuration
-    # To revert to stock: remove the cachyos lines below, keep only cache.nixos.org
-    # NOTE: Uncommenting the lantian lines below will use pre-compiled kernels
-    # instead of compiling from source. Keep commented for security.
-    # ────────────────────────────────────────────────────────────────────────
-    substituters = [ 
-      "https://cache.nixos.org"  # Default NixOS cache
-      # "https://attic.xuyh0120.win/lantian"  # CACHYOS: Binary cache
-    ];
-    trusted-public-keys = [ 
-      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="  # Default
-      # "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="  # CACHYOS: Cache key
-    ];
   };
 
   # ============================================================================
@@ -479,7 +473,7 @@ mouse:bluetooth:v046Dp0B020:name:*:
   # ============================================================================
   
   # Disabled auto-upgrade to avoid frequent kernel recompilations
-  # Run 'sudo nixos-rebuild switch' manually when you want to update
+  # Run 'sudo nixos-rebuild switch' manually when you want to apply updates
   system.autoUpgrade = {
     enable = false;
     dates = "04:00";
