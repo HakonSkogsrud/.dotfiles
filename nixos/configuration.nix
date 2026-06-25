@@ -249,7 +249,6 @@ in
     gcc
     brave
     onlyoffice-desktopeditors
-    freeoffice
     tailscale
     morewaita-icon-theme 
     gopls
