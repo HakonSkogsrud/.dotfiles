@@ -294,7 +294,7 @@ in
           tap-and-drag = false;
         };
         "org/gnome/desktop/background" = {
-          picture-uri = "file:///home/haaksk/.local/share/backgrounds/nix-wallpaper-nineish-dark-gray.svg";
+          picture-uri = "file:///home/haaksk/.local/share/backgrounds/wallhaven-x687ll.png";
           picture-uri-dark = "file:///home/haaksk/.local/share/backgrounds/nix-wallpaper-nineish-dark-gray.svg";
           picture-options = "zoom";
         };

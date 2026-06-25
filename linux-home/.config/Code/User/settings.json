@@ -46,7 +46,9 @@
   "chat.tools.terminal.autoApprove": {
     "git add": true,
     "git commit": true,
-    "git push": true
+    "git push": true,
+    "test": true,
+    "cp": true
   },
   "github.copilot.nextEditSuggestions.enabled": true,
   "github.copilot.enable": {
@@ -61,5 +63,13 @@
   "window.customTitleBarVisibility": "never",
   "terminal.integrated.enableMultiLinePasteWarning": "never",
   "window.autoDetectColorScheme": true,
-  "window.openFoldersInNewWindow": "on"
+  "window.openFoldersInNewWindow": "on",
+  "chat.tools.urls.autoApprove": {
+    "https://code.visualstudio.com": true,
+    "https://github.com/microsoft/vscode/wiki/*": true,
+    "https://github.com": {
+      "approveRequest": false,
+      "approveResponse": true
+    }
+  }
 }
