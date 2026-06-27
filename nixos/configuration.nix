@@ -142,7 +142,6 @@ in
     ibm-plex
     nerd-fonts.jetbrains-mono
     nerd-fonts.commit-mono
-    cantarell-fonts # Clean native GNOME UI font fallback
   ];
 
   # ============================================================================
@@ -237,7 +236,8 @@ in
     obsidian
     ((vscodium.override {
       commandLineArgs = "--enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland";
-    }).fhs)syncthing
+    }).fhs)
+    syncthing
     darktable
     zoxide
     eza
