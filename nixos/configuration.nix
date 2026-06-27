@@ -292,6 +292,7 @@ in
         };
         "org/gnome/desktop/peripherals/touchpad" = {
           tap-and-drag = false;
+          disable-while-typing = true;
         };
         "org/gnome/desktop/background" = {
           picture-uri = "file:///home/haaksk/.local/share/backgrounds/wallhaven-x687ll.png";
