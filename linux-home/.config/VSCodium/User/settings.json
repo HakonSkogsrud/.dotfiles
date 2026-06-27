@@ -4,8 +4,8 @@
   "window.titleBarStyle": "native",
   "window.menuBarVisibility": "toggle",
   // ── Editor ──────────────────────────────────────────────
-  "editor.fontSize": 13,
-  "editor.fontFamily": "JetBrainsMono Nerd Font",
+  "editor.fontSize": 14,
+  "editor.fontFamily": "CommitMono Nerd Font Mono",
   "editor.minimap.enabled": false,
   "editor.formatOnSave": true,
   "editor.renderWhitespace": "none",
@@ -15,11 +15,12 @@
   "editor.scrollbar.horizontalScrollbarSize": 6,
   // ── Terminal ────────────────────────────────────────────
   "terminal.integrated.fontSize": 13,
-  "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font",
+  "terminal.integrated.fontFamily": "CommitMono Nerd Font Mono",
   "terminal.integrated.defaultProfile.linux": "fish",
   "terminal.integrated.sendKeybindingsToShell": true,
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.allowChords": false,
+  "terminal.integrated.enableMultiLinePasteWarning": "never",
   // ── Workbench & Theme ───────────────────────────────────
   "workbench.startupEditor": "none",
   "workbench.iconTheme": "symbols",
@@ -28,6 +29,7 @@
   // ── Files & Explorer ────────────────────────────────────
   "files.autoSave": "afterDelay",
   "files.autoSaveWhenNoErrors": true,
+  "files.autoSaveDelay": 10,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
   "security.workspace.trust.untrustedFiles": "open",
@@ -38,46 +40,26 @@
   // ── Python ──────────────────────────────────────────────
   "python.defaultInterpreterPath": "/run/current-system/sw/bin/python3",
   "python.analysis.typeCheckingMode": "basic",
-  // ── Copilot & Chat ──────────────────────────────────────
-  "chat.editor.fontSize": 13,
-  "chat.instructionsFilesLocations": {
-    "README.md": true
-  },
-  "chat.tools.terminal.autoApprove": {
-    "git add": true,
-    "git commit": true,
-    "git push": true,
-    "test": true,
-    "cp": true
-  },
-  "github.copilot.nextEditSuggestions.enabled": true,
-  "github.copilot.enable": {
-    "*": false,
-    "plaintext": false,
-    "markdown": false,
-    "scminput": false
-  },
   // ── Extensions ──────────────────────────────────────────
   "hediet.vscode-drawio.resizeImages": null,
-  "files.autoSaveDelay": 10,
   "window.customTitleBarVisibility": "never",
-  "terminal.integrated.enableMultiLinePasteWarning": "never",
   "window.autoDetectColorScheme": true,
   "window.openFoldersInNewWindow": "on",
-  "chat.tools.urls.autoApprove": {
-    "https://code.visualstudio.com": true,
-    "https://github.com/microsoft/vscode/wiki/*": true,
-    "https://github.com": {
-      "approveRequest": false,
-      "approveResponse": true
-    },
-    "https://ai.google.dev": {
-      "approveRequest": false,
-      "approveResponse": true
-    },
-    "https://docs.continue.dev": {
-      "approveRequest": false,
-      "approveResponse": true
-    }
+  "redhat.telemetry.enabled": false,
+  "yaml.schemas": {
+    "file:///home/haaksk/.vscode-oss/extensions/continue.continue-2.0.0-linux-x64/config-yaml-schema.json": [
+      ".continue/**/*.yaml"
+    ],
+    "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook": [
+      "file:///Users/hakon.skogsrud/Workspace/serversetup/docker-install.yml",
+      "file:///Users/hakonskogsrud/git/serversetup/servers/fileserver/mount-fileserver-dataset.yml",
+      "file:///Users/hakonskogsrud/git/serversetup/servers/common/tailscale-setup.yml",
+      "file:///Users/hakonskogsrud/git/serversetup/servers/fileserver-44/mount-fileserver-dataset.yml",
+      "file:///Users/hakonskogsrud/git/serversetup/servers/proxmox-41/syncoid-backup.yml"
+    ],
+    "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/vars.json": [
+      "file:///Users/hakon.skogsrud/Workspace/serversetup/vars/common.yml",
+      "file:///Users/hakonskogsrud/git/serversetup/servers/fileserver/vars.yml"
+    ]
   }
 }

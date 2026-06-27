@@ -141,7 +141,7 @@ in
   fonts.packages = with pkgs; [
     ibm-plex
     nerd-fonts.jetbrains-mono
-    nerd-fonts.fira-code
+    nerd-fonts.commit-mono
     cantarell-fonts # Clean native GNOME UI font fallback
   ];
 
@@ -232,11 +232,12 @@ in
     bat
     ripgrep
     emacs-pgtk
-    (vscode.override {
-      commandLineArgs = "--enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland";
-    })
+    nodejs
+    gemini-cli
     obsidian
-    syncthing
+    ((vscodium.override {
+      commandLineArgs = "--enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland";
+    }).fhs)syncthing
     darktable
     zoxide
     eza
@@ -308,7 +309,7 @@ in
             "org.gnome.Nautilus.desktop"
             "obsidian.desktop"
             "emacs.desktop"
-            "code.desktop"
+            "vscodium.desktop"
             "onlyoffice-desktopeditors.desktop"
           ];
         };

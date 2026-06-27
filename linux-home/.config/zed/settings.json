@@ -7,8 +7,17 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "disable_ai": true,
+  "terminal": {
+    "font_size": 16.0,
+  },
+  "proxy": "",
+  "disable_ai": false,
   "agent": {
+    "default_model": {
+      "provider": "google",
+      "model": "gemini-3.5-flash",
+      "enable_thinking": true
+    },
     "enable_feedback": true,
     "favorite_models": [],
     "model_parameters": [],
@@ -51,7 +60,9 @@
   "agent_servers": {
     "github-copilot-cli": {
       "favorite_config_option_values": {
-        "allow_all": ["on"],
+        "allow_all": [
+          "on"
+        ],
       },
       "type": "registry",
     },
@@ -100,8 +111,8 @@
     "dark": "Zed (Default)",
   },
   "base_keymap": "VSCode",
-  "ui_font_size": 16,
-  "buffer_font_size": 15,
+  "ui_font_size": 18.0,
+  "buffer_font_size": 16.0,
   "theme": {
     "mode": "system",
     "light": "One Light",
@@ -147,7 +158,10 @@
   "format_on_save": "on",
   "languages": {
     "Python": {
-      "language_servers": ["basedpyright", "ruff"],
+      "language_servers": [
+        "basedpyright",
+        "ruff"
+      ],
       "formatter": {
         "language_server": {
           "name": "ruff",
