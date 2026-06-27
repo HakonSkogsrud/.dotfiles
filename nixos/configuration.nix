@@ -309,7 +309,7 @@ in
             "org.gnome.Nautilus.desktop"
             "obsidian.desktop"
             "emacs.desktop"
-            "vscodium.desktop"
+            "codium.desktop"
             "onlyoffice-desktopeditors.desktop"
           ];
         };
