@@ -58,13 +58,8 @@
   },
   "cli_default_open_behavior": "existing_window",
   "agent_servers": {
-    "github-copilot-cli": {
-      "favorite_config_option_values": {
-        "allow_all": [
-          "on"
-        ],
-      },
-      "type": "registry",
+    "gemini": {
+      "type": "registry"
     },
   },
   "status_bar": {

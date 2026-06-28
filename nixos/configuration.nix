@@ -28,11 +28,25 @@
 # 2. Search for "CACHYOS" comments in this file and revert those sections
 # ============================================================================
 let
+  # Pin nixpkgs to lock the compile environment (compiler + system libraries) for the kernel.
+  # This stops Nix from recompiling the kernel for 58 mins on every routine system update.
+  pinned-nixpkgs-src = builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/e73de5be04e0eff4190a1432b946d469c794e7b4.tar.gz";
+    sha256 = "04csm31wfzrhmr0qrq74gay01cbx32b7phw540j13lqdry8casx4";
+  };
+
   cachyos-kernel = builtins.fetchTarball {
     url = "https://github.com/xddxdd/nix-cachyos-kernel/archive/3ea1942599d8d0a124bdb9ec1304b3e6f63e8b1f.tar.gz";
     sha256 = "0824ax6fa28jqqaj9xkldly4afmkwn4j6njmasbj7bdvp6y9llsi";
   };
   cachyos-overlay = import "${cachyos-kernel}/default.nix";
+
+  # Isolated compile environment specifically for building the CachyOS kernel
+  pinned-pkgs = import pinned-nixpkgs-src {
+    system = "x86_64-linux";
+    config.allowUnfree = true;
+    overlays = [ cachyos-overlay.overlays.default ];
+  };
 in
 # ============================================================================
 # CACHYOS KERNEL CONFIGURATION - END
@@ -58,7 +72,7 @@ in
   # To revert to stock: uncomment next line, comment/delete the cachyos line
   # ──────────────────────────────────────────────────────────────────────────
   # boot.kernelPackages = pkgs.linuxPackages_latest;  # Stock NixOS kernel
-  boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-bore-lto-x86_64-v4;  # CachyOS optimized
+  boot.kernelPackages = pinned-pkgs.cachyosKernels.linuxPackages-cachyos-bore-lto-x86_64-v4;  # CachyOS optimized (pinned inputs)
 
   # ==================================================  ==========================
   # NETWORKING & HOSTNAME
@@ -121,6 +135,8 @@ in
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     LIBVA_DRIVER_NAME = "iHD"; 
+    ZED_RENDERER = "gles";      # Force OpenGL ES to fix Zed editor Intel GPU lag/freezes
+    XCURSOR_THEME = "Adwaita";  # Fix Wayland cursor spinning/fallback loading loops
   };
 
   # ============================================================================
@@ -249,6 +265,7 @@ in
     stow
     gcc
     brave
+    zed-editor
     onlyoffice-desktopeditors
     tailscale
     morewaita-icon-theme 
@@ -488,3 +505,4 @@ mouse:bluetooth:v046Dp0B020:name:*:
   # It records which version you originally installed on (for backwards compatibility).
   system.stateVersion = "25.11";
 }
+
