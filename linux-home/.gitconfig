@@ -3,7 +3,7 @@
 [credential "https://gist.github.com"]
 	helper = !gh auth git-credential
 [user]
-	email = haaksk@gmail.com
+	email = haakon.skogsrud@pm.me
 	name = Håkon Skogsrud
 [push]
 	autoSetupRemote = true
