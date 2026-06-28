@@ -250,9 +250,7 @@ in
     nodejs
     gemini-cli
     obsidian
-    ((vscodium.override {
-      commandLineArgs = "--enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland";
-    }).fhs)
+    vscodium-fhs
     syncthing
     darktable
     zoxide
