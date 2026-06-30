@@ -177,8 +177,12 @@ require("lazy").setup({
         opts = {
             format_on_save = { timeout_ms = 500, lsp_format = "fallback" },
             formatters_by_ft = {
+                ansible = { "ansible-lint" },
+                json = { "prettier" },
+                jsonc = { "prettier" },
                 lua = { "stylua" },
                 python = { "ruff_format" },
+                toml = { "taplo" },
             },
         },
     },

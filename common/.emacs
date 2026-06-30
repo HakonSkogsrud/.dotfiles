@@ -15,8 +15,22 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
+;; Refresh package archives if stale (older than 1 day)
+(unless (and package-archive-contents
+             (let ((archive-time (nth 5 (file-attributes
+                                         (expand-file-name "archives/melpa/archive-contents"
+                                                           package-user-dir)))))
+               (and archive-time
+                    (< (float-time (time-subtract nil archive-time)) 86400))))
+  (package-refresh-contents))
+
 (require 'use-package)
 (setq use-package-always-ensure t)
+
+;; Locate Fish before exec-path-from-shell tries to use it
+(when-let ((fish-path (executable-find "fish")))
+  (setq shell-file-name fish-path
+        explicit-shell-file-name fish-path))
 
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns x pgtk))
@@ -39,7 +53,7 @@
   :config (auto-dark-mode t))
 
 (cua-mode 1)
-(set-face-attribute 'default nil :font "JetbrainsMono Nerd Font-12")
+(add-to-list 'default-frame-alist '(font . "Hack Nerd Font-15"))
 
 (setq inhibit-startup-screen t
       initial-scratch-message nil
@@ -53,6 +67,15 @@
 
 (setq-default indent-tabs-mode nil
               tab-width 4)
+
+;; macOS: AltGr (arrives as right Cmd due to OS swap) — Norwegian keyboard bindings
+(when (eq system-type 'darwin)
+  (setq ns-right-command-modifier 'super)
+  (global-set-key (kbd "s-1") (lambda () (interactive) (insert "{")))
+  (global-set-key (kbd "s-2") (lambda () (interactive) (insert "[")))
+  (global-set-key (kbd "s-3") (lambda () (interactive) (insert "]")))
+  (global-set-key (kbd "s-4") (lambda () (interactive) (insert "}")))
+  (global-set-key (kbd "§") (lambda () (interactive) (insert "|"))))
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -146,6 +169,7 @@
   :bind (:map eglot-mode-map
               ("C-c r" . eglot-rename)
               ("C-c a" . eglot-code-actions)
+              ("C-c i" . eglot-inlay-hints-mode)
               ("M-."   . xref-find-definitions)
               ("M-?"   . xref-find-references))
   :config
@@ -246,8 +270,9 @@ and searches for 'root_key:' — the YAML definition form."
   "Run current file via uv or python3."
   (interactive)
   (when (buffer-modified-p) (save-buffer))
-  (let ((cmd (if (file-directory-p ".venv") "uv run python" "python3")))
-    (compile (format "%s %S" cmd (buffer-file-name)))))
+  (if (file-directory-p ".venv")
+      (compile (format "uv run %S" (buffer-file-name)))
+    (compile (format "python3 %S" (buffer-file-name)))))
 
 (defun my/python-test-run ()
   "Run pytest via uv or pytest."
@@ -258,10 +283,7 @@ and searches for 'root_key:' — the YAML definition form."
 
 (use-package pyvenv
   :hook ((python-mode    . my/python-uv-venv-activate)
-         (python-ts-mode . my/python-uv-venv-activate))
-  :bind (:map python-ts-mode-map
-              ("C-c C-c" . my/python-run)
-              ("C-c C-t" . my/python-test-run)))
+    (python-ts-mode . my/python-uv-venv-activate)))
 
 (use-package dape
   :preface (setq dape-buffer-window-arrangement 'right)
@@ -313,19 +335,18 @@ and searches for 'root_key:' — the YAML definition form."
       (vector "-x" "-s" "--no-header" node))))
 
 (with-eval-after-load 'python
+  (define-key python-mode-map    (kbd "C-c C-c") #'my/python-run)
+  (define-key python-mode-map    (kbd "C-c C-t") #'my/python-test-run)
   (define-key python-mode-map    (kbd "C-c C-d") #'dape)
   (define-key python-mode-map    (kbd "C-c b")   #'dape-breakpoint-toggle)
+  (define-key python-ts-mode-map (kbd "C-c C-c") #'my/python-run)
+  (define-key python-ts-mode-map (kbd "C-c C-t") #'my/python-test-run)
   (define-key python-ts-mode-map (kbd "C-c C-d") #'dape)
   (define-key python-ts-mode-map (kbd "C-c b")   #'dape-breakpoint-toggle))
 
 ;; ==========================================
 ;; 8. SHELL & GIT
 ;; ==========================================
-
-;; Dynamically locate Fish on the NixOS system path to avoid hardcoded FHS issues
-(when-let ((fish-path (executable-find "fish")))
-  (setq shell-file-name fish-path
-        explicit-shell-file-name fish-path))
 
 (defun my/toggle-shell ()
   "Toggle a shell at project root."

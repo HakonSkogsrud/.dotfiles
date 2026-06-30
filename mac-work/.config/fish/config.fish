@@ -53,3 +53,8 @@ set -x FZF_DEFAULT_OPTS "--height 40% --layout=reverse --border"
 # Remap fzf file widget from Ctrl+T (captured by VS Code) to Ctrl+G
 bind ctrl-g fzf-file-widget
 bind -M insert ctrl-g fzf-file-widget
+
+# Added by LM Studio CLI (lms)
+set -gx PATH $PATH /Users/Hakon.Skogsrud/.lmstudio/bin
+# End of LM Studio CLI section
+
