@@ -53,7 +53,7 @@
   :config (auto-dark-mode t))
 
 (cua-mode 1)
-(add-to-list 'default-frame-alist '(font . "Hack Nerd Font-15"))
+(add-to-list 'default-frame-alist '(font . "Hack Nerd Font-14"))
 
 (setq inhibit-startup-screen t
       initial-scratch-message nil
@@ -125,6 +125,12 @@
   :config
   (setq consult-fd-args '((if (executable-find "fdfind") "fdfind" "fd")
                           "--full-path --color=never --hidden --exclude .git")))
+
+(use-package which-key
+  :init (which-key-mode)
+  :custom
+  (which-key-idle-delay 0.4)
+  (which-key-sort-order 'which-key-key-order-alpha))
 
 ;; ==========================================
 ;; 4. TREESITTER & LSP
@@ -283,7 +289,7 @@ and searches for 'root_key:' — the YAML definition form."
 
 (use-package pyvenv
   :hook ((python-mode    . my/python-uv-venv-activate)
-    (python-ts-mode . my/python-uv-venv-activate)))
+         (python-ts-mode . my/python-uv-venv-activate)))
 
 (use-package dape
   :preface (setq dape-buffer-window-arrangement 'right)
@@ -374,6 +380,7 @@ and searches for 'root_key:' — the YAML definition form."
 (global-set-key (kbd "C-c t") 'my/toggle-shell)
 (global-set-key (kbd "C-c p") 'project-switch-project)
 (global-set-key (kbd "C-c e") 'dired-jump)
+(global-set-key (kbd "C-c k") 'where-is)
 (global-set-key (kbd "C-c s") (lambda () (interactive)
                                 (project-find-regexp (thing-at-point 'symbol t))))
 
