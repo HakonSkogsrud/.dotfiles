@@ -23,6 +23,7 @@ alias ......='cd ../../../../..'
 ## Shell tools
 zoxide init fish | source
 fzf --fish | source
+direnv hook fish | source
 complete -c ansible-playbook -e
 
 # fd as fzf backend

@@ -5,52 +5,11 @@
 # 2. Update the Brave PWA .desktop ID in the GNOME favorite-apps list
 #    (the ID is generated from the installed PWA and profile name)
 # ============================================================================
-# TO REVERT TO STOCK NIXOS KERNEL:
-# ============================================================================
-# Search for "CACHYOS" comments in this file and:
-# 1. Delete/comment the let...in block near the top of this file
-# 2. Uncomment boot.kernelPackages = pkgs.linuxPackages_latest
-# 3. Delete/comment boot.kernelPackages = pkgs.cachyosKernels...
-# 4. Delete/comment nixpkgs.overlays = [ cachyos-overlay... ]
-# Then run: sudo nixos-rebuild switch && systemctl reboot
-# ============================================================================
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }:
-
-# ============================================================================
-# CACHYOS KERNEL CONFIGURATION - START
-# ============================================================================
-# To revert to stock NixOS kernel:
-# 1. Delete or comment out this entire let...in block
-# 2. Search for "CACHYOS" comments in this file and revert those sections
-# ============================================================================
-let
-  # Pin nixpkgs to lock the compile environment (compiler + system libraries) for the kernel.
-  # This stops Nix from recompiling the kernel for 58 mins on every routine system update.
-  pinned-nixpkgs-src = builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/e73de5be04e0eff4190a1432b946d469c794e7b4.tar.gz";
-    sha256 = "04csm31wfzrhmr0qrq74gay01cbx32b7phw540j13lqdry8casx4";
-  };
-
-  cachyos-kernel = builtins.fetchTarball {
-    url = "https://github.com/xddxdd/nix-cachyos-kernel/archive/3ea1942599d8d0a124bdb9ec1304b3e6f63e8b1f.tar.gz";
-    sha256 = "0824ax6fa28jqqaj9xkldly4afmkwn4j6njmasbj7bdvp6y9llsi";
-  };
-  cachyos-overlay = import "${cachyos-kernel}/default.nix";
-
-  # Isolated compile environment specifically for building the CachyOS kernel
-  pinned-pkgs = import pinned-nixpkgs-src {
-    system = "x86_64-linux";
-    config.allowUnfree = true;
-    overlays = [ cachyos-overlay.overlays.default ];
-  };
-in
-# ============================================================================
-# CACHYOS KERNEL CONFIGURATION - END
-# ============================================================================
 
 {
   # ============================================================================
@@ -67,12 +26,8 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   
-  # ──────────────────────────────────────────────────────────────────────────
-  # CACHYOS: Kernel selection
-  # To revert to stock: uncomment next line, comment/delete the cachyos line
-  # ──────────────────────────────────────────────────────────────────────────
   # boot.kernelPackages = pkgs.linuxPackages_latest;  # Stock NixOS kernel
-  boot.kernelPackages = pinned-pkgs.cachyosKernels.linuxPackages-cachyos-bore-lto-x86_64-v4;  # CachyOS optimized (pinned inputs)
+  boot.kernelPackages = pkgs.linuxPackages_zen;
 
   # ==================================================  ==========================
   # NETWORKING & HOSTNAME
@@ -158,6 +113,7 @@ in
     ibm-plex
     nerd-fonts.jetbrains-mono
     nerd-fonts.commit-mono
+    nerd-fonts.hack
   ];
 
   # ============================================================================
@@ -166,7 +122,7 @@ in
   
   # Firefox with declarative enterprise policies
   programs.firefox = {
-    enable = true;
+    enable = true; 
     
     policies = {
       Preferences = {
@@ -208,6 +164,11 @@ in
 
   programs.fish.enable = true;
 
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
+
   # Git configuration
   programs.git = {
     enable = true;
@@ -223,60 +184,60 @@ in
   
   nixpkgs.config.allowUnfree = true;
   
-  # ──────────────────────────────────────────────────────────────────────────
-  # CACHYOS: Overlay to expose pkgs.cachyosKernels.*
-  # To revert to stock: delete or comment out the nixpkgs.overlays block below
-  # ──────────────────────────────────────────────────────────────────────────
-  nixpkgs.overlays = [
-    cachyos-overlay.overlays.default
-  ];
-
   # ============================================================================
   # SYSTEM PACKAGES
   # ============================================================================
   
   environment.systemPackages = with pkgs; [
+    # Development Tools and Editors
     localsend
-    adw-gtk3
-    wget
-    bella
     lazygit
-    ghostty
+    neovim
+    gh
+    stow
+    gcc
+    python3
+    ansible-language-server
+    ansible-lint
+    ansible
+    lua-language-server
+    direnv             # Extremely useful with envrc.el in Emacs
+    nix-direnv         # Integrates nix-shell/flake loading seamlessly
+
+    # Terminal and Shell Utilities
+    wget
     fzf
     fd
     bat
     ripgrep
-    emacs-pgtk
-    nodejs
-    gemini-cli
-    obsidian
-    vscodium-fhs
-    syncthing
-    darktable
     zoxide
     eza
     git
     exiftool
-    gh
-    neovim
     uv
-    stow
-    gcc
+
+    # Applications and Utilities
+    bella
+    ghostty
+    darktable
+    syncthing
+    obsidian
+    emacs-pgtk
+    vscodium-fhs
     brave
-    zed-editor
     onlyoffice-desktopeditors
     tailscale
-    morewaita-icon-theme 
-    gopls
-    go
+    morewaita-icon-theme
+
+    # Desktop and Theme Packages
+    adw-gtk3
     basedpyright
     ruff
-    python3
-    ansible-language-server 
-    ansible-lint
-    ansible
-    lua-language-server  
     gnomeExtensions.legacy-gtk3-theme-scheme-auto-switcher
+
+    # Other Tools
+    nodejs
+    gemini-cli
   ];
 
   # ============================================================================
@@ -496,7 +457,7 @@ mouse:bluetooth:v046Dp0B020:name:*:
     channel = "https://nixos.org/channels/nixos-unstable";
     allowReboot = false; 
     persistent = true;
-    randomizedDelaySec = "30min"; 
+    randomizedDelaySec = "30min";   
   };
 
   # DO NOT change this value. It does NOT track your current NixOS version.
