@@ -183,11 +183,20 @@
   # ============================================================================
   
   nixpkgs.config.allowUnfree = true;
-  
+
+
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc
+    zlib
+    # Add any other common libs if needed, but the defaults usually cover node/python agents
+  ];
+
   # ============================================================================
   # SYSTEM PACKAGES
   # ============================================================================
   
+
   environment.systemPackages = with pkgs; [
     # Development Tools and Editors
     localsend
@@ -224,6 +233,10 @@
     obsidian
     emacs-pgtk
     vscodium-fhs
+    mistral-vibe
+    (vscode.override {
+      commandLineArgs = "--enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland";
+    })
     brave
     onlyoffice-desktopeditors
     tailscale
@@ -464,4 +477,6 @@ mouse:bluetooth:v046Dp0B020:name:*:
   # It records which version you originally installed on (for backwards compatibility).
   system.stateVersion = "25.11";
 }
+
+
 

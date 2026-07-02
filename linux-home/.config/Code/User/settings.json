@@ -1,11 +1,12 @@
 {
+  "mistral-vibe.agentPath": "/run/current-system/sw/bin/vibe-acp",
   // ── Window ──────────────────────────────────────────────
   "window.zoomLevel": 0.8,
   "window.titleBarStyle": "native",
   "window.menuBarVisibility": "toggle",
   // ── Editor ──────────────────────────────────────────────
   "editor.fontSize": 13,
-  "editor.fontFamily": "JetBrainsMono Nerd Font",
+  "editor.fontFamily": "CommitMono Nerd Font Mono",
   "editor.minimap.enabled": false,
   "editor.formatOnSave": true,
   "editor.renderWhitespace": "none",
@@ -15,7 +16,6 @@
   "editor.scrollbar.horizontalScrollbarSize": 6,
   // ── Terminal ────────────────────────────────────────────
   "terminal.integrated.fontSize": 13,
-  "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font",
   "terminal.integrated.defaultProfile.linux": "fish",
   "terminal.integrated.sendKeybindingsToShell": true,
   "terminal.integrated.copyOnSelection": true,
@@ -24,7 +24,16 @@
   "workbench.startupEditor": "none",
   "workbench.iconTheme": "symbols",
   "workbench.preferredLightColorTheme": "Light Modern",
-  "workbench.preferredDarkColorTheme": "Dark Modern",
+  "workbench.preferredDarkColorTheme": "Visual Studio Dark",
+  "workbench.colorCustomizations": {
+    "[Visual Studio Dark]": {
+      "activityBar.background": "#2e2e32",
+      "statusBar.background": "#252525",
+      "tab.inactiveBackground": "#2e2e32",
+      "tab.activeBackground": "#2e2e32",
+      "editorGroupHeader.tabsBackground": "#252525"
+    }
+  },
   // ── Files & Explorer ────────────────────────────────────
   "files.autoSave": "afterDelay",
   "files.autoSaveWhenNoErrors": true,
@@ -79,5 +88,8 @@
       "approveRequest": false,
       "approveResponse": true
     }
-  }
+  },
+  "mistral-vibe-code.telemetry.enabled": false,
+  "telemetry.feedback.enabled": false,
+  "telemetry.editStats.enabled": false
 }
