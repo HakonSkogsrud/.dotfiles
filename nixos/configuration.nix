@@ -425,6 +425,8 @@ mouse:bluetooth:v046Dp0B020:name:*:
 
   services.fwupd.enable = true;
 
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
   # ============================================================================
   # NIX PACKAGE MANAGER
   # ============================================================================
