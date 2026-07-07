@@ -16,7 +16,7 @@
   # IMPORTS
   # ============================================================================
   imports = [
-    /etc/nixos/hardware-configuration.nix
+    ./hardware-configuration.nix
   ];
 
   # ============================================================================
@@ -416,11 +416,11 @@ mouse:bluetooth:v046Dp0B020:name:*:
     };
   };
 
-  # Enable systemd-resolved to fix Tailscale suspend/reboot DNS hangs
+# Enable systemd-resolved to fix Tailscale suspend/reboot DNS hangs
   services.resolved = {
     enable = true;
     # Ensures a global fallback is used if Tailscale's DNS drops
-    domains = [ "~." ];
+    settings.Resolve.Domains = [ "~." ];
   };
 
   services.fwupd.enable = true;
