@@ -232,11 +232,7 @@
     syncthing
     obsidian
     emacs-pgtk
-    vscodium-fhs
     mistral-vibe
-    (vscode.override {
-      commandLineArgs = "--enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland";
-    })
     brave
     onlyoffice-desktopeditors
     tailscale
@@ -250,7 +246,6 @@
 
     # Other Tools
     nodejs
-    gemini-cli
   ];
 
   # ============================================================================
@@ -260,10 +255,10 @@
   programs.dconf.enable = true;
   programs.dconf.profiles.user.databases = [
     # ----------------------------------------------------
-    # Database 1: Locked Settings (User cannot change in GUI)
+    # Database 1: Locked Settings
     # ----------------------------------------------------
     {
-      lockAll = true; # Forces these to remain locked and immutable
+      lockAll = true;
       settings = {
         "org/gnome/desktop/interface" = {
           accent-color = "blue";
@@ -299,7 +294,6 @@
             "org.gnome.Nautilus.desktop"
             "obsidian.desktop"
             "emacs.desktop"
-            "codium.desktop"
             "onlyoffice-desktopeditors.desktop"
           ];
         };
@@ -350,18 +344,6 @@
     checkReversePath = "loose"; 
   };
 
-  # Policy routing to prioritize local LAN traffic over Tailscale
-  systemd.services.tailscale-local-route-override = {
-    description = "Add policy routing rule to prioritize local LAN traffic over Tailscale";
-    after = [ "tailscaled.service" "network-online.target" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = "${pkgs.iproute2}/bin/ip rule add to 10.0.0.0/24 priority 2500 lookup main";
-      ExecStop = "${pkgs.iproute2}/bin/ip rule del to 10.0.0.0/24 priority 2500 lookup main";
-    };
-  };
 
   # ============================================================================
   # INPUT DEVICES
@@ -453,10 +435,6 @@ mouse:bluetooth:v046Dp0B020:name:*:
     options = "--delete-older-than 10d";
   };
 
-  nix.settings = {
-    auto-optimise-store = true;
-    experimental-features = [ "nix-command" "flakes" ];
-  };
 
   # ============================================================================
   # SYSTEM UPDATES & STATE
