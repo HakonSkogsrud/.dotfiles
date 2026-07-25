@@ -45,21 +45,48 @@
   "window.customTitleBarVisibility": "never",
   "window.autoDetectColorScheme": true,
   "window.openFoldersInNewWindow": "on",
-  "redhat.telemetry.enabled": false,
-  "yaml.schemas": {
-    "file:///home/haaksk/.vscode-oss/extensions/continue.continue-2.0.0-linux-x64/config-yaml-schema.json": [
-      ".continue/**/*.yaml"
-    ],
-    "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook": [
-      "file:///Users/hakon.skogsrud/Workspace/serversetup/docker-install.yml",
-      "file:///Users/hakonskogsrud/git/serversetup/servers/fileserver/mount-fileserver-dataset.yml",
-      "file:///Users/hakonskogsrud/git/serversetup/servers/common/tailscale-setup.yml",
-      "file:///Users/hakonskogsrud/git/serversetup/servers/fileserver-44/mount-fileserver-dataset.yml",
-      "file:///Users/hakonskogsrud/git/serversetup/servers/proxmox-41/syncoid-backup.yml"
-    ],
-    "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/vars.json": [
-      "file:///Users/hakon.skogsrud/Workspace/serversetup/vars/common.yml",
-      "file:///Users/hakonskogsrud/git/serversetup/servers/fileserver/vars.yml"
-    ]
+  "workbench.colorCustomizations": {
+    "[Dark Modern]": {
+      //========================================================
+      // General Window & Layout
+      //========================================================
+      "titleBar.activeBackground": "#232629",
+      "titleBar.inactiveBackground": "#232629",
+      "activityBar.background": "#232629",
+      "activityBar.border": "#232629",
+      "statusBar.background": "#232629",
+      "statusBar.border": "#232629",
+      //========================================================
+      // Side Bar
+      //========================================================
+      "sideBar.background": "#232629",
+      "sideBar.border": "#232629",
+      "sideBarSectionHeader.background": "#232629",
+      "widget.shadow": "#00000000",
+      "scrollbar.shadow": "#00000000",
+      "listFilterWidget.shadow": "#00000000",
+      "sideBarStickyScroll.shadow": "#00000000",
+      "panelStickyScroll.shadow": "#232629",
+      //========================================================
+      // Editor & Tabs
+      //========================================================
+      "editorGroupHeader.tabsBackground": "#232629",
+      "editorGroupHeader.noTabsBackground": "#232629",
+      "tab.activeBackground": "#202225",
+      "tab.activeBorder": "#232629",
+      "tab.inactiveBackground": "#232629",
+      //========================================================
+      // Lists & Selections
+      //========================================================
+      "list.activeSelectionBackground": "#232629",
+      "list.inactiveSelectionBackground": "#232629"
+    },
+    "[Light Modern]": {
+      "titleBar.activeBackground": "#f5f5f5",
+      "titleBar.inactiveBackground": "#f5f5f5",
+      "activityBar.background": "#f5f5f5",
+      "activityBar.border": "#f5f5f5",
+      "statusBar.background": "#f5f5f5",
+      "statusBar.border": "#f5f5f5",
+    }
   }
-}

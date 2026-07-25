@@ -1,7 +1,7 @@
 /* 1. DARK MODE COLORS */
 .theme-dark {
-    --breeze-bg: #262A2F;
-    --breeze-border: #262A2F; /* Slightly darker for subtle borders if needed */
+    --breeze-bg: #292c30;
+    --breeze-border: #292c30; 
 
     /* Override Obsidian internal variables for deep integration */
     --titlebar-background: var(--breeze-bg);
