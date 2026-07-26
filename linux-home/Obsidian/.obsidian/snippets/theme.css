@@ -17,6 +17,7 @@
 
     --titlebar-background: var(--breeze-bg);
     --background-secondary: var(--breeze-bg);
+    --background-secondary-alt: var(--breeze-bg); 
 }
 
 /* 3. APPLY TO INTERFACE */
