@@ -1,0 +1,8 @@
+{
+  "KPackageStructure": "Wallpaper/Images",
+  "KPlugin": {
+    "Id": "fedora-dual",
+    "Name": "Fedora dual",
+    "ServiceTypes": ["Plasma/Wallpaper"]
+  }
+}
