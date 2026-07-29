@@ -111,6 +111,7 @@
   
   fonts.packages = with pkgs; [
     ibm-plex
+    nerd-fonts.comic-shanns-mono
     nerd-fonts.jetbrains-mono
     nerd-fonts.commit-mono
     nerd-fonts.hack
@@ -151,10 +152,6 @@
         };
         "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi";
-          installation_mode = "force_installed";
-        };
-        "{d04b0b40-3dab-4f0b-97a6-04ec3eddbfb0}" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/ecosia-the-green-search/latest.xpi";
           installation_mode = "force_installed";
         };
       };

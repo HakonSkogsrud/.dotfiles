@@ -1,5 +1,3 @@
-                                        ; .emacs --- Emacs configuration
-
 ;; ==========================================
 ;; 1. PERFORMANCE & FOUNDATION
 ;; ==========================================
@@ -57,7 +55,12 @@
   :config (auto-dark-mode t))
 
 (cua-mode 1)
-(add-to-list 'default-frame-alist '(font . "CommitMono Nerd Font-11"))
+(add-to-list 'default-frame-alist
+             `(font . ,(format "ComicShannsMono Nerd Font-%d"
+                               (if (eq system-type 'darwin) 16 13))))
+
+(setq select-active-regions nil
+  mouse-drag-copy-region nil)
 
 (setq inhibit-startup-screen t
       initial-scratch-message nil
@@ -72,13 +75,17 @@
 (setq-default indent-tabs-mode nil
               tab-width 4)
 
+(defun my/underscore-is-word-constituent ()
+  (modify-syntax-entry ?_ "w"))
+(add-hook 'after-change-major-mode-hook #'my/underscore-is-word-constituent)
+
 ;; macOS: AltGr (arrives as right Cmd due to OS swap) — Norwegian keyboard bindings
 (when (eq system-type 'darwin)
   (setq ns-right-command-modifier 'super)
-  (global-set-key (kbd "s-1") (lambda () (interactive) (insert "{")))
-  (global-set-key (kbd "s-2") (lambda () (interactive) (insert "[")))
-  (global-set-key (kbd "s-3") (lambda () (interactive) (insert "]")))
-  (global-set-key (kbd "s-4") (lambda () (interactive) (insert "}")))
+  (global-set-key (kbd "s-7") (lambda () (interactive) (insert "{")))
+  (global-set-key (kbd "s-8") (lambda () (interactive) (insert "[")))
+  (global-set-key (kbd "s-9") (lambda () (interactive) (insert "]")))
+  (global-set-key (kbd "s-0") (lambda () (interactive) (insert "}")))
   (global-set-key (kbd "§") (lambda () (interactive) (insert "|"))))
 
 (tool-bar-mode -1)
@@ -136,6 +143,32 @@
   (which-key-idle-delay 0.4)
   (which-key-sort-order 'which-key-key-order-alpha))
 
+(use-package treemacs
+  :preface
+  (defun my/treemacs-visible-p ()
+    (seq-some (lambda (window)
+                (with-current-buffer (window-buffer window)
+                  (derived-mode-p 'treemacs-mode)))
+              (window-list nil 'no-minibuffer)))
+  (defun my/treemacs-toggle-current-project ()
+    (interactive)
+    (if (my/treemacs-visible-p)
+        (treemacs)
+      (treemacs-add-and-display-current-project-exclusively)))
+  :bind (("C-c V" . treemacs)
+         ("C-c v" . my/treemacs-toggle-current-project))
+  :custom
+  (treemacs-width 32)
+  (treemacs-is-never-other-window t)
+  :config
+  (set-face-attribute 'treemacs-root-face nil
+                      :height 0.9
+                      :weight 'normal
+                      :underline nil)
+  (add-hook 'treemacs-mode-hook
+            (lambda ()
+              (face-remap-add-relative 'default :height 0.9))))
+
 ;; ==========================================
 ;; 4. TREESITTER & LSP
 ;; ==========================================
@@ -190,6 +223,8 @@
               ("M-."   . xref-find-definitions)
               ("M-?"   . xref-find-references))
   :config
+  (add-hook 'eglot-managed-mode-hook
+            (lambda () (eglot-inlay-hints-mode -1)))
   (add-to-list 'eglot-server-programs
                '(ansible-ts-mode . ("ansible-language-server" "--stdio")))
   (add-to-list 'eglot-server-programs
