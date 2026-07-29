@@ -57,7 +57,7 @@
   :config (auto-dark-mode t))
 
 (cua-mode 1)
-(add-to-list 'default-frame-alist '(font . "CommitMono Nerd Font-11"))
+(add-to-list 'default-frame-alist '(font . "CommitMono Nerd Font-12"))
 
 (setq inhibit-startup-screen t
       initial-scratch-message nil
@@ -82,7 +82,7 @@
   (global-set-key (kbd "§") (lambda () (interactive) (insert "|"))))
 
 (tool-bar-mode -1)
-(menu-bar-mode 1)
+(menu-bar-mode -1)
 (scroll-bar-mode -1)
 (set-fringe-mode 0)
 (column-number-mode t)

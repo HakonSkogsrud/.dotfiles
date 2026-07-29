@@ -153,10 +153,6 @@
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi";
           installation_mode = "force_installed";
         };
-        "{d04b0b40-3dab-4f0b-97a6-04ec3eddbfb0}" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/ecosia-the-green-search/latest.xpi";
-          installation_mode = "force_installed";
-        };
       };
 
     };
@@ -210,7 +206,6 @@
     ansible-lint
     ansible
     lua-language-server
-    direnv             # Extremely useful with envrc.el in Emacs
     nix-direnv         # Integrates nix-shell/flake loading seamlessly
 
     # Terminal and Shell Utilities
@@ -221,7 +216,6 @@
     ripgrep
     zoxide
     eza
-    git
     exiftool
     uv
 
@@ -230,7 +224,13 @@
     ghostty
     darktable
     syncthing
-    obsidian
+    (obsidian.override {
+      commandLineArgs = [
+        "--enable-features=UseOzonePlatform"
+        "--ozone-platform=wayland"
+        "--gtk-version=4"
+     ];
+    })
     emacs-pgtk
     mistral-vibe
     brave
@@ -278,15 +278,13 @@
           tap-and-drag = false;
           disable-while-typing = true;
         };
-        "org/gnome/desktop/background" = {
-          picture-uri = "file:///home/haaksk/.local/share/backgrounds/wallhaven-x687ll.png";
-          picture-uri-dark = "file:///home/haaksk/.local/share/backgrounds/nix-wallpaper-nineish-dark-gray.svg";
-          picture-options = "zoom";
-        };
         "org/gnome/desktop/wm/preferences" = {
           button-layout = "appmenu:minimize,maximize,close";
         };
         "org/gnome/shell" = {
+          enabled-extensions = [
+            "legacyschemeautoswitcher@joshimukul29.gmail.com"
+          ];
           favorite-apps = [
             "firefox.desktop"
             "com.mitchellh.ghostty.desktop"
@@ -309,6 +307,12 @@
         "org/gnome/desktop/interface" = {
           gtk-theme = "adw-gtk3"; 
         };
+        "org/gnome/desktop/background" = {
+          picture-uri = "file:///home/haaksk/.local/share/backgrounds/wallhaven-x687ll.png";
+          picture-uri-dark = "file:///home/haaksk/.local/share/backgrounds/nix-wallpaper-nineish-dark-gray.svg";
+          picture-options = "zoom";
+        };
+
       };
     }
   ];
@@ -437,6 +441,7 @@ mouse:bluetooth:v046Dp0B020:name:*:
     options = "--delete-older-than 10d";
   };
 
+  nix.settings.auto-optimise-store = true;
 
   # ============================================================================
   # SYSTEM UPDATES & STATE
