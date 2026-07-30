@@ -50,7 +50,7 @@
 
 (use-package auto-dark
   :init
-  (setq auto-dark-themes           '((doom-tomorrow-night) (modus-operandi))
+  (setq auto-dark-themes           '((doom-badger) (modus-operandi))
         auto-dark-detection-method 'dbus)
   :config (auto-dark-mode t))
 
@@ -60,7 +60,7 @@
                                (if (eq system-type 'darwin) 16 13))))
 
 (setq select-active-regions nil
-  mouse-drag-copy-region nil)
+      mouse-drag-copy-region nil)
 
 (setq inhibit-startup-screen t
       initial-scratch-message nil
@@ -492,3 +492,12 @@ and searches for 'root_key:' — the YAML definition form."
 
 (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
       select-enable-clipboard t)
+
+
+(defun my-nixos-rebuild ()
+  "Run nixos-rebuild switch for the local flake configuration."
+  (interactive)
+  (async-shell-command "sudo nixos-rebuild switch --flake ~/.dotfiles/nixos#nixos"))
+
+;; Binds the function to 'C-c n' (Control-c followed by n)
+(global-set-key (kbd "C-c n") 'my-nixos-rebuild)
