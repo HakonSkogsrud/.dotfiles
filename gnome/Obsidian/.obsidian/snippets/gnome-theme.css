@@ -1,0 +1,108 @@
+/* ==========================================
+   GNOME Libadwaita Integration for Obsidian
+   ========================================== */
+
+/* ------------------------------------------
+   1. LIGHT THEME (Adwaita Light)
+   ------------------------------------------ */
+body.theme-light {
+  --titlebar-background: #ebebed;        /* Native titlebar color */
+  --tab-container-background: #ebebed;   /* Top bar container */
+  --background-secondary-alt: #ebebed;   /* Top left container space */
+  --background-secondary: #f6f6f6;       /* Sidebar background */
+  --background-primary: #ffffff;         /* Editor canvas */
+  --divider-color: rgba(0, 0, 0, 0.08);  /* Subtle borders */
+}
+
+/* Headerbar, Titlebar & Top Left Container Space */
+.theme-light .workspace-tab-header-container,
+.theme-light .titlebar,
+.theme-light .workspace-tabs.mod-top-left-space,
+.theme-light .workspace-tabs.mod-top-left-space .workspace-tab-header-container {
+  background-color: #ebebed !important;
+}
+
+/* Remove white box behind the top-left sidebar toggle button [|] */
+.theme-light .sidebar-toggle-button,
+.theme-light .sidebar-toggle-button.mod-left,
+.theme-light .sidebar-toggle-button .clickable-icon,
+.theme-light .workspace-ribbon-header {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Left Sidebar & Ribbon */
+.theme-light .mod-left-split,
+.theme-light .workspace-ribbon.mod-left {
+  background-color: #f6f6f6 !important;
+}
+
+/* Active Main Document Tab (Blends into white canvas) */
+.theme-light .mod-root .workspace-tab-header.is-active {
+  background-color: #ffffff !important;
+}
+
+/* Inactive Tabs (Transparent) */
+.theme-light .workspace-tab-header:not(.is-active) {
+  background-color: transparent !important;
+}
+
+/* File Explorer Hover Highlights */
+.theme-light .nav-file-title:hover,
+.theme-light .nav-folder-title:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+}
+
+
+/* ------------------------------------------
+   2. DARK THEME (Adwaita Dark)
+   ------------------------------------------ */
+body.theme-dark {
+  --titlebar-background: #2e2e32;        /* Native titlebar color */
+  --tab-container-background: #2e2e32;   /* Top bar container */
+  --background-secondary-alt: #2e2e32;   /* Top left container space */
+  --background-secondary: #242427;       /* Sidebar background */
+  --background-primary: #1e1e20;         /* Editor canvas */
+  --divider-color: rgba(255, 255, 255, 0.08); /* Subtle borders */
+}
+
+/* Headerbar, Titlebar & Top Left Container Space */
+.theme-dark .workspace-tab-header-container,
+.theme-dark .titlebar,
+.theme-dark .workspace-tabs.mod-top-left-space,
+.theme-dark .workspace-tabs.mod-top-left-space .workspace-tab-header-container {
+  background-color: #2e2e32 !important;
+}
+
+/* Remove white box behind the top-left sidebar toggle button [|] */
+.theme-dark .sidebar-toggle-button,
+.theme-dark .sidebar-toggle-button.mod-left,
+.theme-dark .sidebar-toggle-button .clickable-icon,
+.theme-dark .workspace-ribbon-header {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Left Sidebar & Ribbon */
+.theme-dark .mod-left-split,
+.theme-dark .workspace-ribbon.mod-left {
+  background-color: #242427 !important;
+}
+
+/* Active Main Document Tab (Blends into dark canvas) */
+.theme-dark .mod-root .workspace-tab-header.is-active {
+  background-color: #1e1e20 !important;
+}
+
+/* Inactive Tabs (Transparent) */
+.theme-dark .workspace-tab-header:not(.is-active) {
+  background-color: transparent !important;
+}
+
+/* File Explorer Hover Highlights */
+.theme-dark .nav-file-title:hover,
+.theme-dark .nav-folder-title:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+}
