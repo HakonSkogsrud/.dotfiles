@@ -223,6 +223,7 @@
     # Applications and Utilities
     bella
     ghostty
+    gitte
     darktable
     syncthing
     (obsidian.override {
@@ -238,6 +239,8 @@
     onlyoffice-desktopeditors
     tailscale
     morewaita-icon-theme
+    hicolor-icon-theme
+    adwaita-icon-theme
 
     # Desktop and Theme Packages
     adw-gtk3
