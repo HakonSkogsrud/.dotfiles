@@ -5,9 +5,6 @@ vim.o.number = true
 vim.o.relativenumber = true
 vim.o.mouse = "a"
 vim.o.showmode = false
-vim.schedule(function()
-    vim.o.clipboard = "unnamedplus"
-end)
 vim.o.shell = "fish"
 vim.o.breakindent = true
 vim.o.undofile = true
@@ -222,6 +219,9 @@ require("lazy").setup({
 })
 
 -- 4. KEYMAPS
+
+-- Paste from the system clipboard without making visual replacements overwrite it
+vim.keymap.set("x", "p", '"+p', { desc = "Paste from system clipboard" })
 
 -- Standard window movement
 vim.keymap.set("n", "<C-h>", "<C-w>h")
