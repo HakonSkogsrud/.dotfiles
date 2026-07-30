@@ -464,6 +464,10 @@ and searches for 'root_key:' — the YAML definition form."
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
 
+(with-eval-after-load 'comint
+  (define-key comint-mode-map (kbd "<up>") #'comint-previous-input)
+  (define-key comint-mode-map (kbd "<down>") #'comint-next-input))
+
 (use-package magit
   :bind ("C-x g" . magit-status))
 
