@@ -191,7 +191,10 @@
 
   services.flatpak = {
     enable = true;
-    packages = [ "org.onlyoffice.desktopeditors" ];
+    packages = [
+      "org.onlyoffice.desktopeditors"
+      "md.obsidian.Obsidian"
+    ];
   };
 
   # ============================================================================
@@ -230,13 +233,6 @@
     gitte
     darktable
     syncthing
-    (obsidian.override {
-      commandLineArgs = [
-        "--enable-features=UseOzonePlatform"
-        "--ozone-platform=wayland"
-        "--gtk-version=4"
-      ];
-    })
     (vscodium.override {
       commandLineArgs = "--enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland --enable-wayland-ime=true --wayland-text-input-version=3";
     })
@@ -297,12 +293,13 @@
           favorite-apps = [
             "firefox.desktop"
             "com.mitchellh.ghostty.desktop"
+            "emacs.desktop"
             "brave-cinhimbnkkaeohfgghhklpknlkffjgod-Default.desktop"
             "org.gnome.Nautilus.desktop"
-            "obsidian.desktop"
-            "emacs.desktop"
+            "md.obsidian.Obsidian.desktop"
             "org.onlyoffice.desktopeditors.desktop"
             "LocalSend.desktop"
+            "de.wwwtech.gitte.desktop"
             "org.darktable.darktable.desktop"
           ];
         };
