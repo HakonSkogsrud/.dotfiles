@@ -11,28 +11,27 @@
   # ============================================================================
   # BOOT & SYSTEM CORE
   # ============================================================================
-  
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  
+
   # boot.kernelPackages = pkgs.linuxPackages_latest;  # Stock NixOS kernel
   boot.kernelPackages = pkgs.linuxPackages_zen;
 
   # ==================================================  ==========================
   # NETWORKING & HOSTNAME
   # ============================================================================
-  
+
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
 
   # ============================================================================
   # LOCALE & TIMEZONE
   # ============================================================================
-  
+
   time.timeZone = "Europe/Oslo";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "nb_NO.UTF-8";
     LC_IDENTIFICATION = "nb_NO.UTF-8";
@@ -48,7 +47,7 @@
   # ============================================================================
   # DISPLAY & DESKTOP ENVIRONMENT (X11 + GNOME)
   # ============================================================================
-  
+
   services.xserver.enable = true;
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
@@ -62,7 +61,7 @@
 
   # ============================================================================
   # AUDIO & SOUND (PipeWire)
-  # ============================================================================  
+  # ============================================================================
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -75,29 +74,32 @@
   # ============================================================================
   # ENVIRONMENT & SESSION VARIABLES
   # ============================================================================
-  
+
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
-    LIBVA_DRIVER_NAME = "iHD"; 
-    ZED_RENDERER = "gles";      # Force OpenGL ES to fix Zed editor Intel GPU lag/freezes
-    XCURSOR_THEME = "Adwaita";  # Fix Wayland cursor spinning/fallback loading loops
+    LIBVA_DRIVER_NAME = "iHD";
+    ZED_RENDERER = "gles"; # Force OpenGL ES to fix Zed editor Intel GPU lag/freezes
+    XCURSOR_THEME = "Adwaita"; # Fix Wayland cursor spinning/fallback loading loops
   };
 
   # ============================================================================
   # USERS
   # ============================================================================
-  
+
   users.users.haaksk = {
     isNormalUser = true;
     description = "Håkon Skogsrud";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
     shell = pkgs.zsh;
   };
 
   # ============================================================================
   # FONTS
   # ============================================================================
-  
+
   fonts.packages = with pkgs; [
     ibm-plex
     nerd-fonts.comic-shanns-mono
@@ -109,11 +111,11 @@
   # ============================================================================
   # PROGRAMS & APPLICATIONS
   # ============================================================================
-  
+
   # Firefox with declarative enterprise policies
   programs.firefox = {
-    enable = true; 
-    
+    enable = true;
+
     policies = {
       Preferences = {
         # Persist the Firefox VA-API preferences that were consistently useful.
@@ -167,9 +169,8 @@
   # ============================================================================
   # PACKAGE MANAGEMENT
   # ============================================================================
-  
-  nixpkgs.config.allowUnfree = true;
 
+  nixpkgs.config.allowUnfree = true;
 
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
@@ -191,7 +192,6 @@
   # ============================================================================
   # SYSTEM PACKAGES
   # ============================================================================
-  
 
   environment.systemPackages = with pkgs; [
     # Development Tools and Editors
@@ -200,11 +200,12 @@
     neovim
     gh
     stow
+    gcc
     python3
     lua-language-server
     nixd
     nixfmt
-    nix-direnv         # Integrates nix-shell/flake loading seamlessly
+    nix-direnv # Integrates nix-shell/flake loading seamlessly
 
     # Terminal and Shell Utilities
     wget
@@ -228,7 +229,7 @@
         "--enable-features=UseOzonePlatform"
         "--ozone-platform=wayland"
         "--gtk-version=4"
-     ];
+      ];
     })
     (vscodium.override {
       commandLineArgs = "--enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland --enable-wayland-ime=true --wayland-text-input-version=3";
@@ -252,7 +253,7 @@
   # ============================================================================
   # GNOME DESKTOP SETTINGS
   # ============================================================================
-  
+
   programs.dconf.enable = true;
   programs.dconf.profiles.user.databases = [
     # ----------------------------------------------------
@@ -264,7 +265,7 @@
         "org/gnome/desktop/interface" = {
           accent-color = "blue";
           show-battery-percentage = true;
-          icon-theme = "MoreWaita"; 
+          icon-theme = "MoreWaita";
         };
         "org/gnome/desktop/input-sources" = {
           xkb-options = [ "ctrl:nocaps" ];
@@ -273,7 +274,7 @@
           region = "nb_NO.UTF-8";
         };
         "org/gnome/desktop/peripherals/mouse" = {
-          speed = -0.2; 
+          speed = -0.2;
         };
         "org/gnome/desktop/peripherals/touchpad" = {
           tap-and-drag = false;
@@ -306,7 +307,7 @@
       lockAll = false; # Set to false so background extensions can modify these
       settings = {
         "org/gnome/desktop/interface" = {
-          gtk-theme = "adw-gtk3"; 
+          gtk-theme = "adw-gtk3";
         };
         "org/gnome/desktop/background" = {
           picture-uri = "file:///home/haaksk/.local/share/backgrounds/wallhaven-x687ll.png";
@@ -315,15 +316,15 @@
         };
 
         # Uncomment after adding dash-to-dock@micxgx.gmail.com to enabled-extensions.
-        # "org/gnome/shell/extensions/dash-to-dock" = {
-        #   dock-position = "LEFT";
-        #   extend-height = true;
-        #   dock-fixed = false;
-        #   autohide = true;
-        #   intellihide-mode = "ALL_WINDOWS";
-        #   show-mounts = false;
-        #   show-trash = false;
-        # };
+        "org/gnome/shell/extensions/dash-to-dock" = {
+          dock-position = "LEFT";
+          extend-height = true;
+          dock-fixed = false;
+          autohide = true;
+          intellihide-mode = "ALL_WINDOWS";
+          show-mounts = false;
+          show-trash = false;
+        };
 
       };
     }
@@ -347,7 +348,7 @@
   # ============================================================================
   # NETWORKING & FIREWALL
   # ============================================================================
-  
+
   services.tailscale.enable = true;
 
   services.avahi = {
@@ -362,10 +363,12 @@
     trustedInterfaces = [ "tailscale0" ];
     # Allow the Tailscale UDP port
     allowedTCPPorts = [ 53317 ];
-    allowedUDPPorts = [ config.services.tailscale.port 53317 ];
-    checkReversePath = "loose"; 
+    allowedUDPPorts = [
+      config.services.tailscale.port
+      53317
+    ];
+    checkReversePath = "loose";
   };
-
 
   # ============================================================================
   # INPUT DEVICES
@@ -374,17 +377,17 @@
   # Scale down mouse speed at driver level (before GNOME settings)
   # Higher DPI value = libinput scales movement DOWN
   services.udev.extraHwdb = ''
-mouse:bluetooth:v1915p0040:name:*:
- MOUSE_DPI=2000@1000
+    mouse:bluetooth:v1915p0040:name:*:
+     MOUSE_DPI=2000@1000
 
-mouse:bluetooth:v046Dp0B020:name:*:
- MOUSE_DPI=1800@1000
+    mouse:bluetooth:v046Dp0B020:name:*:
+     MOUSE_DPI=1800@1000
   '';
 
   # ============================================================================
   # HARDWARE
   # ============================================================================
-  
+
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
@@ -395,13 +398,13 @@ mouse:bluetooth:v046Dp0B020:name:*:
   # ============================================================================
   # SERVICES
   # ============================================================================
-  
+
   services.syncthing = {
     enable = true;
 
     # Run the service under your local user account
     user = "haaksk";
-  
+
     # The default directory where new synced folders will be created
     dataDir = "/home/haaksk";
 
@@ -420,25 +423,25 @@ mouse:bluetooth:v046Dp0B020:name:*:
       devices = {
         "services" = {
           id = "M7IMWFU-66PMZO3-WVVK2S7-NJDOZT3-XUIMWGU-3QMAX3B-5PMYWR5-LDA4MQV";
-          # Since 10.0.0.44 is a local/Tailscale IP, specifying it directly 
+          # Since 10.0.0.44 is a local/Tailscale IP, specifying it directly
           # allows instant connection without relying on global discovery relays.
-          addresses = [ "tcp://10.0.0.44:22000" ]; 
+          addresses = [ "tcp://10.0.0.44:22000" ];
         };
       };
 
       # 2. Map the shared folder to your local Documents directory
       folders = {
         "Documents" = {
-          id = "ulv9z-dbglm";              # Must match the server's folder ID exactly
-          label = "Sync";                  # Keeps the user-friendly label "Sync" in your GUI
+          id = "ulv9z-dbglm"; # Must match the server's folder ID exactly
+          label = "Sync"; # Keeps the user-friendly label "Sync" in your GUI
           path = "/home/haaksk/Documents"; # The local target directory on your laptop
-          devices = [ "services" ];        # Tell Syncthing to sync this folder with the server
+          devices = [ "services" ]; # Tell Syncthing to sync this folder with the server
         };
       };
     };
   };
 
-# Enable systemd-resolved to fix Tailscale suspend/reboot DNS hangs
+  # Enable systemd-resolved to fix Tailscale suspend/reboot DNS hangs
   services.resolved = {
     enable = true;
     # Ensures a global fallback is used if Tailscale's DNS drops
@@ -447,12 +450,15 @@ mouse:bluetooth:v046Dp0B020:name:*:
 
   services.fwupd.enable = true;
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # ============================================================================
   # NIX PACKAGE MANAGER
   # ============================================================================
-  
+
   nix.gc = {
     automatic = true;
     dates = "weekly";
@@ -464,22 +470,19 @@ mouse:bluetooth:v046Dp0B020:name:*:
   # ============================================================================
   # SYSTEM UPDATES & STATE
   # ============================================================================
-  
+
   # Disabled auto-upgrade to avoid frequent kernel recompilations
   # Run 'sudo nixos-rebuild switch' manually when you want to apply updates
   system.autoUpgrade = {
     enable = false;
     dates = "04:00";
     channel = "https://nixos.org/channels/nixos-unstable";
-    allowReboot = false; 
+    allowReboot = false;
     persistent = true;
-    randomizedDelaySec = "30min";   
+    randomizedDelaySec = "30min";
   };
 
   # DO NOT change this value. It does NOT track your current NixOS version.
   # It records which version you originally installed on (for backwards compatibility).
   system.stateVersion = "25.11";
 }
-
-
-
