@@ -1,14 +1,3 @@
-# ============================================================================
-# MANUAL WORK REQUIRED AFTER FRESH INSTALL
-# ============================================================================
-# 1. Run `nixos-generate-config` to generate hardware-configuration.nix
-# 2. Update the Brave PWA .desktop ID in the GNOME favorite-apps list
-#    (the ID is generated from the installed PWA and profile name)
-# ============================================================================
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
 
 {
@@ -189,6 +178,16 @@
     # Add any other common libs if needed, but the defaults usually cover node/python agents
   ];
 
+  programs.nh = {
+    enable = true;
+    flake = "/home/haaksk/.dotfiles/nixos";
+  };
+
+  services.flatpak = {
+    enable = true;
+    packages = [ "org.onlyoffice.desktopeditors" ];
+  };
+
   # ============================================================================
   # SYSTEM PACKAGES
   # ============================================================================
@@ -236,7 +235,6 @@
     emacs-pgtk
     mistral-vibe
     brave
-    onlyoffice-desktopeditors
     tailscale
     morewaita-icon-theme
     hicolor-icon-theme
@@ -246,6 +244,7 @@
     adw-gtk3
     basedpyright
     ruff
+    gnomeExtensions.dash-to-dock
     gnomeExtensions.legacy-gtk3-theme-scheme-auto-switcher
 
     # Other Tools
@@ -296,7 +295,7 @@
             "org.gnome.Nautilus.desktop"
             "obsidian.desktop"
             "emacs.desktop"
-            "onlyoffice-desktopeditors.desktop"
+            "org.onlyoffice.desktopeditors.desktop"
           ];
         };
       };
@@ -316,6 +315,17 @@
           picture-uri-dark = "file:///home/haaksk/.local/share/backgrounds/nix-wallpaper-nineish-dark-gray.svg";
           picture-options = "zoom";
         };
+
+        # Uncomment after adding dash-to-dock@micxgx.gmail.com to enabled-extensions.
+        # "org/gnome/shell/extensions/dash-to-dock" = {
+        #   dock-position = "LEFT";
+        #   extend-height = true;
+        #   dock-fixed = false;
+        #   autohide = true;
+        #   intellihide-mode = "ALL_WINDOWS";
+        #   show-mounts = false;
+        #   show-trash = false;
+        # };
 
       };
     }
@@ -341,6 +351,12 @@
   # ============================================================================
   
   services.tailscale.enable = true;
+
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
 
   networking.firewall = {
     enable = true;
