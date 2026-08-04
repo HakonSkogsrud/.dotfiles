@@ -291,6 +291,7 @@
         };
         "org/gnome/shell" = {
           enabled-extensions = [
+            "dash-to-dock@micxgx.gmail.com"
             "legacyschemeautoswitcher@joshimukul29.gmail.com"
           ];
           favorite-apps = [
@@ -321,7 +322,6 @@
           picture-options = "zoom";
         };
 
-        # Uncomment after adding dash-to-dock@micxgx.gmail.com to enabled-extensions.
         "org/gnome/shell/extensions/dash-to-dock" = {
           dock-position = "LEFT";
           extend-height = true;
