@@ -302,6 +302,8 @@
             "obsidian.desktop"
             "emacs.desktop"
             "org.onlyoffice.desktopeditors.desktop"
+            "LocalSend.desktop"
+            "org.darktable.darktable.desktop"
           ];
         };
       };
@@ -330,6 +332,20 @@
           intellihide-mode = "ALL_WINDOWS";
           show-mounts = false;
           show-trash = false;
+
+          # --- Background & Transparency ---
+          custom-background-color = true;
+          background-color = "rgb(0,0,0)";
+          transparency-mode = "FIXED";
+          background-opacity = 0.75;
+          customize-alphas = true;
+          min-alpha = 0.75;
+          max-alpha = 0.75;
+          apply-custom-theme = false;
+
+          # --- Compact / Shrink Options ---
+          custom-theme-shrink = true;
+          #height-fraction = 0.9;
         };
 
       };
