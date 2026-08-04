@@ -57,7 +57,7 @@
 (cua-mode 1)
 (add-to-list 'default-frame-alist
              `(font . ,(format "ComicShannsMono Nerd Font-%d"
-                               (if (eq system-type 'darwin) 16 13))))
+                               (if (eq system-type 'darwin) 15 13))))
 
 (setq select-active-regions nil
       mouse-drag-copy-region nil)
@@ -186,15 +186,21 @@
   (unless (treesit-language-available-p lang)
     (treesit-install-language-grammar lang)))
 
-(setq major-mode-remap-alist
-      '((python-mode . python-ts-mode)
-        (go-mode     . go-ts-mode)
-        (yaml-mode   . yaml-ts-mode)
-        (bash-mode   . bash-ts-mode)
-        (json-mode   . json-ts-mode)
-        (nix-mode   . nix-ts-mode)))
+(setq major-mode-remap-alist nil)
+(dolist (entry '((python python-mode python-ts-mode)
+                 (go     go-mode     go-ts-mode)
+                 (yaml   yaml-mode   yaml-ts-mode)
+                 (bash   bash-mode   bash-ts-mode)
+                 (json   json-mode   json-ts-mode)
+                 (nix    nix-mode    nix-ts-mode)))
+  (when (treesit-language-available-p (nth 0 entry))
+    (add-to-list 'major-mode-remap-alist
+                 (cons (nth 1 entry) (nth 2 entry)))))
 
-(add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
+(add-to-list 'auto-mode-alist
+             `("\\.ya?ml\\'" . ,(if (treesit-language-available-p 'yaml)
+                                     'yaml-ts-mode
+                                   'yaml-mode)))
 
 (use-package nix-ts-mode
   :mode "\\.nix\\'")
@@ -204,11 +210,12 @@
 (add-to-list 'auto-mode-alist '("\\.j2\\'" nil t))
 
 (use-package eglot
-  :hook ((python-ts-mode  . eglot-ensure)
+  :hook ((python-mode     . my/python-eglot-ensure)
+         (python-ts-mode  . my/python-eglot-ensure)
          (go-ts-mode      . eglot-ensure)
          (ansible-ts-mode . eglot-ensure)
-      (bash-ts-mode    . eglot-ensure)
-      (nix-ts-mode     . eglot-ensure))
+         (bash-ts-mode    . eglot-ensure)
+         (nix-ts-mode     . eglot-ensure))
   :bind (:map eglot-mode-map
               ("C-c r" . eglot-rename)
               ("C-c a" . eglot-code-actions)
@@ -263,8 +270,8 @@ and searches for 'root_key:' — the YAML definition form."
   (setq-default eglot-workspace-configuration
                 (append (bound-and-true-p eglot-workspace-configuration)
                         '((:basedpyright
-                           . ((typeCheckingMode . "standard")
-                              (reportUnknownVariableType . "none")))
+                           . ((analysis . ((typeCheckingMode . "standard")
+                                           (reportUnknownVariableType . "none")))))
                           (:ansible . ((ansible . ((path . "ansible")
                                                    (useFullyQualifiedCollectionNames . t)))
                                        (validation . ((enabled . t)
@@ -278,17 +285,44 @@ and searches for 'root_key:' — the YAML definition form."
 ;; 6. PYTHON
 ;; ==========================================
 
-(defun my/python-uv-venv-activate ()
-  "Activate .venv if created by uv in project root."
-  (interactive)
-  (when-let ((project (project-current)))
-    (let ((venv-path (expand-file-name ".venv" (project-root project))))
-      (when (file-directory-p venv-path)
-        (pyvenv-activate venv-path)
-        ;; Check if eglot is loaded and a server is actually running
-        (when (and (fboundp 'eglot-current-server) 
-                   (eglot-current-server))
-          (eglot-reconnect (eglot-current-server)))))))
+(defun my/python-project-find (directory)
+  "Return the nearest pyproject.toml project containing DIRECTORY."
+  ;; Prefer a nested Python project over an enclosing Git repository.
+  (when-let ((root (locate-dominating-file directory "pyproject.toml")))
+    (cons 'transient root)))
+
+(defun my/python-venv ()
+  "Return a local .venv, falling back to the current project root."
+  ;; A venv beside the file is more specific than one at the project root.
+  (let* ((local-directory (file-name-directory
+                           (or (buffer-file-name) default-directory)))
+         (local-venv (expand-file-name ".venv" local-directory)))
+    (if (file-directory-p local-venv)
+        local-venv
+      (when-let* ((project (project-current))
+                  (project-venv (expand-file-name ".venv"
+                                                  (project-root project)))
+                  ((file-directory-p project-venv)))
+        project-venv))))
+
+(defun my/python-eglot-ensure ()
+  "Start Eglot using the current project's uv environment."
+  ;; Eglot is lazy-loaded, so its configuration variables may not exist yet.
+  (require 'eglot)
+  (add-hook 'project-find-functions #'my/python-project-find nil t)
+  (let* ((venv (my/python-venv))
+         (venv-python (and venv (expand-file-name "bin/python" venv))))
+    (when (and venv-python (file-executable-p venv-python))
+      ;; Keep the selected environment local to this buffer and LSP process.
+      (setq-local process-environment (copy-sequence process-environment))
+      (setenv "VIRTUAL_ENV" venv)
+      (setenv "PATH" (concat (expand-file-name "bin" venv)
+                              path-separator
+                              (getenv "PATH")))
+      (setq-local eglot-workspace-configuration
+                  (cons `(:python . ((pythonPath . ,venv-python)))
+                        eglot-workspace-configuration)))
+    (eglot-ensure)))
 
 (defun my/python-run ()
   "Run current file via uv or python3."
@@ -304,10 +338,6 @@ and searches for 'root_key:' — the YAML definition form."
   (when (buffer-modified-p) (save-buffer))
   (let ((cmd (if (file-directory-p ".venv") "uv run pytest" "pytest")))
     (compile cmd)))
-
-(use-package pyvenv
-  :hook ((python-mode    . my/python-uv-venv-activate)
-         (python-ts-mode . my/python-uv-venv-activate)))
 
 (use-package dape
   :preface (setq dape-buffer-window-arrangement 'right)
