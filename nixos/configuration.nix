@@ -150,7 +150,12 @@
     };
   };
 
-  programs.zsh.enable = true;
+  programs.zsh = {
+    enable = true;
+    interactiveShellInit = ''
+      source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    '';
+  };
 
   programs.direnv = {
     enable = true;
@@ -215,6 +220,7 @@
     ripgrep
     zoxide
     eza
+    zsh-autosuggestions
     exiftool
     uv
 
