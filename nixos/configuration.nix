@@ -91,7 +91,7 @@
     isNormalUser = true;
     description = "Håkon Skogsrud";
     extraGroups = [ "networkmanager" "wheel" ];
-    shell = pkgs.fish;
+    shell = pkgs.zsh;
   };
 
   # ============================================================================
@@ -148,7 +148,7 @@
     };
   };
 
-  programs.fish.enable = true;
+  programs.zsh.enable = true;
 
   programs.direnv = {
     enable = true;

@@ -1,4 +1,4 @@
-command = /opt/homebrew/bin/fish
+command = /bin/zsh
 window-height = 30
 window-width = 110
 window-padding-balance = true
