@@ -200,9 +200,10 @@
     neovim
     gh
     stow
-    gcc
     python3
     lua-language-server
+    nixd
+    nixfmt
     nix-direnv         # Integrates nix-shell/flake loading seamlessly
 
     # Terminal and Shell Utilities
@@ -229,8 +230,10 @@
         "--gtk-version=4"
      ];
     })
+    (vscodium.override {
+      commandLineArgs = "--enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland --enable-wayland-ime=true --wayland-text-input-version=3";
+    })
     emacs-pgtk
-    mistral-vibe
     brave
     tailscale
     morewaita-icon-theme
@@ -239,8 +242,6 @@
 
     # Desktop and Theme Packages
     adw-gtk3
-    basedpyright
-    ruff
     gnomeExtensions.dash-to-dock
     gnomeExtensions.legacy-gtk3-theme-scheme-auto-switcher
 

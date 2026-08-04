@@ -180,9 +180,7 @@
         (python . ("https://github.com/tree-sitter/tree-sitter-python"))
         (bash   . ("https://github.com/tree-sitter/tree-sitter-bash"))
         (json   . ("https://github.com/tree-sitter/tree-sitter-json"))
-        (nix    . ("https://github.com/nix-community/tree-sitter-nix"))
-        (c      . ("https://github.com/tree-sitter/tree-sitter-c"))
-        (cpp    . ("https://github.com/tree-sitter/tree-sitter-cpp"))))
+        (nix    . ("https://github.com/nix-community/tree-sitter-nix"))))
 
 (dolist (lang (mapcar #'car treesit-language-source-alist))
   (unless (treesit-language-available-p lang)
@@ -194,9 +192,7 @@
         (yaml-mode   . yaml-ts-mode)
         (bash-mode   . bash-ts-mode)
         (json-mode   . json-ts-mode)
-        (nix-mode    . nix-ts-mode)
-        (c-mode      . c-ts-mode)
-        (c++-mode    . c++-ts-mode)))
+        (nix-mode   . nix-ts-mode)))
 
 (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
 
@@ -211,11 +207,8 @@
   :hook ((python-ts-mode  . eglot-ensure)
          (go-ts-mode      . eglot-ensure)
          (ansible-ts-mode . eglot-ensure)
-         (bash-ts-mode    . eglot-ensure)
-         (c-mode          . eglot-ensure)
-         (c-ts-mode       . eglot-ensure)
-         (c++-mode        . eglot-ensure)
-         (c++-ts-mode     . eglot-ensure))
+      (bash-ts-mode    . eglot-ensure)
+      (nix-ts-mode     . eglot-ensure))
   :bind (:map eglot-mode-map
               ("C-c r" . eglot-rename)
               ("C-c a" . eglot-code-actions)
@@ -232,7 +225,7 @@
   (add-to-list 'eglot-server-programs
                '(go-ts-mode . ("gopls")))
   (add-to-list 'eglot-server-programs
-               '((c-mode c-ts-mode c++-mode c++-ts-mode) . ("clangd" "--query-driver=**/*"))))
+               '(nix-ts-mode . ("nixd"))))
 
 (use-package apheleia
   :config (apheleia-global-mode +1))
@@ -282,69 +275,7 @@ and searches for 'root_key:' — the YAML definition form."
 
 
 ;; ==========================================
-;; 6. C / C++ (CLANGD, MESON, NINJA, GDB)
-;; ==========================================
-
-(defun my/c-compile ()
-  "Compile the C project. If meson.build exists, run ninja inside build directory."
-  (interactive)
-  (let ((default-directory (or (when-let ((proj (project-current)))
-                                 (project-root proj))
-                               default-directory)))
-    (if (and (file-exists-p "build/build.ninja")
-             (executable-find "ninja"))
-        (compile "ninja -C build")
-      (if (and (file-exists-p "meson.build")
-               (executable-find "meson"))
-          (compile "meson setup build && ninja -C build")
-        (compile "make")))))
-
-(defun my/c-run ()
-  "Find the compiled executable or prompt and run it."
-  (interactive)
-  (when (buffer-modified-p) (save-buffer))
-  (let ((default-directory (or (when-let ((proj (project-current)))
-                                 (project-root proj))
-                               default-directory)))
-    (if (and (file-exists-p "build/build.ninja")
-             (executable-find "ninja"))
-        ;; Run ninja build, then run compiled binary if compilation succeeds
-        (let ((compile-command "ninja -C build"))
-          (compile (concat compile-command " && find build -maxdepth 2 -type f -executable ! -name \"*.so\" ! -name \"*.a\" -exec {} \\;")))
-      (compile (format "gcc -g %S -o %s && ./%s"
-                       (buffer-file-name)
-                       (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))
-                       (file-name-sans-extension (file-name-nondirectory (buffer-file-name))))))))
-
-(with-eval-after-load 'cc-mode
-  (define-key c-mode-map    (kbd "C-c C-c") #'my/c-run)
-  (define-key c-mode-map    (kbd "C-c C-b") #'my/c-compile)
-  (define-key c-mode-map    (kbd "C-c b")   #'dape-breakpoint-toggle)
-  (define-key c-mode-map    (kbd "C-c C-d") #'dape)
-  (define-key c++-mode-map  (kbd "C-c C-c") #'my/c-run)
-  (define-key c++-mode-map  (kbd "C-c C-b") #'my/c-compile)
-  (define-key c++-mode-map  (kbd "C-c b")   #'dape-breakpoint-toggle)
-  (define-key c++-mode-map  (kbd "C-c C-d") #'dape))
-
-(add-hook 'c-ts-mode-hook
-          (lambda ()
-            (local-set-key (kbd "C-c C-c") #'my/c-run)
-            (local-set-key (kbd "C-c C-b") #'my/c-compile)
-            (local-set-key (kbd "C-c b")   #'dape-breakpoint-toggle)
-            (local-set-key (kbd "C-c C-d") #'dape)))
-(add-hook 'c++-ts-mode-hook
-          (lambda ()
-            (local-set-key (kbd "C-c C-c") #'my/c-run)
-            (local-set-key (kbd "C-c C-b") #'my/c-compile)
-            (local-set-key (kbd "C-c b")   #'dape-breakpoint-toggle)
-            (local-set-key (kbd "C-c C-d") #'dape)))
-
-;; Configure dape for C/C++ debugging via gdb (or lldb-dap/gdb)
-;; Configuration is already added directly inside the `dape` use-package block below.
-
-
-;; ==========================================
-;; 7. PYTHON
+;; 6. PYTHON
 ;; ==========================================
 
 (defun my/python-uv-venv-activate ()
@@ -416,18 +347,6 @@ and searches for 'root_key:' — the YAML definition form."
                  :cwd dape-cwd
                  :args my/dape-pytest-args))
 
-  ;; Configuration for debugging C projects with gdb (over gdb-mi / lldb-vscode) via dape.
-  ;; Since you're on NixOS, envrc-mode will ensure that the nix-shell 'gdb' is in PATH.
-  (add-to-list 'dape-configs
-               `(gdb
-                 modes (c-mode c-ts-mode c++-mode c++-ts-mode)
-                 command "gdb"
-                 command-args ("--interpreter=dap")
-                 :request "launch"
-                 :type "gdb"
-                 :cwd dape-cwd
-                 :program (lambda () (read-file-name "Program to debug: " (funcall dape-cwd-fn)))))
-
   (defun my/dape-pytest-args ()
     "Return pytest args for the test function at point."
     (let* ((file (file-relative-name (buffer-file-name)
@@ -450,7 +369,7 @@ and searches for 'root_key:' — the YAML definition form."
   (define-key python-ts-mode-map (kbd "C-c b")   #'dape-breakpoint-toggle))
 
 ;; ==========================================
-;; 8. SHELL & GIT
+;; 7. SHELL & GIT
 ;; ==========================================
 
 (defun my/toggle-shell ()
@@ -472,7 +391,7 @@ and searches for 'root_key:' — the YAML definition form."
   :bind ("C-x g" . magit-status))
 
 ;; ==========================================
-;; 9. KEYBINDINGS & HOUSEKEEPING
+;; 8. KEYBINDINGS & HOUSEKEEPING
 ;; ==========================================
 
 (global-set-key (kbd "M-h") 'windmove-left)

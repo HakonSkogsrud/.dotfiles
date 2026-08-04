@@ -129,6 +129,7 @@ require("lazy").setup({
                 ansiblels = {},
                 ruff = {},
                 lua_ls = {},
+                nixd = {},
             }
 
             -- Set up and enable each server natively using the 0.11+ vim.lsp API
@@ -178,6 +179,7 @@ require("lazy").setup({
                 json = { "prettier" },
                 jsonc = { "prettier" },
                 lua = { "stylua" },
+                nix = { "nixfmt" },
                 python = { "ruff_format" },
                 toml = { "taplo" },
             },
