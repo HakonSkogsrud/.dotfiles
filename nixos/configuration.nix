@@ -202,9 +202,6 @@
     stow
     gcc
     python3
-    ansible-language-server
-    ansible-lint
-    ansible
     lua-language-server
     nix-direnv         # Integrates nix-shell/flake loading seamlessly
 
