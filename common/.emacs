@@ -268,17 +268,23 @@ and searches for 'root_key:' — the YAML definition form."
 
 (with-eval-after-load 'eglot
   (setq-default eglot-workspace-configuration
-                (append (bound-and-true-p eglot-workspace-configuration)
-                        '((:basedpyright
-                           . ((analysis . ((typeCheckingMode . "standard")
-                                           (reportUnknownVariableType . "none")))))
-                          (:ansible . ((ansible . ((path . "ansible")
-                                                   (useFullyQualifiedCollectionNames . t)))
-                                       (validation . ((enabled . t)
-                                                      (lint . ((enabled . t)
-                                                               (path . "ansible-lint")))))
-                                       (completion . ((provideRedirectModules . t)
-                                                      (provideModuleOptionAliases . t)))))))))
+                '(:basedpyright.analysis
+                  (:typeCheckingMode "standard"
+                   :diagnosticSeverityOverrides
+                   (:reportAny "none"
+                    :reportUnusedCallResult "none"
+                    :reportUnknownVariableType "none"))
+                  :ansible
+                  (:ansible
+                   (:path "ansible"
+                    :useFullyQualifiedCollectionNames t)
+                   :validation
+                   (:enabled t
+                    :lint (:enabled t
+                           :path "ansible-lint"))
+                   :completion
+                   (:provideRedirectModules t
+                    :provideModuleOptionAliases t)))))
 
 
 ;; ==========================================
@@ -320,8 +326,8 @@ and searches for 'root_key:' — the YAML definition form."
                               path-separator
                               (getenv "PATH")))
       (setq-local eglot-workspace-configuration
-                  (cons `(:python . ((pythonPath . ,venv-python)))
-                        eglot-workspace-configuration)))
+                  (plist-put (copy-sequence eglot-workspace-configuration)
+                             :python `(:pythonPath ,venv-python))))
     (eglot-ensure)))
 
 (defun my/python-run ()
