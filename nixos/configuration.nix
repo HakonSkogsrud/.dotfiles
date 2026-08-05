@@ -245,7 +245,6 @@
 
     # Desktop and Theme Packages
     adw-gtk3
-    gnomeExtensions.dash-to-dock
     gnomeExtensions.legacy-gtk3-theme-scheme-auto-switcher
 
     # Other Tools
@@ -283,11 +282,10 @@
           disable-while-typing = true;
         };
         "org/gnome/desktop/wm/preferences" = {
-          button-layout = "appmenu:minimize,maximize,close";
+          button-layout = "appmenu:close";
         };
         "org/gnome/shell" = {
           enabled-extensions = [
-            "dash-to-dock@micxgx.gmail.com"
             "legacyschemeautoswitcher@joshimukul29.gmail.com"
           ];
           favorite-apps = [
@@ -300,6 +298,7 @@
             "org.onlyoffice.desktopeditors.desktop"
             "LocalSend.desktop"
             "de.wwwtech.gitte.desktop"
+            "codium.desktop"
             "org.darktable.darktable.desktop"
           ];
         };
@@ -320,31 +319,6 @@
           picture-uri-dark = "file:///home/haaksk/.local/share/backgrounds/nix-wallpaper-nineish-dark-gray.svg";
           picture-options = "zoom";
         };
-
-        "org/gnome/shell/extensions/dash-to-dock" = {
-          dock-position = "LEFT";
-          extend-height = true;
-          dock-fixed = false;
-          autohide = true;
-          intellihide-mode = "ALL_WINDOWS";
-          show-mounts = false;
-          show-trash = false;
-
-          # --- Background & Transparency ---
-          custom-background-color = true;
-          background-color = "rgb(0,0,0)";
-          transparency-mode = "FIXED";
-          background-opacity = 0.75;
-          customize-alphas = true;
-          min-alpha = 0.75;
-          max-alpha = 0.75;
-          apply-custom-theme = false;
-
-          # --- Compact / Shrink Options ---
-          custom-theme-shrink = true;
-          #height-fraction = 0.9;
-        };
-
       };
     }
   ];
