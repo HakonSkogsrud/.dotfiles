@@ -50,29 +50,29 @@
       //========================================================
       // General Window & Layout
       //========================================================
-      "activityBar.background": "#2e2e32",
-      "activityBar.border": "#414146",
-      "statusBar.background": "#2e2e32",
-      "statusBar.border": "#414146",
+      "activityBar.background": "#303030",
+      "activityBar.border": "#454545",
+      "statusBar.background": "#303030",
+      "statusBar.border": "#454545",
       //========================================================
       // Side Bar
       //========================================================
-      "sideBar.background": "#2e2e32",
-      "sideBar.border": "#414146",
-      "sideBarSectionHeader.background": "#2e2e32",
+      "sideBar.background": "#303030",
+      "sideBar.border": "#454545",
+      "sideBarSectionHeader.background": "#303030",
       "widget.shadow": "#00000000",
       "scrollbar.shadow": "#00000000",
       "listFilterWidget.shadow": "#00000000",
       "sideBarStickyScroll.shadow": "#00000000",
-      "panelStickyScroll.shadow": "#2e2e32",
+      "panelStickyScroll.shadow": "#303030",
       //========================================================
       // Editor & Tabs
       //========================================================
-      "editorGroupHeader.tabsBackground": "#2e2e32",
-      "editorGroupHeader.noTabsBackground": "#2e2e32",
-      "tab.activeBackground": "#26262a",
+      "editorGroupHeader.tabsBackground": "#303030",
+      "editorGroupHeader.noTabsBackground": "#303030",
+      "tab.activeBackground": "#383838",
       "tab.activeBorder": "#78aeed",
-      "tab.inactiveBackground": "#2e2e32",
+      "tab.inactiveBackground": "#303030",
       //========================================================
       // Lists & Selections
       //========================================================
@@ -84,50 +84,50 @@
       // General Window & Layout
       //========================================================
       "focusBorder": "#3584e4",
-      "activityBar.background": "#ebebed",
-      "activityBar.border": "#d6d6da",
+      "activityBar.background": "#f6f5f4",
+      "activityBar.border": "#deddda",
       "activityBar.foreground": "#2e3436",
       "activityBar.inactiveForeground": "#77767b",
       "activityBar.activeBorder": "#3584e4",
-      "statusBar.background": "#ebebed",
-      "statusBar.border": "#d6d6da",
+      "statusBar.background": "#f6f5f4",
+      "statusBar.border": "#deddda",
       //========================================================
       // Side Bar
       //========================================================
-      "sideBar.background": "#ebebed",
-      "sideBar.border": "#d6d6da",
+      "sideBar.background": "#f6f5f4",
+      "sideBar.border": "#deddda",
       "sideBar.foreground": "#2e3436",
-      "sideBarSectionHeader.background": "#ebebed",
+      "sideBarSectionHeader.background": "#f6f5f4",
       "widget.shadow": "#00000000",
       "scrollbar.shadow": "#00000000",
       "listFilterWidget.shadow": "#00000000",
       "sideBarStickyScroll.shadow": "#00000000",
-      "panelStickyScroll.shadow": "#d6d6da",
+      "panelStickyScroll.shadow": "#deddda",
       //========================================================
       // Editor & Tabs
       //========================================================
-      "editorGroup.border": "#d6d6da",
-      "editorGroupHeader.tabsBackground": "#ebebed",
-      "editorGroupHeader.noTabsBackground": "#ebebed",
-      "editorGroupHeader.tabsBorder": "#d6d6da",
-      "tab.activeBackground": "#f5f5f7",
+      "editorGroup.border": "#deddda",
+      "editorGroupHeader.tabsBackground": "#f6f5f4",
+      "editorGroupHeader.noTabsBackground": "#f6f5f4",
+      "editorGroupHeader.tabsBorder": "#deddda",
+      "tab.activeBackground": "#ffffff",
       "tab.activeBorder": "#3584e4",
-      "tab.border": "#d6d6da",
-      "tab.inactiveBackground": "#ebebed",
-      "tab.hoverBackground": "#e2e2e5",
+      "tab.border": "#deddda",
+      "tab.inactiveBackground": "#f6f5f4",
+      "tab.hoverBackground": "#efedeb",
       //========================================================
       // Lists & Selections
       //========================================================
       "list.activeSelectionBackground": "#d6e4f7",
       "list.activeSelectionForeground": "#2e3436",
       "list.inactiveSelectionBackground": "#e9e7e5",
-      "list.hoverBackground": "#e2e2e5",
+      "list.hoverBackground": "#efedeb",
       "list.focusBackground": "#e2edf9",
       //========================================================
       // Panels, Inputs & Status
       //========================================================
-      "panel.background": "#ebebed",
-      "panel.border": "#d6d6da",
+      "panel.background": "#f6f5f4",
+      "panel.border": "#deddda",
       "panelTitle.activeBorder": "#3584e4",
       "input.background": "#ffffff",
       "input.border": "#c7cdd5",
