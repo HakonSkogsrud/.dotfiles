@@ -56,8 +56,8 @@
 
 (cua-mode 1)
 (add-to-list 'default-frame-alist
-             `(font . ,(format "ComicShannsMono Nerd Font-%d"
-                               (if (eq system-type 'darwin) 15 13))))
+             `(font . ,(format "FantasqueSansM Nerd Font Mono-%d"
+                               (if (eq system-type 'darwin) 16 13))))
 
 (setq select-active-regions nil
       mouse-drag-copy-region nil)
@@ -199,8 +199,8 @@
 
 (add-to-list 'auto-mode-alist
              `("\\.ya?ml\\'" . ,(if (treesit-language-available-p 'yaml)
-                                     'yaml-ts-mode
-                                   'yaml-mode)))
+                                    'yaml-ts-mode
+                                  'yaml-mode)))
 
 (use-package nix-ts-mode
   :mode "\\.nix\\'")
@@ -270,21 +270,21 @@ and searches for 'root_key:' — the YAML definition form."
   (setq-default eglot-workspace-configuration
                 '(:basedpyright.analysis
                   (:typeCheckingMode "standard"
-                   :diagnosticSeverityOverrides
-                   (:reportAny "none"
-                    :reportUnusedCallResult "none"
-                    :reportUnknownVariableType "none"))
+                                     :diagnosticSeverityOverrides
+                                     (:reportAny "none"
+                                                 :reportUnusedCallResult "none"
+                                                 :reportUnknownVariableType "none"))
                   :ansible
                   (:ansible
                    (:path "ansible"
-                    :useFullyQualifiedCollectionNames t)
+                          :useFullyQualifiedCollectionNames t)
                    :validation
                    (:enabled t
-                    :lint (:enabled t
-                           :path "ansible-lint"))
+                             :lint (:enabled t
+                                             :path "ansible-lint"))
                    :completion
                    (:provideRedirectModules t
-                    :provideModuleOptionAliases t)))))
+                                            :provideModuleOptionAliases t)))))
 
 
 ;; ==========================================
@@ -323,8 +323,8 @@ and searches for 'root_key:' — the YAML definition form."
       (setq-local process-environment (copy-sequence process-environment))
       (setenv "VIRTUAL_ENV" venv)
       (setenv "PATH" (concat (expand-file-name "bin" venv)
-                              path-separator
-                              (getenv "PATH")))
+                             path-separator
+                             (getenv "PATH")))
       (setq-local eglot-workspace-configuration
                   (plist-put (copy-sequence eglot-workspace-configuration)
                              :python `(:pythonPath ,venv-python))))
