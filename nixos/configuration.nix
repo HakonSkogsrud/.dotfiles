@@ -103,6 +103,7 @@
   fonts.packages = with pkgs; [
     ibm-plex
     nerd-fonts.comic-shanns-mono
+    nerd-fonts.fantasque-sans-mono
     nerd-fonts.jetbrains-mono
     nerd-fonts.commit-mono
     nerd-fonts.hack

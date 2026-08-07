@@ -16,7 +16,7 @@
   "editor.scrollbar.horizontalScrollbarSize": 6,
   // ── Terminal ────────────────────────────────────────────
   "terminal.integrated.fontSize": 13,
-  "terminal.integrated.defaultProfile.linux": "fish",
+  "terminal.integrated.defaultProfile.linux": "zsh",
   "terminal.integrated.sendKeybindingsToShell": true,
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.allowChords": false,
