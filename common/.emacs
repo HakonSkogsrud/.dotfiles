@@ -64,15 +64,17 @@
 
 (setq inhibit-startup-screen t
       initial-scratch-message nil
-  confirm-kill-processes nil
-  vc-follow-symlinks t
+      confirm-kill-processes nil
+      vc-follow-symlinks t
       sentence-end-double-space nil
       ring-bell-function 'ignore
       scroll-conservatively 101
-      scroll-margin 3
-      fast-but-imprecise-scrolling nil
+      scroll-margin 0
+      fast-but-imprecise-scrolling t
       mouse-wheel-scroll-amount '(2 ((shift) . 5))
       mouse-wheel-progressive-speed nil)
+
+(pixel-scroll-precision-mode 1)
 
 (setq-default indent-tabs-mode nil
               tab-width 4)

@@ -1,8 +1,8 @@
 {
   // ── Window ──────────────────────────────────────────────
   "window.zoomLevel": 1,
-  "window.titleBarStyle": "custom",
-  "window.menuBarVisibility": "classic",
+  "window.titleBarStyle": "native",
+  "window.menuBarVisibility": "toggle",
   // ── Editor ──────────────────────────────────────────────
   "editor.fontSize": 14,
   "editor.fontFamily": "CommitMono Nerd Font Mono",
@@ -25,7 +25,7 @@
   "workbench.startupEditor": "none",
   "workbench.iconTheme": "symbols",
   "workbench.preferredLightColorTheme": "Light 2026",
-  "workbench.preferredDarkColorTheme": "Dark 2026",
+  "workbench.preferredDarkColorTheme": "Adwaita Dark & Github syntax highlighting",
   // ── Files & Explorer ────────────────────────────────────
   "files.autoSave": "afterDelay",
   "files.autoSaveWhenNoErrors": true,

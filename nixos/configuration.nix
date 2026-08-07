@@ -438,6 +438,12 @@
           path = "/home/haaksk/Documents"; # The local target directory on your laptop
           devices = [ "services" ]; # Tell Syncthing to sync this folder with the server
         };
+        "2026" = {
+          id = "c2xpa-nhtgu"; # Must match the server's folder ID exactly
+          label = "2026"; # Keeps the user-friendly label "Sync" in your GUI
+          path = "/home/haaksk/Pictures/2026"; # The local target directory on your laptop
+          devices = [ "services" ]; # Tell Syncthing to sync this folder with the server
+        };
       };
     };
   };
