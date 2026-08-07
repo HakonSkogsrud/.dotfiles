@@ -16,7 +16,7 @@
   // ── Terminal ────────────────────────────────────────────
   "terminal.integrated.fontSize": 13,
   "terminal.integrated.fontFamily": "CommitMono Nerd Font Mono",
-  "terminal.integrated.defaultProfile.linux": "fish",
+  "terminal.integrated.defaultProfile.linux": "zsh",
   "terminal.integrated.sendKeybindingsToShell": true,
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.allowChords": false,

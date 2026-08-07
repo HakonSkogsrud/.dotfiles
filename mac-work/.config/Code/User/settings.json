@@ -13,7 +13,7 @@
   "editor.fontFamily": "Hack Nerd Font",
   "terminal.integrated.fontFamily": "Hack Nerd Font",
   "git.enableSmartCommit": true,
-  "terminal.integrated.defaultProfile.osx": "fish",
+  "terminal.integrated.defaultProfile.osx": "zsh",
   "terminal.integrated.sendKeybindingsToShell": true,
   "symbols.hidesExplorerArrows": false,
   "workbench.iconTheme": "symbols",

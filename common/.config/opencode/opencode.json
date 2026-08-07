@@ -4,7 +4,6 @@
     "oh-my-opencode@latest"
   ],
   "permission": {
-      "fish": {
             "*": "ask",
             "sudo *": "deny",
             "npm *": "allow",
@@ -52,8 +51,7 @@
             "acli *": "allow",
             "acli *delete*": "deny",
             "acli *DELETE*": "deny",
-            "acli *Delete*": "deny",      
-          },
+            "acli *Delete*": "deny",
       "external_directory": "ask",
       "doom_loop": "ask"
     },

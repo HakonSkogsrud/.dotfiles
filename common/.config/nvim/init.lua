@@ -5,7 +5,7 @@ vim.o.number = true
 vim.o.relativenumber = true
 vim.o.mouse = "a"
 vim.o.showmode = false
-vim.o.shell = "fish"
+vim.o.shell = "zsh"
 vim.o.breakindent = true
 vim.o.undofile = true
 vim.o.ignorecase = true
@@ -157,7 +157,7 @@ require("lazy").setup({
                 ["<Tab>"] = { "select_next", "fallback" },
                 ["<S-Tab>"] = { "select_prev", "fallback" },
 
-                -- The "Fish Shell" Accept
+                -- Accept completion
                 ["<C-f>"] = { "accept", "fallback" },
 
                 -- Standard controls
@@ -261,7 +261,7 @@ end
 -- 1. Map for Normal Mode
 vim.keymap.set("n", "<leader>tt", "<cmd>lua toggle_terminal()<CR>", { desc = "Toggle Terminal" })
 
--- 2. Map for Terminal Mode (Allows toggling OFF while typing in Fish)
+-- 2. Map for Terminal Mode
 vim.keymap.set("t", "<leader>tt", [[<C-\><C-n><cmd>lua toggle_terminal()<CR>]], { desc = "Toggle Terminal" })
 -- Telescope Search Suite
 local builtin = require("telescope.builtin")
