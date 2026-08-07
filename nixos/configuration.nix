@@ -284,6 +284,11 @@
         "org/gnome/desktop/wm/preferences" = {
           button-layout = "appmenu:close";
         };
+        "org/gnome/desktop/background" = {
+          picture-uri = "file:///home/haaksk/.dotfiles/gnome/.local/share/backgrounds/3440x1400-simple-blue.png";
+          picture-uri-dark = "file:///home/haaksk/.dotfiles/gnome/.local/share/backgrounds/3440x1400-dark-grey.png";
+          picture-options = "zoom";
+        };
         "org/gnome/shell" = {
           enabled-extensions = [
             "legacyschemeautoswitcher@joshimukul29.gmail.com"
@@ -314,11 +319,6 @@
         "org/gnome/desktop/interface" = {
           gtk-theme = "adw-gtk3";
         };
-        "org/gnome/desktop/background" = {
-          picture-uri = "file:///home/haaksk/.local/share/backgrounds/wallhaven-x687ll.png";
-          picture-uri-dark = "file:///home/haaksk/.local/share/backgrounds/nix-wallpaper-nineish-dark-gray.svg";
-          picture-options = "zoom";
-        };
       };
     }
   ];
@@ -334,6 +334,13 @@
     decibels
     epiphany
     gnome-tour
+    gnome-logs
+    pkgs.gnome-connections
+    gnome-weather
+    gnome-clocks
+    gnome-calendar
+    gnome-calculator
+    pkgs.nixos-render-docs
   ];
 
   services.xserver.excludePackages = [ pkgs.xterm ];

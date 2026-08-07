@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE wallpapers SYSTEM "gnome-wp-list.dtd">
+<wallpapers>
+  <wallpaper deleted="false">
+    <name>NixOS Dynamic</name>
+    <filename>/home/haaksk/.local/share/backgrounds/3440x1400-simple-blue.png</filename>
+    <filename-dark>/home/haaksk/.local/share/backgrounds/3440x1440-dark-grey.png</filename-dark>
+    <options>zoom</options>
+    <shade_type>solid</shade_type>
+    <pcolor>#2f302f</pcolor>
+    <scolor>#2f302f</scolor>
+  </wallpaper>
+</wallpapers>
