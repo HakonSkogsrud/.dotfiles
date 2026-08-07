@@ -25,10 +25,10 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;; Locate Fish before exec-path-from-shell tries to use it
-(when-let ((fish-path (executable-find "fish")))
-  (setq shell-file-name fish-path
-        explicit-shell-file-name fish-path))
+;; Locate Zsh before exec-path-from-shell tries to use it
+(when-let ((zsh-path (executable-find "zsh")))
+  (setq shell-file-name zsh-path
+        explicit-shell-file-name zsh-path))
 
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns x pgtk))
@@ -64,6 +64,8 @@
 
 (setq inhibit-startup-screen t
       initial-scratch-message nil
+  confirm-kill-processes nil
+  vc-follow-symlinks t
       sentence-end-double-space nil
       ring-bell-function 'ignore
       scroll-conservatively 101
@@ -331,19 +333,13 @@ and searches for 'root_key:' — the YAML definition form."
     (eglot-ensure)))
 
 (defun my/python-run ()
-  "Run current file via uv or python3."
+  "Run the current Python file with uv in an asynchronous shell buffer."
   (interactive)
+  (unless buffer-file-name
+    (user-error "Current buffer is not visiting a file"))
   (when (buffer-modified-p) (save-buffer))
-  (if (file-directory-p ".venv")
-      (compile (format "uv run %S" (buffer-file-name)))
-    (compile (format "python3 %S" (buffer-file-name)))))
-
-(defun my/python-test-run ()
-  "Run pytest via uv or pytest."
-  (interactive)
-  (when (buffer-modified-p) (save-buffer))
-  (let ((cmd (if (file-directory-p ".venv") "uv run pytest" "pytest")))
-    (compile cmd)))
+  (async-shell-command
+   (format "uv run %s" (shell-quote-argument buffer-file-name))))
 
 (use-package dape
   :preface (setq dape-buffer-window-arrangement 'right)
@@ -395,12 +391,10 @@ and searches for 'root_key:' — the YAML definition form."
       (vector "-x" "-s" "--no-header" node))))
 
 (with-eval-after-load 'python
-  (define-key python-mode-map    (kbd "C-c C-c") #'my/python-run)
-  (define-key python-mode-map    (kbd "C-c C-t") #'my/python-test-run)
+  (define-key python-mode-map    (kbd "C-c r")   #'my/python-run)
   (define-key python-mode-map    (kbd "C-c C-d") #'dape)
   (define-key python-mode-map    (kbd "C-c b")   #'dape-breakpoint-toggle)
-  (define-key python-ts-mode-map (kbd "C-c C-c") #'my/python-run)
-  (define-key python-ts-mode-map (kbd "C-c C-t") #'my/python-test-run)
+  (define-key python-ts-mode-map (kbd "C-c r")   #'my/python-run)
   (define-key python-ts-mode-map (kbd "C-c C-d") #'dape)
   (define-key python-ts-mode-map (kbd "C-c b")   #'dape-breakpoint-toggle))
 
@@ -416,7 +410,12 @@ and searches for 'root_key:' — the YAML definition form."
         (delete-window (get-buffer-window shell-buf))
       (project-shell))))
 
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+(defun my/shell-mode-setup ()
+  (ansi-color-for-comint-mode-on)
+  (corfu-mode -1)
+  (setq-local comint-prompt-regexp "^[^\n]* \\$ "))
+
+(add-hook 'shell-mode-hook #'my/shell-mode-setup)
 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
 
 (with-eval-after-load 'comint

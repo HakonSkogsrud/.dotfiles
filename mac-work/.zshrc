@@ -71,5 +71,7 @@ precmd() {
     prompt_text+=" %F{magenta} ($(git rev-parse --abbrev-ref HEAD 2>/dev/null))%f"
   fi
 
-  PROMPT="$prompt_text ❯ "
+  PROMPT="$prompt_text \$ "
 }
+
+precmd
