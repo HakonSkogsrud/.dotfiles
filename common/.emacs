@@ -98,6 +98,22 @@
 (savehist-mode 1)
 (recentf-mode 1)
 
+(defun my/mode-line-git-branch ()
+  "Return the current Git branch for the mode line, if available."
+  (when vc-mode
+    (concat "Git: "
+            (string-trim
+             (replace-regexp-in-string "\\`[[:space:]]*Git[-:]?" "" vc-mode)))))
+
+(setq-default mode-line-format
+              '("%e" mode-line-front-space
+                (:eval (if (buffer-modified-p) "* " "  "))
+                mode-line-buffer-identification
+                mode-line-format-right-align
+                (:eval (when-let ((branch (my/mode-line-git-branch)))
+                         (concat branch " | ")))
+                mode-name " | " "%l:%c  "))
+
 (add-hook 'dired-mode-hook 'dired-hide-details-mode)
 (setq dired-kill-when-opening-new-dired-buffer t
       dired-auto-revert-buffer t)
@@ -415,7 +431,7 @@ and searches for 'root_key:' — the YAML definition form."
   (corfu-mode -1)
   (setq-local comint-prompt-regexp "^[^\n]* \\$ "))
 
-(add-hook 'shell-mode-hook #'my/shell-mode-setup)
+(add-hook 'shell-mode-hook #'my/shell-mode-setup) 
 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
 
 (with-eval-after-load 'comint
