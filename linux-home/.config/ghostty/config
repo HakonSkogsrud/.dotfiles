@@ -1,5 +1,5 @@
-window-height = 27
-window-width = 110
+window-height = 25
+window-width = 100
 window-theme = ghostty
 cursor-style-blink = true
 cursor-style = block
