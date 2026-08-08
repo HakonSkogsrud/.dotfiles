@@ -1,0 +1,90 @@
+/* ==========================================
+   GNOME Libadwaita "Layered" Integration
+   Embraces the Native Frame as a distinct header
+   ========================================== */
+
+/* ------------------------------------------
+   1. LIGHT THEME (Adwaita Light)
+   ------------------------------------------ */
+body.theme-light {
+  /* GNOME Titlebar is ~ #ebebed. We deliberately contrast with it. */
+  --tab-container-background: #f4f4f4;   /* Distinct toolbar color */
+  --background-secondary-alt: #f4f4f4;   /* Top left container space */
+  --background-secondary: #f4f4f4;       /* Sidebar background */
+  --background-primary: #ffffff;         /* Editor canvas */
+  --divider-color: rgba(0, 0, 0, 0.08);  /* Subtle borders */
+  --tab-outline-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Headerbar & Top Left Container Space */
+.theme-light .workspace-tab-header-container,
+.theme-light .workspace-tabs.mod-top-left-space,
+.theme-light .workspace-tabs.mod-top-left-space .workspace-tab-header-container {
+  background-color: var(--tab-container-background) !important;
+  /* Adds a tiny inner shadow at the top to make the GTK line look like a structural shadow */
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02) !important; 
+}
+
+/* ------------------------------------------
+   2. DARK THEME (Adwaita Dark)
+   ------------------------------------------ */
+body.theme-dark {
+  /* GNOME Titlebar is ~ #303030. We drop down a step. */
+  --tab-container-background: #242424;   /* Distinct toolbar color */
+  --background-secondary-alt: #242424;   /* Top left container space */
+  --background-secondary: #242424;       /* Sidebar background */
+  --background-primary: #1e1e1e;         /* Editor canvas */
+  --divider-color: rgba(255, 255, 255, 0.08); /* Subtle borders */
+  --tab-outline-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Headerbar & Top Left Container Space */
+.theme-dark .workspace-tab-header-container,
+.theme-dark .workspace-tabs.mod-top-left-space,
+.theme-dark .workspace-tabs.mod-top-left-space .workspace-tab-header-container {
+  background-color: var(--tab-container-background) !important;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.15) !important;
+}
+
+/* ------------------------------------------
+   3. UNIVERSAL TAB & SIDEBAR STYLING
+   ------------------------------------------ */
+
+/* Remove white box behind the top-left sidebar toggle button */
+.sidebar-toggle-button,
+.sidebar-toggle-button.mod-left,
+.sidebar-toggle-button .clickable-icon,
+.workspace-ribbon-header {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Left Sidebar & Ribbon matching the tab bar */
+.mod-left-split,
+.workspace-ribbon.mod-left {
+  background-color: var(--background-secondary) !important;
+}
+
+/* Active Main Document Tab (Blends into canvas, pops out from tab bar) */
+.mod-root .workspace-tab-header.is-active {
+  background-color: var(--background-primary) !important;
+  border-top: 1px solid var(--tab-outline-color) !important;
+  border-left: 1px solid var(--tab-outline-color) !important;
+  border-right: 1px solid var(--tab-outline-color) !important;
+  border-radius: 8px 8px 0 0 !important;
+  margin-top: 4px;
+}
+
+/* Inactive Tabs (Transparent to blend into the container) */
+.workspace-tab-header:not(.is-active) {
+  background-color: transparent !important;
+  border: none !important;
+  opacity: 0.7;
+}
+
+/* File Explorer Hover Highlights (Pill shaped for GNOME feel) */
+.nav-file-title:hover,
+.nav-folder-title:hover {
+  background-color: var(--divider-color);
+  border-radius: 6px;
+}
