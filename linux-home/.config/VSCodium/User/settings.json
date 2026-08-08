@@ -24,7 +24,7 @@
   // ── Workbench & Theme ───────────────────────────────────
   "workbench.startupEditor": "none",
   "workbench.iconTheme": "symbols",
-  "workbench.preferredLightColorTheme": "Light 2026",
+  "workbench.preferredLightColorTheme": "Light Modern",
   "workbench.preferredDarkColorTheme": "Adwaita Dark & Github syntax highlighting",
   // ── Files & Explorer ────────────────────────────────────
   "files.autoSave": "afterDelay",
