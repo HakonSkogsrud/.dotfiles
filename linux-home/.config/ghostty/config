@@ -10,3 +10,5 @@ font-family = JetbrainsMono Nerd Font
 font-size = 12
 scrollbar = never
 theme = GitLab Dark Grey
+term = xterm-256color
+

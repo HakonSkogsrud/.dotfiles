@@ -286,8 +286,8 @@
           button-layout = "appmenu:close";
         };
         "org/gnome/desktop/background" = {
-          picture-uri = "file:///home/haaksk/.dotfiles/gnome/.local/share/backgrounds/3440x1400-simple-blue.png";
-          picture-uri-dark = "file:///home/haaksk/.dotfiles/gnome/.local/share/backgrounds/3440x1400-dark-grey.png";
+          picture-uri = "file:///home/haaksk/.dotfiles/gnome/.local/share/backgrounds/nixos-wallpaper-mist.png";
+          picture-uri-dark = "file:///home/haaksk/.dotfiles/gnome/.local/share/backgrounds/3440x1440-dark-grey.png";
           picture-options = "zoom";
         };
         "org/gnome/shell" = {

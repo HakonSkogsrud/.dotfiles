@@ -466,11 +466,24 @@ and searches for 'root_key:' — the YAML definition form."
 (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
       select-enable-clipboard t)
 
+;; nixos stuff
+;; ===============================================================================
 
 (defun my-nixos-rebuild ()
   "Run nixos-rebuild switch for the local flake configuration."
   (interactive)
   (async-shell-command "sudo nixos-rebuild switch --flake ~/.dotfiles/nixos#nixos"))
 
-;; Binds the function to 'C-c n' (Control-c followed by n)
-(global-set-key (kbd "C-c n") 'my-nixos-rebuild)
+(defun open-nixos-config ()
+  "Open the main NixOS configuration file."
+  (interactive)
+  (find-file (expand-file-name "~/.dotfiles/nixos/configuration.nix")))
+
+;; Define a prefix key for all NixOS shortcuts
+(define-prefix-command 'nixos-map)
+(global-set-key (kbd "C-c n") 'nixos-map)
+
+;; Bind your commands inside the prefix map
+(define-key nixos-map (kbd "r") 'my-nixos-rebuild)   ; Press 'C-c n r' to rebuild
+(define-key nixos-map (kbd "c") 'open-nixos-config) ; Press 'C-c n c' to open config
+

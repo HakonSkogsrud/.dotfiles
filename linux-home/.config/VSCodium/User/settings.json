@@ -1,7 +1,7 @@
 {
   // ── Window ──────────────────────────────────────────────
   "window.zoomLevel": 1,
-  "window.titleBarStyle": "native",
+  "window.titleBarStyle": "custom",
   "window.menuBarVisibility": "toggle",
   // ── Editor ──────────────────────────────────────────────
   "editor.fontSize": 14,
@@ -25,7 +25,7 @@
   "workbench.startupEditor": "none",
   "workbench.iconTheme": "symbols",
   "workbench.preferredLightColorTheme": "Light Modern",
-  "workbench.preferredDarkColorTheme": "Adwaita Dark & Github syntax highlighting",
+  "workbench.preferredDarkColorTheme": "Dark Modern",
   // ── Files & Explorer ────────────────────────────────────
   "files.autoSave": "afterDelay",
   "files.autoSaveWhenNoErrors": true,
