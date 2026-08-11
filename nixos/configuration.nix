@@ -285,11 +285,6 @@
         "org/gnome/desktop/wm/preferences" = {
           button-layout = "appmenu:close";
         };
-        "org/gnome/desktop/background" = {
-          picture-uri = "file:///home/haaksk/.dotfiles/gnome/.local/share/backgrounds/nixos-wallpaper-mist.png";
-          picture-uri-dark = "file:///home/haaksk/.dotfiles/gnome/.local/share/backgrounds/3440x1440-dark-grey.png";
-          picture-options = "zoom";
-        };
         "org/gnome/shell" = {
           enabled-extensions = [
             "legacyschemeautoswitcher@joshimukul29.gmail.com"
@@ -319,6 +314,11 @@
       settings = {
         "org/gnome/desktop/interface" = {
           gtk-theme = "adw-gtk3";
+        };
+        "org/gnome/desktop/background" = {
+          picture-uri = "file:///home/haaksk/.dotfiles/gnome/.local/share/backgrounds/nixos-wallpaper-mist.png";
+          picture-uri-dark = "file:///home/haaksk/.dotfiles/gnome/.local/share/backgrounds/3440x1440-dark-grey.png";
+          picture-options = "zoom";
         };
       };
     }

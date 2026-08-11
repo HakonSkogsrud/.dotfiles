@@ -50,7 +50,7 @@
 
 (use-package auto-dark
   :init
-  (setq auto-dark-themes           '((doom-opera) (modus-operandi))
+  (setq auto-dark-themes           '((doom-vibrant) (modus-operandi))
         auto-dark-detection-method 'dbus)
   :config (auto-dark-mode t))
 
