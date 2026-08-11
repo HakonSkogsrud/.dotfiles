@@ -485,5 +485,5 @@ and searches for 'root_key:' — the YAML definition form."
 
 ;; Bind your commands inside the prefix map
 (define-key nixos-map (kbd "r") 'my-nixos-rebuild)   ; Press 'C-c n r' to rebuild
-(define-key nixos-map (kbd "c") 'open-nixos-config) ; Press 'C-c n c' to open config
+(define-key nixos-map (kbd "o") 'open-nixos-config) ; Press 'C-c n c' to open config
 
