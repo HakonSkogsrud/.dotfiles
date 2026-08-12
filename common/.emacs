@@ -50,7 +50,7 @@
 
 (use-package auto-dark
   :init
-  (setq auto-dark-themes           '((doom-vibrant) (modus-operandi))
+  (setq auto-dark-themes           '((doom-sourcerer) (modus-operandi))
         auto-dark-detection-method 'dbus)
   :config (auto-dark-mode t))
 
@@ -95,7 +95,6 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
-(set-fringe-mode 0)
 (column-number-mode t)
 (savehist-mode 1)
 (recentf-mode 1)
@@ -306,7 +305,6 @@ and searches for 'root_key:' — the YAML definition form."
                    (:provideRedirectModules t
                                             :provideModuleOptionAliases t)))))
 
-
 ;; ==========================================
 ;; 6. PYTHON
 ;; ==========================================
@@ -487,3 +485,83 @@ and searches for 'root_key:' — the YAML definition form."
 (define-key nixos-map (kbd "r") 'my-nixos-rebuild)   ; Press 'C-c n r' to rebuild
 (define-key nixos-map (kbd "o") 'open-nixos-config) ; Press 'C-c n c' to open config
 
+
+
+(defun my/apply-cosmic-dark-override (&rest _)
+  "Override current theme's background and modeline with custom dark palette."
+  (interactive)
+  (let ((bg          "#1B1B1B")  ; <--- Main Editor Background
+        (bg-alt      "#282828")  ; Modeline & current line background
+        (fg          "#e1e3e8")  ; Main text
+        (fg-dim      "#707585")  ; Dimmed/inactive text
+        (cosmic-teal "#32b4ac")) ; Accent color
+
+    ;; Main Editor Area
+    (set-face-attribute 'default nil :background bg :foreground fg)
+    (set-face-attribute 'fringe nil :background bg)
+    (set-face-attribute 'line-number nil :background bg :foreground fg-dim)
+    (set-face-attribute 'line-number-current-line nil :background bg-alt :foreground cosmic-teal :weight 'bold)
+
+    ;; Active Mode-Line
+    (set-face-attribute 'mode-line nil
+                        :background bg-alt
+                        :foreground fg
+                        :box (list :line-width 1 :color cosmic-teal))
+    (set-face-attribute 'mode-line-buffer-id nil
+                        :foreground cosmic-teal
+                        :weight 'bold)
+
+    ;; Inactive Mode-Line
+    (set-face-attribute 'mode-line-inactive nil
+                        :background bg
+                        :foreground fg-dim
+                        :box (list :line-width 1 :color bg-alt))
+
+    ;; Vertical Window Dividers
+    (set-face-attribute 'vertical-border nil :foreground bg-alt)
+    (when (facep 'window-divider)
+      (set-face-attribute 'window-divider nil :foreground bg-alt))))
+
+;; Automatically trigger on theme switches
+(if (boundp 'enable-theme-functions)
+    (add-hook 'enable-theme-functions #'my/apply-cosmic-dark-override)
+  (advice-add 'load-theme :after #'my/apply-cosmic-dark-override))
+
+;; Apply on startup
+(my/apply-cosmic-dark-override)
+
+(set-fringe-mode '(16 . 16))
+
+
+;; disable bidirectional scanning
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)
+
+;; skip fontification during input
+(setq redisplay-skip-fontification-on-input t)
+
+;; increase process output buffer
+(setq read-process-output-max (* 4 1024 1024)) ; 4MB
+
+
+;; dont render cursor in non focused windows
+(setq-default cursor-in-non-selected-windows nil)
+(setq highlight-nonselected-windows nil)
+
+;; reversible C-x 1
+(winner-mode +1)
+
+(defun toggle-delete-other-windows ()
+  "Delete other windows in frame if any, or restore previous window config."
+  (interactive)
+  (if (and winner-mode
+           (equal (selected-window) (next-window)))
+      (winner-undo)
+    (delete-other-windows)))
+
+(global-set-key (kbd "C-x 1") #'toggle-delete-other-windows)
+
+
+                                        ; faster mark popping
+(setq set-mark-command-repeat-pop t)

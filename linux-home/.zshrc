@@ -1,6 +1,7 @@
 # Format man pages
 export MANROFFOPT="-c"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export GTK_THEME_CSD_CSS="$HOME/.config/gtk-4.0/custom.css"
 
 path=("$HOME/.local/bin" "$HOME/.cargo/bin" $path)
 export PATH
@@ -73,6 +74,18 @@ export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 if (( $+functions[fzf-file-widget] )); then
   bindkey '^G' fzf-file-widget
 fi
+
+# History settings
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+
+# History options
+setopt HIST_IGNORE_DUPS       # Do not record an entry that was just recorded again
+setopt HIST_IGNORE_ALL_DUPS   # Delete old duplicate entry if new entry is a duplicate
+setopt HIST_SAVE_NO_DUPS      # Do not write duplicate entries to the history file
+setopt HIST_FIND_NO_DUPS      # Do not display duplicate entries when searching
+setopt SHARE_HISTORY          # Share history across all active terminal sessions
 
 precmd() {
   local prompt_text='%F{cyan}%~%f'
