@@ -24,7 +24,7 @@
                                          (expand-file-name "archives/melpa/archive-contents"
                                                            package-user-dir)))))
                (and archive-time
-                    (< (float-time (time-subtract nil archive-time)) 86400))))
+                    (< (float-time (time-subtract nil archive-time)) 186400))))
   (package-refresh-contents))
 
 (require 'use-package)
