@@ -6,7 +6,6 @@
 
   programs.firefox = {
     enable = true;
-
     policies = {
       Preferences = {
         "widget.gtk.libadwaita-colors.enabled" = {
@@ -17,9 +16,16 @@
           Value = true;
           Status = "user";
         };
-      };     
-    };  
+      };
+    };
   };
-  
-}
 
+  environment.systemPackages = with pkgs; [
+    adw-gtk3
+  ];
+
+  # Make adw-gtk3-dark the default for all GTK apps
+  environment.sessionVariables = {
+    GTK_THEME = "adw-gtk3-flat-dark";
+  };
+}

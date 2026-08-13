@@ -1,6 +1,6 @@
 {
   // ── Window ──────────────────────────────────────────────
-  "window.zoomLevel": 1,
+  "window.zoomLevel": 0.7,
   "window.titleBarStyle": "custom",
   // ── Editor ──────────────────────────────────────────────
   "editor.fontSize": 13,

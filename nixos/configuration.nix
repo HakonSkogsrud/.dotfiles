@@ -205,7 +205,7 @@
     lua-language-server
     nixd
     nixfmt
-    nix-direnv 
+    nix-direnv
 
     # Terminal and Shell Utilities
     wget
@@ -219,7 +219,9 @@
     exiftool
     uv
 
+    adw-gtk3
     # Applications and Utilities
+    loupe
     darktable
     syncthing
     (vscodium.override {
@@ -232,8 +234,6 @@
     # Other Tools
     nodejs
   ];
-
-
 
   # ============================================================================
   # NETWORKING & FIREWALL
