@@ -44,6 +44,57 @@
 ;; 2. UI & UX
 ;; ==========================================
 
+;; --- 2. List of Themes to Override ---
+;; Replace these with the theme symbols you want to affect (e.g. doom-one, misterioso, etc.)
+(defvar my-cosmic-themes '(doom-sourcerer misterioso modus-vivendi)
+  "List of theme symbols that should trigger the Cosmic Dark override.")
+
+
+;; --- 3. Override Function ---
+(defun my/apply-cosmic-dark-override (&optional theme &rest _)
+  "Override background and modeline, but ONLY for themes in `my-cosmic-themes`."
+  (interactive)
+  (let ((active-theme (or theme (car custom-enabled-themes))))
+    ;; Check if the loaded theme is in our allowed list (or if run manually)
+    (when (or (called-interactively-p 'any)
+              (memq active-theme my-cosmic-themes))
+      (let ((bg          "#1B1B1B")  ; Main Background
+            (bg-alt      "#282828")  ; Modeline & current line
+            (fg          "#e1e3e8")  ; Text
+            (fg-dim      "#707585")  ; Dimmed text
+            (cosmic-teal "#32b4ac")) ; Accent color
+
+        ;; Main Editor Area & Padding
+        (set-face-attribute 'default nil :background bg :foreground fg)
+        (set-face-attribute 'fringe nil :background bg)
+        (set-face-attribute 'line-number nil :background bg :foreground fg-dim)
+        (set-face-attribute 'line-number-current-line nil :background bg-alt :foreground cosmic-teal :weight 'bold)
+
+        ;; Active Mode-Line
+        (set-face-attribute 'mode-line nil
+                            :background bg-alt
+                            :foreground fg
+                            :box (list :line-width 1 :color cosmic-teal))
+        (set-face-attribute 'mode-line-buffer-id nil
+                            :foreground cosmic-teal
+                            :weight 'bold)
+
+        ;; Inactive Mode-Line
+        (set-face-attribute 'mode-line-inactive nil
+                            :background bg
+                            :foreground fg-dim
+                            :box (list :line-width 1 :color bg-alt))
+
+        ;; Vertical Window Dividers
+        (set-face-attribute 'vertical-border nil :foreground bg-alt)
+        (when (facep 'window-divider)
+          (set-face-attribute 'window-divider nil :foreground bg-alt))))))
+
+;; Automatically trigger on theme switches
+(if (boundp 'enable-theme-functions)
+    (add-hook 'enable-theme-functions #'my/apply-cosmic-dark-override)
+  (advice-add 'load-theme :after #'my/apply-cosmic-dark-override))
+
 (use-package doom-themes)
 
 (setq custom-safe-themes t)
@@ -486,50 +537,6 @@ and searches for 'root_key:' — the YAML definition form."
 (define-key nixos-map (kbd "o") 'open-nixos-config) ; Press 'C-c n c' to open config
 
 
-
-(defun my/apply-cosmic-dark-override (&rest _)
-  "Override current theme's background and modeline with custom dark palette."
-  (interactive)
-  (let ((bg          "#1B1B1B")  ; <--- Main Editor Background
-        (bg-alt      "#282828")  ; Modeline & current line background
-        (fg          "#e1e3e8")  ; Main text
-        (fg-dim      "#707585")  ; Dimmed/inactive text
-        (cosmic-teal "#32b4ac")) ; Accent color
-
-    ;; Main Editor Area
-    (set-face-attribute 'default nil :background bg :foreground fg)
-    (set-face-attribute 'fringe nil :background bg)
-    (set-face-attribute 'line-number nil :background bg :foreground fg-dim)
-    (set-face-attribute 'line-number-current-line nil :background bg-alt :foreground cosmic-teal :weight 'bold)
-
-    ;; Active Mode-Line
-    (set-face-attribute 'mode-line nil
-                        :background bg-alt
-                        :foreground fg
-                        :box (list :line-width 1 :color cosmic-teal))
-    (set-face-attribute 'mode-line-buffer-id nil
-                        :foreground cosmic-teal
-                        :weight 'bold)
-
-    ;; Inactive Mode-Line
-    (set-face-attribute 'mode-line-inactive nil
-                        :background bg
-                        :foreground fg-dim
-                        :box (list :line-width 1 :color bg-alt))
-
-    ;; Vertical Window Dividers
-    (set-face-attribute 'vertical-border nil :foreground bg-alt)
-    (when (facep 'window-divider)
-      (set-face-attribute 'window-divider nil :foreground bg-alt))))
-
-;; Automatically trigger on theme switches
-(if (boundp 'enable-theme-functions)
-    (add-hook 'enable-theme-functions #'my/apply-cosmic-dark-override)
-  (advice-add 'load-theme :after #'my/apply-cosmic-dark-override))
-
-;; Apply on startup
-(my/apply-cosmic-dark-override)
-
 (set-fringe-mode '(16 . 16))
 
 
@@ -565,3 +572,9 @@ and searches for 'root_key:' — the YAML definition form."
 
                                         ; faster mark popping
 (setq set-mark-command-repeat-pop t)
+
+
+
+
+
+
