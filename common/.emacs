@@ -2,9 +2,14 @@
 ;; 1. PERFORMANCE & FOUNDATION
 ;; ==========================================
 
-(setq gc-cons-threshold 100000000   ; 100MB GC for LSP performance
-      read-process-output-max (* 1024 1024) ; 1MB chunks
-      eglot-events-buffer-size 0)           ; Disable LSP logging for speed
+(setq gc-cons-threshold 100000000
+  read-process-output-max (* 4 1024 1024)
+  eglot-events-buffer-size 0
+  redisplay-skip-fontification-on-input t
+  bidi-inhibit-bpa t)
+
+(setq-default bidi-display-reordering 'left-to-right
+      bidi-paragraph-direction 'left-to-right)
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
 (load custom-file 'noerror)
@@ -95,6 +100,15 @@
     (add-hook 'enable-theme-functions #'my/apply-cosmic-dark-override)
   (advice-add 'load-theme :after #'my/apply-cosmic-dark-override))
 
+(defun my/apply-light-fringe-override (&optional theme &rest _)
+  "Make the light-theme fringe inherit the editor background."
+  (when (eq (or theme (car custom-enabled-themes)) 'modus-operandi)
+    (set-face-attribute 'fringe nil :background 'unspecified)))
+
+(if (boundp 'enable-theme-functions)
+    (add-hook 'enable-theme-functions #'my/apply-light-fringe-override)
+  (advice-add 'load-theme :after #'my/apply-light-fringe-override))
+
 (use-package doom-themes)
 
 (setq custom-safe-themes t)
@@ -146,9 +160,19 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
+(set-fringe-mode '(16 . 16))
 (column-number-mode t)
 (savehist-mode 1)
 (recentf-mode 1)
+
+(setq save-interprogram-paste-before-kill t
+  kill-do-not-save-duplicates t
+  ffap-machine-p-known 'reject)
+
+(add-to-list 'savehist-additional-variables 'kill-ring)
+
+(setq-default cursor-in-non-selected-windows nil)
+(setq highlight-nonselected-windows nil)
 
 (defun my/mode-line-git-branch ()
   "Return the current Git branch for the mode line, if available."
@@ -515,8 +539,9 @@ and searches for 'root_key:' — the YAML definition form."
 (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
       select-enable-clipboard t)
 
-;; nixos stuff
-;; ===============================================================================
+;; ==========================================
+;; 9. NIXOS
+;; ==========================================
 
 (defun my-nixos-rebuild ()
   "Run nixos-rebuild switch for the local flake configuration."
@@ -536,27 +561,12 @@ and searches for 'root_key:' — the YAML definition form."
 (define-key nixos-map (kbd "r") 'my-nixos-rebuild)   ; Press 'C-c n r' to rebuild
 (define-key nixos-map (kbd "o") 'open-nixos-config) ; Press 'C-c n c' to open config
 
+;; ==========================================
+;; 10. WINDOW MANAGEMENT
+;; ==========================================
 
-(set-fringe-mode '(16 . 16))
+(setq window-combination-resize t)
 
-
-;; disable bidirectional scanning
-(setq-default bidi-display-reordering 'left-to-right
-              bidi-paragraph-direction 'left-to-right)
-(setq bidi-inhibit-bpa t)
-
-;; skip fontification during input
-(setq redisplay-skip-fontification-on-input t)
-
-;; increase process output buffer
-(setq read-process-output-max (* 4 1024 1024)) ; 4MB
-
-
-;; dont render cursor in non focused windows
-(setq-default cursor-in-non-selected-windows nil)
-(setq highlight-nonselected-windows nil)
-
-;; reversible C-x 1
 (winner-mode +1)
 
 (defun toggle-delete-other-windows ()
@@ -569,8 +579,6 @@ and searches for 'root_key:' — the YAML definition form."
 
 (global-set-key (kbd "C-x 1") #'toggle-delete-other-windows)
 
-
-                                        ; faster mark popping
 (setq set-mark-command-repeat-pop t)
 
 
