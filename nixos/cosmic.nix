@@ -1,17 +1,25 @@
 { pkgs, ... }:
 
 {
-  # Adds COSMIC as a selectable session in GDM.
   services.desktopManager.cosmic.enable = true;
+  services.displayManager.cosmic-greeter.enable = true;
 
-  # A separate home directory prevents GNOME/COSMIC configuration collisions.
-  users.users.cosmic-test = {
-    isNormalUser = true;
-    description = "COSMIC test user";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-    ];
-    shell = pkgs.zsh;
+  programs.firefox = {
+    enable = true;
+
+    policies = {
+      Preferences = {
+        "widget.gtk.libadwaita-colors.enabled" = {
+          Value = false;
+          Status = "user";
+        };
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = {
+          Value = true;
+          Status = "user";
+        };
+      };     
+    };  
   };
+  
 }
+
