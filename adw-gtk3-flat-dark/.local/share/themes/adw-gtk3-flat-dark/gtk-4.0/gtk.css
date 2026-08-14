@@ -1,0 +1,5 @@
+windowcontrols button image:not(:hover) {
+    background-color: transparent;
+}
+@import url('libadwaita.css');
+@import url('libadwaita-tweaks.css');

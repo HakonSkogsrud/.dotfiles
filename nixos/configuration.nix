@@ -16,8 +16,11 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # boot.kernelPackages = pkgs.linuxPackages_latest;  # Stock NixOS kernel
-  boot.kernelPackages = pkgs.linuxPackages_zen;
+  boot.kernelPackages = pkgs.linuxPackages_latest; # Stock NixOS kernel
+  #boot.kernelPackages = pkgs.linuxPackages_zen;
+
+  services.power-profiles-daemon.enable = true;
+  services.thermald.enable = true;
 
   # ============================================================================
   # NETWORKING & HOSTNAME
