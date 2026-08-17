@@ -44,6 +44,8 @@ cd() {
   fi
 }
 
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
+
 alias restart='source ~/.zshrc'
 alias lg='lazygit'
 alias venv='source .venv/bin/activate'
