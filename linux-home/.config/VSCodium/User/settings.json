@@ -23,7 +23,7 @@
   // ── Workbench & Theme ───────────────────────────────────
   "workbench.startupEditor": "none",
   "workbench.iconTheme": "symbols",
-  "workbench.preferredLightColorTheme": "Light Modern",
+  "workbench.preferredLightColorTheme": "Night Owl Light",
   // ── Files & Explorer ────────────────────────────────────
   "files.autoSave": "afterDelay",
   "files.autoSaveWhenNoErrors": true,
@@ -81,7 +81,6 @@
       }
     ]
   },
-  "workbench.colorTheme": "One Dark",
   "glassit.alpha": 100,
   "workbench.preferredDarkColorTheme": "Dark Modern",
 }
