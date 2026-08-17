@@ -13,14 +13,16 @@
   # BOOT & SYSTEM CORE
   # ============================================================================
 
+  boot.kernelParams = [
+    "intel_pstate=active"
+    "processor.ignore_ppc=1"
+  ];
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
   boot.kernelPackages = pkgs.linuxPackages_latest; # Stock NixOS kernel
   #boot.kernelPackages = pkgs.linuxPackages_zen;
-
-  services.power-profiles-daemon.enable = true;
-  services.thermald.enable = true;
 
   # ============================================================================
   # NETWORKING & HOSTNAME
@@ -289,6 +291,36 @@
   # ============================================================================
   # SERVICES
   # ============================================================================
+
+  # ============================================================================
+  # LUNAR LAKE RESUME FIX (Unclamping 400MHz LFM Lock)
+  # ============================================================================
+
+  # CRITICAL: Ensure thermald is disabled. It misreads Lunar Lake sensors
+  # and forces a 400MHz thermal clamp.
+  services.thermald.enable = false;
+
+  services.power-profiles-daemon.enable = true;
+
+  powerManagement = {
+    enable = true;
+    resumeCommands = ''
+      # Run asynchronously so it doesn't delay the lockscreen from appearing
+      (
+        # Wait 2 seconds for DBus and PPD to fully wake up
+        sleep 2
+        
+        # 1. Automate your manual workaround to kick the Embedded Controller (EC)
+        ${pkgs.power-profiles-daemon}/bin/powerprofilesctl set performance
+        
+        # 2. Give the CPU 2 seconds to ramp up clocks and break the 400MHz lock
+        sleep 2
+        
+        # 3. Return to balanced mode for battery life
+        ${pkgs.power-profiles-daemon}/bin/powerprofilesctl set balanced
+      ) &
+    '';
+  };
 
   services.syncthing = {
     enable = true;
