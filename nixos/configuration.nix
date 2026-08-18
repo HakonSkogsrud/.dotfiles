@@ -13,11 +13,6 @@
   # BOOT & SYSTEM CORE
   # ============================================================================
 
-  boot.kernelParams = [
-    "intel_pstate=active"
-    "processor.ignore_ppc=1"
-  ];
-
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -291,36 +286,8 @@
   # ============================================================================
   # SERVICES
   # ============================================================================
-  # ============================================================================
-  # LUNAR LAKE RESUME / POWER MANAGEMENT FIX
-  # ============================================================================
 
-  services.thermald.enable = false; # Keep this disabled
   services.power-profiles-daemon.enable = true;
-
-  powerManagement = {
-    enable = true;
-    resumeCommands = ''
-      # Schedule a detached systemd unit to run 2 seconds after wake.
-      # This survives the suspend cgroup cleanup and runs cleanly in the background.
-      ${pkgs.systemd}/bin/systemd-run --unit=lunar-lake-unthrottle \
-        --on-active=2 \
-        --timer-property=AccuracySec=100ms \
-        ${pkgs.writeShellScript "ll-wake-fix" ''
-          # Explicitly tell the script where the DBus socket is
-          export DBUS_SYSTEM_BUS_ADDRESS="unix:path=/run/dbus/system_bus_socket"
-
-          # 1. Force hardware out of 400 MHz LFM state
-          ${pkgs.power-profiles-daemon}/bin/powerprofilesctl set performance
-
-          # 2. Give the CPU 2 seconds to scale up
-          sleep 2
-
-          # 3. Return to standard EPP
-          ${pkgs.power-profiles-daemon}/bin/powerprofilesctl set balanced
-        ''}
-    '';
-  };
 
   services.syncthing = {
     enable = true;

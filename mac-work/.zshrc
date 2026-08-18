@@ -6,6 +6,7 @@ path=("$HOME/.local/bin" "$HOME/.cargo/bin" $path)
 export PATH
 
 # eza (modern ls)
+alias clear='pyroclear'
 alias ls='eza -al --color=always --group-directories-first --icons=always'
 alias la='eza -a --color=always --group-directories-first --icons=always'
 alias ll='eza -l --color=always --group-directories-first --icons=always'
