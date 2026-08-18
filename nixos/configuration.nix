@@ -291,34 +291,34 @@
   # ============================================================================
   # SERVICES
   # ============================================================================
-
   # ============================================================================
-  # LUNAR LAKE RESUME FIX (Unclamping 400MHz LFM Lock)
+  # LUNAR LAKE RESUME / POWER MANAGEMENT FIX
   # ============================================================================
 
-  # CRITICAL: Ensure thermald is disabled. It misreads Lunar Lake sensors
-  # and forces a 400MHz thermal clamp.
-  services.thermald.enable = false;
-
+  services.thermald.enable = false; # Keep this disabled
   services.power-profiles-daemon.enable = true;
 
   powerManagement = {
     enable = true;
     resumeCommands = ''
-      # Run asynchronously so it doesn't delay the lockscreen from appearing
-      (
-        # Wait 2 seconds for DBus and PPD to fully wake up
-        sleep 2
-        
-        # 1. Automate your manual workaround to kick the Embedded Controller (EC)
-        ${pkgs.power-profiles-daemon}/bin/powerprofilesctl set performance
-        
-        # 2. Give the CPU 2 seconds to ramp up clocks and break the 400MHz lock
-        sleep 2
-        
-        # 3. Return to balanced mode for battery life
-        ${pkgs.power-profiles-daemon}/bin/powerprofilesctl set balanced
-      ) &
+      # Schedule a detached systemd unit to run 2 seconds after wake.
+      # This survives the suspend cgroup cleanup and runs cleanly in the background.
+      ${pkgs.systemd}/bin/systemd-run --unit=lunar-lake-unthrottle \
+        --on-active=2 \
+        --timer-property=AccuracySec=100ms \
+        ${pkgs.writeShellScript "ll-wake-fix" ''
+          # Explicitly tell the script where the DBus socket is
+          export DBUS_SYSTEM_BUS_ADDRESS="unix:path=/run/dbus/system_bus_socket"
+
+          # 1. Force hardware out of 400 MHz LFM state
+          ${pkgs.power-profiles-daemon}/bin/powerprofilesctl set performance
+
+          # 2. Give the CPU 2 seconds to scale up
+          sleep 2
+
+          # 3. Return to standard EPP
+          ${pkgs.power-profiles-daemon}/bin/powerprofilesctl set balanced
+        ''}
     '';
   };
 
