@@ -22,5 +22,13 @@
           ./configuration.nix
         ];
       };
+
+      nixosConfigurations.nixos-vm = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          nix-flatpak.nixosModules.nix-flatpak
+          ../nixos-vm/configuration.nix
+        ];
+      };
     };
 }
