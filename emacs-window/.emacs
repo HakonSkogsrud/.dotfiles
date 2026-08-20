@@ -27,6 +27,9 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;;(add-to-list 'default-frame-alist '(font . "Cascadia Code-10"))
+(set-face-attribute 'default nil :height 110)
+
 ;; ==========================================
 ;; 2. EDITING & NAVIGATION
 ;; ==========================================
@@ -38,14 +41,11 @@
       confirm-kill-processes nil
       sentence-end-double-space nil
       ring-bell-function 'ignore
-      scroll-conservatively 101
-      mouse-wheel-scroll-amount '(2 ((shift) . 5))
-      mouse-wheel-progressive-speed nil
       select-active-regions nil
       mouse-drag-copy-region nil)
 
 (tool-bar-mode -1)
-(menu-bar-mode -1)
+(menu-bar-mode 1)
 (scroll-bar-mode -1)
 (column-number-mode t)
 (savehist-mode 1)
