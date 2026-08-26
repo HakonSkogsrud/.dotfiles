@@ -27,7 +27,7 @@ vim.opt.shiftwidth = 4   -- Use 2 spaces for indent (common for Lua/YAML)
 vim.opt.tabstop = 4      -- A tab character looks like 2 spaces
 vim.opt.softtabstop = 4  -- Number of spaces a tab counts for while editing
 
-vim.filetype.add({
+vim.filetype.add({ 
     extension = {
         yml = function(path)
             if path:match("playbook") or path:match("tasks") or path:match("roles") then
@@ -112,6 +112,14 @@ require("lazy").setup({
     {
         "sindrets/diffview.nvim",
         dependencies = { "nvim-lua/plenary.nvim", "nvim-tree/nvim-web-devicons" },
+    },
+    {
+        "kdheepak/lazygit.nvim",
+        cmd = "LazyGit",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        keys = {
+            { "<leader>gg", "<cmd>LazyGit<CR>", desc = "Git: LazyGit" },
+        },
     },
 
     -- LSP Configuration (Modern Neovim 0.12.x native setup)

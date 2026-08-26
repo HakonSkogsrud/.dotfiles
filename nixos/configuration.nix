@@ -197,6 +197,7 @@
     # Development Tools and Editors
     localsend
     lazygit
+    delta
     neovim
     gh
     stow
