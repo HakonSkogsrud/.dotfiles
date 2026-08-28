@@ -2,14 +2,15 @@
 ;; 1. PERFORMANCE & FOUNDATION
 ;; ==========================================
 
+
 (setq gc-cons-threshold 100000000
-  read-process-output-max (* 4 1024 1024)
-  eglot-events-buffer-size 0
-  redisplay-skip-fontification-on-input t
-  bidi-inhibit-bpa t)
+      read-process-output-max (* 4 1024 1024)
+      eglot-events-buffer-size 0
+      redisplay-skip-fontification-on-input t
+      bidi-inhibit-bpa t)
 
 (setq-default bidi-display-reordering 'left-to-right
-      bidi-paragraph-direction 'left-to-right)
+              bidi-paragraph-direction 'left-to-right)
 
 (setq custom-file (locate-user-emacs-file "custom.el"))
 (load custom-file 'noerror)
@@ -166,8 +167,8 @@
 (recentf-mode 1)
 
 (setq save-interprogram-paste-before-kill t
-  kill-do-not-save-duplicates t
-  ffap-machine-p-known 'reject)
+      kill-do-not-save-duplicates t
+      ffap-machine-p-known 'reject)
 
 (add-to-list 'savehist-additional-variables 'kill-ring)
 

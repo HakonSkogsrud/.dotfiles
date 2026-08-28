@@ -6,6 +6,16 @@ export GTK_THEME_CSD_CSS="$HOME/.config/gtk-4.0/custom.css"
 path=("$HOME/.local/bin" "$HOME/.cargo/bin" $path)
 export PATH
 
+# Word navigation with Ctrl + Left / Right
+bindkey '^[[1;5D' backward-word
+bindkey '^[[1;5C' forward-word
+bindkey '^[^[[D'  backward-word
+bindkey '^[^[[C'  forward-word
+
+# (Optional) Alt + Left / Right
+bindkey '^[[1;3D' backward-word
+bindkey '^[[1;3C' forward-word
+
 # eza (modern ls)
 alias ls='eza -al --color=always --group-directories-first --icons=always'
 alias la='eza -a --color=always --group-directories-first --icons=always'
@@ -44,6 +54,11 @@ cd() {
   fi
 }
 
+# Autosuggestions
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
+if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+  source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
 
 alias restart='source ~/.zshrc'
