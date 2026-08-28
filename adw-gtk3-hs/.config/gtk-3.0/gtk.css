@@ -1,0 +1,7 @@
+/* 3. Your titlebar button styling */
+headerbar button.titlebutton:not(:hover),
+.titlebar button.titlebutton:not(:hover) {
+    background-color: transparent;
+    background-image: none;
+    box-shadow: none;
+}
