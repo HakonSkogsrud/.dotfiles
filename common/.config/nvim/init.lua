@@ -23,24 +23,26 @@ vim.o.scrolloff = 10
 vim.o.confirm = true
 
 vim.opt.expandtab = true -- Use spaces instead of tabs
-vim.opt.shiftwidth = 4   -- Use 2 spaces for indent (common for Lua/YAML)
-vim.opt.tabstop = 4      -- A tab character looks like 2 spaces
+vim.opt.shiftwidth = 4   -- Use four spaces for indentation
+vim.opt.tabstop = 4      -- Display a tab as four spaces
 vim.opt.softtabstop = 4  -- Number of spaces a tab counts for while editing
 
-vim.filetype.add({ 
+local function yaml_filetype(path)
+    local normalized_path = path:lower()
+    if normalized_path:match("playbook")
+        or normalized_path:match("site%.ya?ml$")
+        or normalized_path:match("/roles?/")
+        or normalized_path:match("/tasks?/")
+        or normalized_path:match("/(group_vars|host_vars)/") then
+        return "yaml.ansible"
+    end
+    return "yaml"
+end
+
+vim.filetype.add({
     extension = {
-        yml = function(path)
-            if path:match("playbook") or path:match("tasks") or path:match("roles") then
-                return "yaml.ansible"
-            end
-            return "yaml"
-        end,
-        yaml = function(path)
-            if path:match("playbook") or path:match("tasks") or path:match("roles") then
-                return "yaml.ansible"
-            end
-            return "yaml"
-        end,
+        yml = yaml_filetype,
+        yaml = yaml_filetype,
     },
     pattern = {
         [".*%.sh%.j2"] = "sh",
@@ -206,9 +208,11 @@ require("lazy").setup({
     {
         "mfussenegger/nvim-dap",
         dependencies = {
-            "rcarriga/nvim-dap-ui",
+            {
+                "rcarriga/nvim-dap-ui",
+                dependencies = { "nvim-neotest/nvim-nio" },
+            },
             "mfussenegger/nvim-dap-python",
-            "nvim-neotest/nvim-nio",
         },
         config = function()
             local dap, dapui = require("dap"), require("dapui")
@@ -219,6 +223,23 @@ require("lazy").setup({
             dap.listeners.after.event_initialized["dapui_config"] = dapui.open
             dap.listeners.before.event_terminated["dapui_config"] = dapui.close
             dap.listeners.before.event_exited["dapui_config"] = dapui.close
+
+            vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
+            vim.keymap.set("n", "<F10>", dap.step_over, { desc = "Debug: Step Over" })
+            vim.keymap.set("n", "<F11>", dap.step_into, { desc = "Debug: Step Into" })
+            vim.keymap.set("n", "<F12>", dap.step_out, { desc = "Debug: Step Out" })
+            vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
+            vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Debug: Toggle UI" })
+            vim.keymap.set("n", "<leader>dq", function()
+                dap.terminate()
+                dapui.close()
+            end, { desc = "Debug: Terminate and Close UI" })
+            vim.keymap.set("n", "<leader>dc", function()
+                dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
+            end, { desc = "Debug: Set Conditional Breakpoint" })
+            vim.keymap.set("n", "<leader>dt", dap_python.test_method, { desc = "Debug: Nearest Test Method" })
+            vim.keymap.set("n", "<leader>dT", dap_python.test_class, { desc = "Debug: Nearest Test Class" })
+            vim.keymap.set("n", "<leader>dl", dap.run_last, { desc = "Debug: Re-run Last Session" })
         end,
     },
 
@@ -329,38 +350,6 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "TermOpen" }, {
         vim.cmd("startinsert")
     end,
 })
--- Debugging
-local dap = require("dap")
-local dapui = require("dapui")
-
--- Basic Debugger Controls
-vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
-vim.keymap.set("n", "<F10>", dap.step_over, { desc = "Debug: Step Over" })
-vim.keymap.set("n", "<F11>", dap.step_into, { desc = "Debug: Step Into" })
-vim.keymap.set("n", "<F12>", dap.step_out, { desc = "Debug: Step Out" })
-
--- Toggle UI and Breakpoints
-vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
-vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Debug: Toggle UI" })
 vim.keymap.set("i", "jk", "<Esc>", { desc = "Exit Insert Mode" })
--- Close Debugger (Important!)
-vim.keymap.set("n", "<leader>dq", function()
-    dap.terminate()
-    dapui.close()
-end, { desc = "Debug: Terminate and Close UI" })
-vim.keymap.set("n", "<leader>dc", function()
-    require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))
-end, { desc = "Debug: Set Conditional Breakpoint" })
 
 vim.keymap.set("n", "<leader>ta", "<cmd>!python -m pytest<CR>", { desc = "Run All Tests (pytest)" })
-vim.keymap.set("n", "<leader>dt", function()
-    require("dap-python").test_method()
-end, { desc = "Debug: Nearest Test Method" })
-
-vim.keymap.set("n", "<leader>dT", function()
-    require("dap-python").test_class()
-end, { desc = "Debug: Nearest Test Class" })
-
-vim.keymap.set("n", "<leader>dl", function()
-    require("dap").run_last()
-end, { desc = "Debug: Re-run Last Session" })

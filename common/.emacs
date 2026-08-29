@@ -1,3 +1,5 @@
+;;; .emacs --- Personal Emacs configuration -*- lexical-binding: t; -*-
+
 ;; ==========================================
 ;; 1. PERFORMANCE & FOUNDATION
 ;; ==========================================
@@ -19,13 +21,13 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-;; Refresh package archives if stale (older than 1 day)
+;; Refresh package archives if stale (older than 7 days)
 (unless (and package-archive-contents
              (let ((archive-time (nth 5 (file-attributes
                                          (expand-file-name "archives/melpa/archive-contents"
                                                            package-user-dir)))))
                (and archive-time
-                    (< (float-time (time-subtract nil archive-time)) 186400))))
+                    (< (float-time (time-subtract nil archive-time)) 604800))))
   (package-refresh-contents))
 
 (require 'use-package)
@@ -112,7 +114,11 @@
 
 (use-package doom-themes)
 
-(setq custom-safe-themes t)
+;; Trust built-in themes, hashes approved in custom.el, and this reviewed
+;; version of doom-sourcerer. Theme updates require explicit approval.
+(add-to-list 'custom-safe-themes 'default)
+(add-to-list 'custom-safe-themes
+             "0d2c5679b6d087686dcfd4d7e57ed8e8aedcccc7f1a478cd69704c02e4ee36fe")
 
 (use-package auto-dark
   :init
@@ -277,13 +283,15 @@
         (json   . ("https://github.com/tree-sitter/tree-sitter-json"))
         (nix    . ("https://github.com/nix-community/tree-sitter-nix"))))
 
-(dolist (lang (mapcar #'car treesit-language-source-alist))
-  (unless (treesit-language-available-p lang)
-    (treesit-install-language-grammar lang)))
+(defun my/treesit-install-grammars ()
+  "Install any configured tree-sitter grammars that are currently missing."
+  (interactive)
+  (dolist (lang (mapcar #'car treesit-language-source-alist))
+    (unless (treesit-language-available-p lang)
+      (treesit-install-language-grammar lang))))
 
 (setq major-mode-remap-alist nil)
 (dolist (entry '((python python-mode python-ts-mode)
-                 (go     go-mode     go-ts-mode)
                  (yaml   yaml-mode   yaml-ts-mode)
                  (bash   bash-mode   bash-ts-mode)
                  (json   json-mode   json-ts-mode)
@@ -304,10 +312,47 @@
 ;; The (nil t) form strips .j2 and re-checks auto-mode-alist on the remainder.
 (add-to-list 'auto-mode-alist '("\\.j2\\'" nil t))
 
+(defun my/python-project-find (directory)
+  "Return the nearest pyproject.toml project containing DIRECTORY."
+  ;; Prefer a nested Python project over an enclosing Git repository.
+  (when-let ((root (locate-dominating-file directory "pyproject.toml")))
+    (cons 'transient root)))
+
+(defun my/python-venv ()
+  "Return a local .venv, falling back to the current project root."
+  ;; A venv beside the file is more specific than one at the project root.
+  (let* ((local-directory (file-name-directory
+                           (or (buffer-file-name) default-directory)))
+         (local-venv (expand-file-name ".venv" local-directory)))
+    (if (file-directory-p local-venv)
+        local-venv
+      (when-let* ((project (project-current))
+                  (project-venv (expand-file-name ".venv"
+                                                  (project-root project)))
+                  ((file-directory-p project-venv)))
+        project-venv))))
+
+(defun my/python-eglot-ensure ()
+  "Start Eglot using the current project's uv environment."
+  (require 'eglot)
+  (add-hook 'project-find-functions #'my/python-project-find nil t)
+  (let* ((venv (my/python-venv))
+         (venv-python (and venv (expand-file-name "bin/python" venv))))
+    (when (and venv-python (file-executable-p venv-python))
+      ;; Keep the selected environment local to this buffer and LSP process.
+      (setq-local process-environment (copy-sequence process-environment))
+      (setenv "VIRTUAL_ENV" venv)
+      (setenv "PATH" (concat (expand-file-name "bin" venv)
+                             path-separator
+                             (getenv "PATH")))
+      (setq-local eglot-workspace-configuration
+                  (plist-put (copy-sequence eglot-workspace-configuration)
+                             :python `(:pythonPath ,venv-python))))
+    (eglot-ensure)))
+
 (use-package eglot
   :hook ((python-mode     . my/python-eglot-ensure)
          (python-ts-mode  . my/python-eglot-ensure)
-         (go-ts-mode      . eglot-ensure)
          (ansible-ts-mode . eglot-ensure)
          (bash-ts-mode    . eglot-ensure)
          (nix-ts-mode     . eglot-ensure))
@@ -324,8 +369,6 @@
                '(ansible-ts-mode . ("ansible-language-server" "--stdio")))
   (add-to-list 'eglot-server-programs
                '((python-mode python-ts-mode) . ("basedpyright-langserver" "--stdio")))
-  (add-to-list 'eglot-server-programs
-               '(go-ts-mode . ("gopls")))
   (add-to-list 'eglot-server-programs
                '(nix-ts-mode . ("nixd"))))
 
@@ -349,7 +392,7 @@
 (defun my/ansible-find-variable ()
   "Search project for the Ansible variable definition around point.
 Extracts content between {{ and }}, takes the root key (before first dot),
-and searches for 'root_key:' — the YAML definition form."
+and searches for `root_key:' — the YAML definition form."
   (interactive)
   (let* ((start (save-excursion (search-backward "{{" nil t) (+ (point) 2)))
          (end   (save-excursion (search-forward  "}}" nil t) (- (point) 2)))
@@ -384,45 +427,6 @@ and searches for 'root_key:' — the YAML definition form."
 ;; ==========================================
 ;; 6. PYTHON
 ;; ==========================================
-
-(defun my/python-project-find (directory)
-  "Return the nearest pyproject.toml project containing DIRECTORY."
-  ;; Prefer a nested Python project over an enclosing Git repository.
-  (when-let ((root (locate-dominating-file directory "pyproject.toml")))
-    (cons 'transient root)))
-
-(defun my/python-venv ()
-  "Return a local .venv, falling back to the current project root."
-  ;; A venv beside the file is more specific than one at the project root.
-  (let* ((local-directory (file-name-directory
-                           (or (buffer-file-name) default-directory)))
-         (local-venv (expand-file-name ".venv" local-directory)))
-    (if (file-directory-p local-venv)
-        local-venv
-      (when-let* ((project (project-current))
-                  (project-venv (expand-file-name ".venv"
-                                                  (project-root project)))
-                  ((file-directory-p project-venv)))
-        project-venv))))
-
-(defun my/python-eglot-ensure ()
-  "Start Eglot using the current project's uv environment."
-  ;; Eglot is lazy-loaded, so its configuration variables may not exist yet.
-  (require 'eglot)
-  (add-hook 'project-find-functions #'my/python-project-find nil t)
-  (let* ((venv (my/python-venv))
-         (venv-python (and venv (expand-file-name "bin/python" venv))))
-    (when (and venv-python (file-executable-p venv-python))
-      ;; Keep the selected environment local to this buffer and LSP process.
-      (setq-local process-environment (copy-sequence process-environment))
-      (setenv "VIRTUAL_ENV" venv)
-      (setenv "PATH" (concat (expand-file-name "bin" venv)
-                             path-separator
-                             (getenv "PATH")))
-      (setq-local eglot-workspace-configuration
-                  (plist-put (copy-sequence eglot-workspace-configuration)
-                             :python `(:pythonPath ,venv-python))))
-    (eglot-ensure)))
 
 (defun my/python-run ()
   "Run the current Python file with uv in an asynchronous shell buffer."
@@ -474,7 +478,7 @@ and searches for 'root_key:' — the YAML definition form."
   (defun my/dape-pytest-args ()
     "Return pytest args for the test function at point."
     (let* ((file (file-relative-name (buffer-file-name)
-                                     (funcall dape-cwd-fn)))
+                                     (funcall dape-cwd-function)))
            (func (save-excursion
                    (end-of-line)
                    (when (re-search-backward "^\\s-*def \\(test[a-zA-Z0-9_]*\\)" nil t)
@@ -483,10 +487,10 @@ and searches for 'root_key:' — the YAML definition form."
       (vector "-x" "-s" "--no-header" node))))
 
 (with-eval-after-load 'python
-  (define-key python-mode-map    (kbd "C-c r")   #'my/python-run)
+  (define-key python-mode-map    (kbd "C-c C-r") #'my/python-run)
   (define-key python-mode-map    (kbd "C-c C-d") #'dape)
   (define-key python-mode-map    (kbd "C-c b")   #'dape-breakpoint-toggle)
-  (define-key python-ts-mode-map (kbd "C-c r")   #'my/python-run)
+  (define-key python-ts-mode-map (kbd "C-c C-r") #'my/python-run)
   (define-key python-ts-mode-map (kbd "C-c C-d") #'dape)
   (define-key python-ts-mode-map (kbd "C-c b")   #'dape-breakpoint-toggle))
 
@@ -499,7 +503,7 @@ and searches for 'root_key:' — the YAML definition form."
   (interactive)
   (let ((shell-buf (get-buffer "*shell*")))
     (if (and shell-buf (get-buffer-window shell-buf))
-        (delete-window (get-buffer-window shell-buf))
+        (quit-window nil (get-buffer-window shell-buf))
       (project-shell))))
 
 (defun my/shell-mode-setup ()
@@ -560,7 +564,7 @@ and searches for 'root_key:' — the YAML definition form."
 
 ;; Bind your commands inside the prefix map
 (define-key nixos-map (kbd "r") 'my-nixos-rebuild)   ; Press 'C-c n r' to rebuild
-(define-key nixos-map (kbd "o") 'open-nixos-config) ; Press 'C-c n c' to open config
+(define-key nixos-map (kbd "o") 'open-nixos-config) ; Press 'C-c n o' to open config
 
 ;; ==========================================
 ;; 10. WINDOW MANAGEMENT
@@ -581,9 +585,4 @@ and searches for 'root_key:' — the YAML definition form."
 (global-set-key (kbd "C-x 1") #'toggle-delete-other-windows)
 
 (setq set-mark-command-repeat-pop t)
-
-
-
-
-
 
