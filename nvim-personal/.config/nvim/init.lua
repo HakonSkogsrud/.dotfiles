@@ -1,0 +1,355 @@
+-- 1. SETTINGS
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+vim.o.number = true
+vim.o.relativenumber = true
+vim.o.mouse = "a"
+vim.o.showmode = false
+vim.o.shell = "zsh"
+vim.o.breakindent = true
+vim.o.undofile = true
+vim.o.ignorecase = true
+vim.o.smartcase = true
+vim.o.signcolumn = "yes"
+vim.o.updatetime = 250
+vim.o.timeoutlen = 300
+vim.o.splitright = true
+vim.o.splitbelow = true
+vim.o.list = true
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+vim.o.inccommand = "split"
+vim.o.cursorline = true
+vim.o.scrolloff = 10
+vim.o.confirm = true
+
+vim.opt.expandtab = true -- Use spaces instead of tabs
+vim.opt.shiftwidth = 4   -- Use four spaces for indentation
+vim.opt.tabstop = 4      -- Display a tab as four spaces
+vim.opt.softtabstop = 4  -- Number of spaces a tab counts for while editing
+
+local function yaml_filetype(path)
+    local normalized_path = path:lower()
+    if normalized_path:match("playbook")
+        or normalized_path:match("site%.ya?ml$")
+        or normalized_path:match("/roles?/")
+        or normalized_path:match("/tasks?/")
+        or normalized_path:match("/(group_vars|host_vars)/") then
+        return "yaml.ansible"
+    end
+    return "yaml"
+end
+
+vim.filetype.add({
+    extension = {
+        yml = yaml_filetype,
+        yaml = yaml_filetype,
+    },
+    pattern = {
+        [".*%.sh%.j2"] = "sh",
+        [".*%.bash%.j2"] = "sh",
+    },
+})
+-- 2. LAZY.NVIM BOOTSTRAP
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+    local out = vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "--branch=stable",
+        "https://github.com/folke/lazy.nvim.git",
+        lazypath,
+    })
+    if vim.v.shell_error ~= 0 then
+        error("Error cloning lazy.nvim:\n" .. out)
+    end
+end
+vim.opt.rtp:prepend(lazypath)
+
+-- 3. PLUGINS
+require("lazy").setup({
+    {
+        "projekt0n/github-nvim-theme",
+        name = "github-theme",
+        priority = 1000,
+        config = function()
+            require("github-theme").setup({
+                options = {
+                    transparent = true,
+                    terminal_colors = true,
+                    dim_inactive = false,
+                },
+            })
+            vim.cmd.colorscheme("github_dark_dimmed")
+        end,
+    },
+    -- The universal transparency plugin
+    {
+        "xiyaowong/transparent.nvim",
+        lazy = false, -- Critical: prevents lazy-loading issues
+        opts = {
+            extra_groups = {
+                "NormalFloat",
+                "NeoTreeNormal",
+                "NeoTreeNormalNC",
+                "NeoTreeWinSeparator",
+            },
+        },
+        config = function(_, opts)
+            require("transparent").setup(opts)
+            vim.cmd("TransparentEnable") -- Automatically triggers the transparency logic
+        end,
+    },
+    { "nvim-tree/nvim-web-devicons" },
+    { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
+    {
+        "nvim-neo-tree/neo-tree.nvim",
+        branch = "v3.x",
+        dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
+    },
+    {
+        "lewis6991/gitsigns.nvim",
+        opts = {
+            signs = {
+                add = { text = "│" },
+                change = { text = "│" },
+                delete = { text = "_" },
+                topdelete = { text = "‾" },
+                changedelete = { text = "~" },
+            },
+        },
+    },
+    {
+        "sindrets/diffview.nvim",
+        dependencies = { "nvim-lua/plenary.nvim", "nvim-tree/nvim-web-devicons" },
+    },
+    {
+        "kdheepak/lazygit.nvim",
+        cmd = "LazyGit",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        keys = {
+            { "<leader>gg", "<cmd>LazyGit<CR>", desc = "Git: LazyGit" },
+        },
+    },
+
+    -- LSP Configuration (Modern Neovim 0.12.x native setup)
+    {
+        "neovim/nvim-lspconfig",
+        dependencies = {
+            "saghen/blink.cmp",
+        },
+        config = function()
+            local caps = require("blink.cmp").get_lsp_capabilities()
+
+            -- Define your target servers
+            local servers = {
+                basedpyright = { settings = { basedpyright = { analysis = { typeCheckingMode = "basic" } } } },
+                ansiblels = {},
+                ruff = {},
+                lua_ls = {},
+                nixd = {},
+            }
+
+            -- Set up and enable each server natively using the 0.11+ vim.lsp API
+            for server_name, server in pairs(servers) do
+                server.capabilities = vim.tbl_deep_extend("force", {}, caps, server.capabilities or {})
+
+                -- 1. Register the server settings natively
+                vim.lsp.config(server_name, server)
+
+                -- 2. Enable/Activate the server natively
+                vim.lsp.enable(server_name)
+            end
+        end,
+    },
+    -- Autocomplete
+    {
+        "saghen/blink.cmp",
+        version = "v0.*",
+        opts = {
+            keymap = {
+                preset = "none",
+                -- Selection (Next/Prev)
+                ["<C-n>"] = { "select_next", "fallback" },
+                ["<C-p>"] = { "select_prev", "fallback" },
+                ["<Tab>"] = { "select_next", "fallback" },
+                ["<S-Tab>"] = { "select_prev", "fallback" },
+
+                -- Accept completion
+                ["<C-f>"] = { "accept", "fallback" },
+
+                -- Standard controls
+                ["<Up>"] = { "select_prev", "fallback" },
+                ["<Down>"] = { "select_next", "fallback" },
+            },
+            completion = {
+                list = { selection = { preselect = true, auto_insert = false } },
+                ghost_text = { enabled = true }, -- THIS is what makes C-f feel right
+            },
+        },
+    },
+    {
+        "stevearc/conform.nvim",
+        opts = {
+            format_on_save = { timeout_ms = 500, lsp_format = "fallback" },
+            formatters_by_ft = {
+                ansible = { "ansible-lint" },
+                json = { "prettier" },
+                jsonc = { "prettier" },
+                lua = { "stylua" },
+                nix = { "nixfmt" },
+                python = { "ruff_format" },
+                toml = { "taplo" },
+            },
+        },
+    },
+
+    -- Debugging
+    {
+        "mfussenegger/nvim-dap",
+        dependencies = {
+            {
+                "rcarriga/nvim-dap-ui",
+                dependencies = { "nvim-neotest/nvim-nio" },
+            },
+            "mfussenegger/nvim-dap-python",
+        },
+        config = function()
+            local dap, dapui = require("dap"), require("dapui")
+            local dap_python = require("dap-python")
+            dap_python.setup("uv")
+            dap_python.test_runner = "pytest"
+            dapui.setup()
+            dap.listeners.after.event_initialized["dapui_config"] = dapui.open
+            dap.listeners.before.event_terminated["dapui_config"] = dapui.close
+            dap.listeners.before.event_exited["dapui_config"] = dapui.close
+
+            vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
+            vim.keymap.set("n", "<F10>", dap.step_over, { desc = "Debug: Step Over" })
+            vim.keymap.set("n", "<F11>", dap.step_into, { desc = "Debug: Step Into" })
+            vim.keymap.set("n", "<F12>", dap.step_out, { desc = "Debug: Step Out" })
+            vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
+            vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Debug: Toggle UI" })
+            vim.keymap.set("n", "<leader>dq", function()
+                dap.terminate()
+                dapui.close()
+            end, { desc = "Debug: Terminate and Close UI" })
+            vim.keymap.set("n", "<leader>dc", function()
+                dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
+            end, { desc = "Debug: Set Conditional Breakpoint" })
+            vim.keymap.set("n", "<leader>dt", dap_python.test_method, { desc = "Debug: Nearest Test Method" })
+            vim.keymap.set("n", "<leader>dT", dap_python.test_class, { desc = "Debug: Nearest Test Class" })
+            vim.keymap.set("n", "<leader>dl", dap.run_last, { desc = "Debug: Re-run Last Session" })
+        end,
+    },
+
+    -- Treesitter
+    {
+        "nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate",
+        config = function()
+            require("nvim-treesitter").setup({
+                ensure_installed = { "python", "ansible", "yaml", "lua", "bash", "markdown", "nix" },
+            })
+            -- Enable treesitter-based indentation (v1.0.0+ uses native vim option)
+            vim.o.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end,
+    },
+})
+
+-- 4. KEYMAPS
+
+-- Paste from the system clipboard without making visual replacements overwrite it
+vim.keymap.set("x", "p", '"+p', { desc = "Paste from system clipboard" })
+
+-- Standard window movement
+vim.keymap.set("n", "<C-h>", "<C-w>h")
+vim.keymap.set("n", "<C-j>", "<C-w>j")
+vim.keymap.set("n", "<C-k>", "<C-w>k")
+vim.keymap.set("n", "<C-l>", "<C-w>l")
+
+-- Terminal-mode movement (Jump out of terminal seamlessly)
+vim.keymap.set("t", "<C-h>", [[<C-\><C-n><C-w>h]])
+vim.keymap.set("t", "<C-j>", [[<C-\><C-n><C-w>j]])
+vim.keymap.set("t", "<C-k>", [[<C-\><C-n><C-w>k]])
+vim.keymap.set("t", "<C-l>", [[<C-\><C-n><C-w>l]])
+
+-- Terminal Toggle Logic
+local term_buf = nil
+local term_win = nil
+
+function _G.toggle_terminal()
+    if term_win and vim.api.nvim_win_is_valid(term_win) then
+        vim.api.nvim_win_close(term_win, true)
+        term_win = nil
+    else
+        vim.cmd("botright split")
+        vim.api.nvim_win_set_height(0, 15)
+        if term_buf and vim.api.nvim_buf_is_valid(term_buf) then
+            vim.api.nvim_set_current_buf(term_buf)
+        else
+            vim.cmd("term")
+            term_buf = vim.api.nvim_get_current_buf()
+        end
+        term_win = vim.api.nvim_get_current_win()
+    end
+end
+
+-- 1. Map for Normal Mode
+vim.keymap.set("n", "<leader>tt", "<cmd>lua toggle_terminal()<CR>", { desc = "Toggle Terminal" })
+
+-- 2. Map for Terminal Mode
+vim.keymap.set("t", "<leader>tt", [[<C-\><C-n><cmd>lua toggle_terminal()<CR>]], { desc = "Toggle Terminal" })
+-- Telescope Search Suite
+local builtin = require("telescope.builtin")
+vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "Search Help" })
+vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "Search Keymaps" })
+vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "Search Files" })
+vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "Search Grep" })
+vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "Search Diagnostics" })
+vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "Search Resume" })
+vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = "Search Recent Files" })
+vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "Find buffers" })
+vim.keymap.set("n", "<leader>/", builtin.current_buffer_fuzzy_find, { desc = "Fuzzy search buffer" })
+vim.keymap.set({ "n", "v" }, "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
+vim.keymap.set("n", "gl", vim.diagnostic.open_float, { desc = "Show line diagnostics" })
+
+-- Terminal and Explorer
+vim.keymap.set("n", "<leader>e", ":Neotree toggle<CR>")
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
+vim.keymap.set("t", "jk", "<C-\\><C-n>")
+vim.keymap.set("n", "<C-Up>", ":resize +4<CR>")
+vim.keymap.set("n", "<C-Down>", ":resize -4<CR>")
+vim.keymap.set("n", "<C-Left>", ":vertical resize -4<CR>")
+vim.keymap.set("n", "<C-Right>", ":vertical resize +4<CR>")
+vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen HEAD<CR>", { desc = "Git: Diff against HEAD" })
+vim.keymap.set("n", "<leader>gD", "<cmd>DiffviewOpen --cached<CR>", { desc = "Git: Staged diff" })
+vim.keymap.set("n", "<leader>gw", "<cmd>DiffviewOpen<CR>", { desc = "Git: Worktree vs index" })
+vim.keymap.set("n", "<leader>gf", "<cmd>DiffviewFileHistory %<CR>", { desc = "Git: File history" })
+vim.keymap.set("n", "<leader>gF", "<cmd>DiffviewFileHistory<CR>", { desc = "Git: Branch history" })
+vim.keymap.set("n", "<leader>gq", "<cmd>DiffviewClose<CR>", { desc = "Git: Close diff view" })
+vim.keymap.set("n", "<leader>gp", "<cmd>Gitsigns preview_hunk_inline<CR>", { desc = "Git: Preview hunk" })
+vim.keymap.set("n", "<leader>gb", "<cmd>Gitsigns blame_line<CR>", { desc = "Git: Blame line" })
+vim.keymap.set("n", "<leader>gs", "<cmd>Gitsigns stage_hunk<CR>", { desc = "Git: Stage hunk" })
+vim.keymap.set("n", "<leader>gr", "<cmd>Gitsigns reset_hunk<CR>", { desc = "Git: Reset hunk" })
+-- LSP Attach Mappings
+vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(event)
+        local buf = event.buf
+        vim.keymap.set("n", "grr", builtin.lsp_references, { buffer = buf, desc = "Goto References" })
+        vim.keymap.set("n", "grd", builtin.lsp_definitions, { buffer = buf, desc = "Goto Definition" })
+        vim.keymap.set("n", "grn", vim.lsp.buf.rename, { buffer = buf, desc = "Rename" })
+        vim.keymap.set("n", "gra", vim.lsp.buf.code_action, { buffer = buf, desc = "Code Action" })
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = buf, desc = "Hover Documentation" })
+    end,
+})
+-- Automatically enter Insert Mode when entering a terminal buffer
+vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "TermOpen" }, {
+    pattern = "term://*",
+    callback = function()
+        vim.cmd("startinsert")
+    end,
+})
+vim.keymap.set("i", "jk", "<Esc>", { desc = "Exit Insert Mode" })
+
+vim.keymap.set("n", "<leader>ta", "<cmd>!python -m pytest<CR>", { desc = "Run All Tests (pytest)" })
