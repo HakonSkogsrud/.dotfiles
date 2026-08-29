@@ -67,10 +67,18 @@ vim.opt.rtp:prepend(lazypath)
 -- 3. PLUGINS
 require("lazy").setup({
     {
-        "folke/tokyonight.nvim",
+        "projekt0n/github-nvim-theme",
+        name = "github-theme",
         priority = 1000,
         config = function()
-            vim.cmd.colorscheme("tokyonight")
+            require("github-theme").setup({
+                options = {
+                    transparent = true,
+                    terminal_colors = true,
+                    dim_inactive = false,
+                },
+            })
+            vim.cmd.colorscheme("github_dark_dimmed")
         end,
     },
     -- The universal transparency plugin
