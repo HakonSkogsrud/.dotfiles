@@ -1,32 +1,16 @@
 { pkgs, ... }:
 
-let
-  papirus-palebrown = pkgs.runCommand "papirus-icon-theme-palebrown" {
-    nativeBuildInputs = [ pkgs.papirus-folders ];
-  } ''
-    mkdir -p "$out/share/icons"
-    cp -r ${pkgs.papirus-icon-theme}/share/icons/. "$out/share/icons/"
-    chmod -R u+w "$out/share/icons"
-
-    USER_HOME="$TMPDIR" DISABLE_UPDATE_ICON_CACHE=1 \
-      papirus-folders --once --color palebrown \
-        --theme "$out/share/icons/Papirus"
-  '';
-in
 {
   services.xserver.enable = true;
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
 
   environment.systemPackages = with pkgs; [
-    papirus-palebrown
     hicolor-icon-theme
     adwaita-icon-theme
-
+    
     ghostty
     bella
-    gitte
-
     gnomeExtensions.legacy-gtk3-theme-scheme-auto-switcher
   ];
 

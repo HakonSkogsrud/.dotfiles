@@ -260,6 +260,7 @@
     nixd
     nixfmt
     nix-direnv
+    codex
 
     # Terminal and Shell Utilities
     wget
@@ -275,6 +276,7 @@
 
     # Applications and Utilities
     loupe
+    chatgpt
     darktable
     syncthing
     (vscodium.override {
