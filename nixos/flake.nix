@@ -23,10 +23,9 @@
         ];
       };
 
-      nixosConfigurations.nixos-vm = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.nixos-proxmox = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
-          nix-flatpak.nixosModules.nix-flatpak
           ../nixos-vm/configuration.nix
         ];
       };
