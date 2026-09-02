@@ -69,8 +69,8 @@
           gtk-theme = "adw-gtk3";
         };
         "org/gnome/desktop/background" = {
-          picture-uri = "file:///home/haaksk/.dotfiles/gnome/.local/share/backgrounds/nixos-wallpaper-mist.png";
-          picture-uri-dark = "file:///home/haaksk/.dotfiles/gnome/.local/share/backgrounds/3440x1440-dark-grey.png";
+          picture-uri = "file:///home/haaksk/.dotfiles/gnome-wallpapers/.local/share/backgrounds/nixos-wallpaper-mist.png";
+          picture-uri-dark = "file:///home/haaksk/.dotfiles/gnome-wallpapers/.local/share/backgrounds/3440x1440-dark-grey.png";
           picture-options = "zoom";
         };
       };

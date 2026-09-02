@@ -40,10 +40,6 @@ if (( $+commands[fzf] )); then
   source <(fzf --zsh)
 fi
 
-if (( $+commands[direnv] )); then
-  eval "$(direnv hook zsh)"
-fi
-
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 cd() {
