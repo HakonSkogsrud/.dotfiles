@@ -1,7 +1,7 @@
 {
   // ── Window ──────────────────────────────────────────────
   "window.zoomLevel": 0.7,
-  "window.titleBarStyle": "native",
+  "window.titleBarStyle": "custom",
   // ── Editor ──────────────────────────────────────────────
   "editor.fontSize": 13,
   "editor.fontFamily": "JetBrainsMono Nerd Font Mono",
