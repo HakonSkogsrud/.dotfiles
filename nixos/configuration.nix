@@ -91,6 +91,8 @@
   # ============================================================================
 
   environment.sessionVariables = {
+    EDITOR = "nvim";
+    VISUAL = "nvim";
     NIXOS_OZONE_WL = "1";
     LIBVA_DRIVER_NAME = "iHD";
     ZED_RENDERER = "gles"; # Force OpenGL ES to fix Zed editor Intel GPU lag/freezes
@@ -211,6 +213,10 @@
   services.flatpak = {
     enable = true;
     packages = [
+      # Keep both variants available so GTK3 Flatpaks follow GNOME's
+      # light/dark appearance setting.
+      "org.gtk.Gtk3theme.adw-gtk3"
+      "org.gtk.Gtk3theme.adw-gtk3-dark"
       "org.onlyoffice.desktopeditors"
       "md.obsidian.Obsidian"
       "io.github.CyberTimon.RapidRAW"
@@ -220,6 +226,20 @@
 
     overrides."io.github.CyberTimon.RapidRAW".Context.filesystems = [
       "/home/haaksk/Photos"
+    ];
+
+    # Both applications currently render a light client-side titlebar on
+    # native Wayland.  Use Mutter's X11 decorations until that is fixed
+    # upstream; the GTK theme itself still follows GNOME's color scheme.
+    overrides."org.signal.Signal".Context.sockets = [
+      "x11"
+      "!wayland"
+      "!fallback-x11"
+    ];
+    overrides."org.localsend.localsend_app".Context.sockets = [
+      "x11"
+      "!wayland"
+      "!fallback-x11"
     ];
   };
 
