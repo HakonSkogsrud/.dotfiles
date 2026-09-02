@@ -6,7 +6,7 @@
   # ============================================================================
   imports = [
     ./hardware-configuration.nix
-    ./cosmic.nix
+    ./gnome.nix
   ];
 
   # ============================================================================
@@ -16,8 +16,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  boot.kernelPackages = pkgs.linuxPackages_latest; # Stock NixOS kernel
-  #boot.kernelPackages = pkgs.linuxPackages_zen;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # ============================================================================
   # NETWORKING & HOSTNAME
@@ -25,6 +24,25 @@
 
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
+
+  # Prefer the normal LAN route over policy-routing tables (for example,
+  # tables installed by VPN software) when reaching the local subnet.
+  systemd.services.local-network-policy-rule = {
+    description = "Route the local subnet through the main routing table";
+    wantedBy = [ "network.target" ];
+    after = [ "NetworkManager.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      ${pkgs.iproute2}/bin/ip rule delete to 10.0.0.0/24 priority 5000 table main 2>/dev/null || true
+      ${pkgs.iproute2}/bin/ip rule add to 10.0.0.0/24 priority 5000 table main
+    '';
+    preStop = ''
+      ${pkgs.iproute2}/bin/ip rule delete to 10.0.0.0/24 priority 5000 table main 2>/dev/null || true
+    '';
+  };
 
   # ============================================================================
   # LOCALE & TIMEZONE
@@ -97,11 +115,16 @@
   # ============================================================================
 
   fonts.packages = with pkgs; [
+    inter
     nerd-fonts.comic-shanns-mono
     nerd-fonts.fantasque-sans-mono
     nerd-fonts.jetbrains-mono
     nerd-fonts.commit-mono
   ];
+
+  fonts.fontconfig.defaultFonts = {
+    sansSerif = [ "Inter" ];
+  };
 
   # ============================================================================
   # PROGRAMS & APPLICATIONS
@@ -118,6 +141,10 @@
           Status = "user";
         };
         "widget.wayland-dmabuf-vaapi.enabled" = {
+          Value = true;
+          Status = "user";
+        };
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = {
           Value = true;
           Status = "user";
         };
@@ -186,6 +213,13 @@
     packages = [
       "org.onlyoffice.desktopeditors"
       "md.obsidian.Obsidian"
+      "io.github.CyberTimon.RapidRAW"
+      "org.localsend.localsend_app"
+      "org.signal.Signal"
+    ];
+
+    overrides."io.github.CyberTimon.RapidRAW".Context.filesystems = [
+      "/home/haaksk/Photos"
     ];
   };
 
@@ -195,7 +229,6 @@
 
   environment.systemPackages = with pkgs; [
     # Development Tools and Editors
-    localsend
     lazygit
     delta
     neovim
@@ -220,7 +253,6 @@
     exiftool
     uv
 
-    adw-gtk3
     # Applications and Utilities
     loupe
     darktable
