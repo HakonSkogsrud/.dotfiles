@@ -25,3 +25,15 @@ apps=(
 )
 
 flatpak install --system --noninteractive flathub "${apps[@]}"
+
+# Allow applications to discover user-installed GTK themes, icons, and GTK
+# settings without granting write access to those directories. User overrides
+# apply to these system-installed applications for the current account.
+for app_id in "${apps[@]}"; do
+  flatpak override --user \
+    --filesystem=xdg-data/themes:ro \
+    --filesystem=xdg-data/icons:ro \
+    --filesystem=xdg-config/gtk-3.0:ro \
+    --filesystem=xdg-config/gtk-4.0:ro \
+    "$app_id"
+done
