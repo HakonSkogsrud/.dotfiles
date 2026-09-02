@@ -15,10 +15,7 @@ flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.f
 apps=(
   io.github.CyberTimon.RapidRAW
   io.github.josephmawa.Bella
-  io.github.shonebinu.Brief
-  com.vscodium.codium
   md.obsidian.Obsidian
-  org.gnome.World.Iotas
   org.localsend.localsend_app
   org.onlyoffice.desktopeditors
   org.signal.Signal
