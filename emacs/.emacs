@@ -394,18 +394,51 @@
       (ansible-ts-mode))))
 (add-hook 'yaml-ts-mode-hook #'my/ansible-maybe-activate)
 
-(defun my/ansible-find-variable ()
-  "Search project for the Ansible variable definition around point.
-Extracts content between {{ and }}, takes the root key (before first dot),
-and searches for `root_key:' — the YAML definition form."
-  (interactive)
-  (let* ((start (save-excursion (search-backward "{{" nil t) (+ (point) 2)))
-         (end   (save-excursion (search-forward  "}}" nil t) (- (point) 2)))
-         (raw   (when (and start end (< start end))
-                  (string-trim (buffer-substring-no-properties start end))))
-         (root  (when raw (car (split-string raw "\\."))))
-         (var   (read-string "Find variable: " (concat (or root "") ":"))))
-    (project-find-regexp (regexp-quote var))))
+(defun my/ansible-variable-at-point ()
+  "Return the root Ansible variable in the Jinja expression at point.
+For example, return `virtiofs_tags' for
+`{{ virtiofs_tags.nextcloud }}'."
+  (let ((origin (point)) start end expression)
+    (save-excursion
+      (setq start (search-backward "{{" (line-beginning-position) t))
+      (when start
+        ;; Do not borrow an opening delimiter from an earlier expression.
+        (unless (search-forward "}}" origin t)
+          (goto-char (+ start 2))
+          (setq end (search-forward "}}" (line-end-position) t)))))
+    (when (and start end (<= (+ start 2) origin) (<= origin end))
+      (setq expression
+            (buffer-substring-no-properties (+ start 2) (- end 2)))
+      ;; The first identifier is the useful lookup target for ordinary
+      ;; Ansible/Jinja expressions, including dotted and indexed values.
+      (when (string-match "[[:alpha:]_][[:alnum:]_]*" expression)
+        (match-string 0 expression)))))
+
+(defun my/ansible-find-variable (&optional prompt)
+  "Find the YAML definition of the Ansible variable around point.
+Nested references are searched by their root key.  With prefix argument
+PROMPT, allow editing the detected variable before searching."
+  (interactive "P")
+  (let* ((root (or (locate-dominating-file default-directory "ansible.cfg")
+                   (when-let ((project (project-current)))
+                     (project-root project))
+                   (user-error "This file is not inside a project")))
+         (detected (my/ansible-variable-at-point))
+         (variable (if (or prompt (not detected))
+                       (read-string "Ansible variable: " detected)
+                     detected)))
+    (when (string-empty-p variable)
+      (user-error "No Ansible variable at point"))
+    ;; Anchoring the key avoids matches in Jinja uses and prose.  Keeping the
+    ;; project search UI means duplicate definitions remain visible/selectable.
+    (let ((default-directory root)
+          ;; Treat the Ansible root as the project even if its Git repository
+          ;; is higher up.  This also works with Emacs versions whose
+          ;; `project-find-regexp' accepts only REGEXP and FILES.
+          (project-find-functions
+           (list (lambda (_directory) (cons 'transient root)))))
+      (project-find-regexp
+       (format "^[[:space:]]*%s:[[:space:]]*" (regexp-quote variable))))))
 
 (define-key ansible-ts-mode-map (kbd "C-c v") #'my/ansible-find-variable)
 
