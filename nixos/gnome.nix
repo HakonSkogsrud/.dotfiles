@@ -3,12 +3,14 @@
 {
   services.xserver.enable = true;
   services.displayManager.gdm.enable = true;
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = "haaksk";
   services.desktopManager.gnome.enable = true;
 
   environment.systemPackages = with pkgs; [
     hicolor-icon-theme
     adwaita-icon-theme
-    
+
     ghostty
     bella
     gnomeExtensions.legacy-gtk3-theme-scheme-auto-switcher
@@ -45,6 +47,10 @@
         "org/gnome/desktop/peripherals/touchpad" = {
           tap-and-drag = false;
           disable-while-typing = true;
+        };
+        "org/gnome/settings-daemon/plugins/power" = {
+          power-button-action = "nothing";
+          sleep-inactive-ac-type = "nothing";
         };
         "org/gnome/desktop/wm/preferences" = {
           button-layout = "appmenu:close";

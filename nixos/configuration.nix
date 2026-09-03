@@ -231,11 +231,6 @@
     # Both applications currently render a light client-side titlebar on
     # native Wayland.  Use Mutter's X11 decorations until that is fixed
     # upstream; the GTK theme itself still follows GNOME's color scheme.
-    overrides."org.signal.Signal".Context.sockets = [
-      "x11"
-      "!wayland"
-      "!fallback-x11"
-    ];
     overrides."org.localsend.localsend_app".Context.sockets = [
       "x11"
       "!wayland"
@@ -276,7 +271,6 @@
 
     # Applications and Utilities
     loupe
-    chatgpt
     darktable
     syncthing
     (vscodium.override {
