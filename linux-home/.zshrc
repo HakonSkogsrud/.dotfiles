@@ -60,6 +60,12 @@ bindkey '^I' expand-or-complete
 bindkey '^F' autosuggest-accept
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
 
+# Navigate command history with Ctrl-P / Ctrl-N.
+bindkey -M emacs '^P' up-line-or-history
+bindkey -M emacs '^N' down-line-or-history
+bindkey -M viins '^P' up-line-or-history
+bindkey -M viins '^N' down-line-or-history
+
 alias restart='source ~/.zshrc'
 alias lg='lazygit'
 alias venv='source .venv/bin/activate'
