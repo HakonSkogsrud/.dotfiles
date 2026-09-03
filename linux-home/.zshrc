@@ -55,6 +55,9 @@ export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
 if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
   source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
+# Keep Tab as normal completion and use Ctrl-F to accept the suggestion.
+bindkey '^I' expand-or-complete
+bindkey '^F' autosuggest-accept
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
 
 alias restart='source ~/.zshrc'
