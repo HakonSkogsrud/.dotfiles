@@ -274,6 +274,11 @@
 ;; 4. TREESITTER & LSP
 ;; ==========================================
 
+;; Fallback for systems where the YAML tree-sitter grammar has not yet been
+;; installed.  Without this declaration, the auto-mode fallback below points
+;; at an unknown major mode and opening a .yml/.yaml file prompts to ignore it.
+(use-package yaml-mode)
+
 (setq treesit-font-lock-level 4)
 
 (setq treesit-language-source-alist
@@ -585,4 +590,3 @@ and searches for `root_key:' — the YAML definition form."
 (global-set-key (kbd "C-x 1") #'toggle-delete-other-windows)
 
 (setq set-mark-command-repeat-pop t)
-

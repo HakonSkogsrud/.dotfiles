@@ -273,9 +273,7 @@
     loupe
     darktable
     syncthing
-    (vscodium.override {
-      commandLineArgs = "--enable-features=UseOzonePlatform,WaylandWindowDecorations --ozone-platform=wayland --enable-wayland-ime=true --wayland-text-input-version=3";
-    })
+    vscode
     emacs-pgtk
     brave
     tailscale
