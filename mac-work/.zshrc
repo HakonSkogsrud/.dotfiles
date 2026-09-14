@@ -4,6 +4,7 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 path=("$HOME/.local/bin" "$HOME/.cargo/bin" $path)
 export LG_CONFIG_FILE="$HOME/.config/lazygit/config.yml"
+export PATH="$HOME/go/bin:$PATH"
 export PATH
 
 # eza (modern ls)
