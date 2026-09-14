@@ -32,6 +32,15 @@ if (( $+commands[fzf] )); then
   source <(fzf --zsh)
 fi
 
+# fzf binds Tab to its own widget; retain standard shell completion on Tab.
+bindkey '^I' expand-or-complete
+
+# Show accepted history entries as muted inline suggestions.
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
+if [[ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+  source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 cd() {
