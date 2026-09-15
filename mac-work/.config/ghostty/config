@@ -6,3 +6,4 @@ window-padding-x = 4
 window-padding-y = 4
 theme = Horizon
 window-theme = ghostty
+background-opacity = 1.0

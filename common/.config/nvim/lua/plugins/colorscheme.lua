@@ -4,7 +4,7 @@ return {
     lazy = false,
     priority = 1000,
     opts = {
-      transparent = false,
+      transparent = vim.uv.os_uname().sysname == "Darwin",
       terminal_colors = true,
     },
   },
