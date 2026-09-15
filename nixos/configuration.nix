@@ -37,7 +37,9 @@
     };
     script = ''
       ${pkgs.iproute2}/bin/ip rule delete to 10.0.0.0/24 priority 5000 table main 2>/dev/null || true
-      ${pkgs.iproute2}/bin/ip rule add to 10.0.0.0/24 priority 5000 table main
+      # Ignore the main table's default route: use main only when the home LAN
+      # has a more-specific route, otherwise fall through to Tailscale's table.
+      ${pkgs.iproute2}/bin/ip rule add to 10.0.0.0/24 priority 5000 table main suppress_prefixlength 0
     '';
     preStop = ''
       ${pkgs.iproute2}/bin/ip rule delete to 10.0.0.0/24 priority 5000 table main 2>/dev/null || true
