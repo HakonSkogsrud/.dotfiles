@@ -109,6 +109,15 @@
         mode: "0644"
       notify: Apply sysctl settings
 
+    - name: Create systemd-resolved drop-in directory
+      ansible.builtin.file:
+        path: /etc/systemd/resolved.conf.d
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+      when: manage_systemd_resolved
+
     - name: Configure systemd-resolved fallback routing
       ansible.builtin.template:
         src: templates/99-default-fallback.conf.j2

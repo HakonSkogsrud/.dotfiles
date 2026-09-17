@@ -3,14 +3,14 @@
 Minimal Ansible configuration for the parts of the laptop that are useful to
 keep declarative:
 
-- Tailscale, Avahi, firewalld, and systemd-resolved
+- Tailscale, Syncthing, Avahi, firewalld, and systemd-resolved
 - LocalSend and mDNS firewall access
 - Loose reverse-path filtering for Tailscale policy routing
 - Preference for the physical LAN route to `10.0.0.0/24`
 - Non-development Flatpak applications
 
 The playbooks deliberately do not manage GNOME settings, user accounts,
-authentication, Tailscale login, Syncthing, development tools, fonts, shells,
+authentication, Tailscale login, Syncthing configuration, development tools, fonts, shells,
 printing, browser policy, hardware tweaks, or RPM Fusion.
 
 ## Run from an Ansible controller
@@ -53,7 +53,7 @@ the first run, log in manually:
 sudo tailscale up
 ```
 
-Syncthing and its firewall ports remain entirely manual.
+Syncthing is installed, but its service, configuration, and firewall ports remain manual.
 
 ## Verify local routing
 

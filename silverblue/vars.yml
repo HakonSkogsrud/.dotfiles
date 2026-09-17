@@ -12,6 +12,7 @@ silverblue_network_packages:
   - avahi
   - firewalld
   - nss-mdns
+  - syncthing
   - tailscale
 
 localsend_ports:
