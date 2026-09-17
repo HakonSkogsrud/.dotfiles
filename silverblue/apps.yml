@@ -1,0 +1,44 @@
+---
+- name: Install Silverblue desktop applications
+  hosts: silverblue
+  become: true
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Add Flathub
+      community.general.flatpak_remote:
+        name: flathub
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        method: system
+        state: present
+
+    - name: Install Flatpak applications
+      community.general.flatpak:
+        name: "{{ item }}"
+        remote: flathub
+        method: system
+        state: present
+      loop: "{{ flatpak_apps }}"
+
+    - name: Create the RapidRAW photo directory
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/Photos"
+        state: directory
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0755"
+
+    - name: Allow RapidRAW to access the photo directory
+      ansible.builtin.command:
+        argv:
+          - flatpak
+          - override
+          - --user
+          - "--filesystem={{ desktop_home }}/Photos"
+          - io.github.CyberTimon.RapidRAW
+      become: true
+      become_user: "{{ desktop_user }}"
+      environment:
+        HOME: "{{ desktop_home }}"
+      changed_when: false

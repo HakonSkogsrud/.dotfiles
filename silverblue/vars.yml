@@ -1,0 +1,32 @@
+---
+desktop_user: haaksk
+desktop_home: /home/haaksk
+
+local_subnet: 10.0.0.0/24
+local_route_rule_priority: 5000
+
+rpm_ostree_apply_live: true
+manage_systemd_resolved: true
+
+silverblue_network_packages:
+  - avahi
+  - firewalld
+  - nss-mdns
+  - tailscale
+
+localsend_ports:
+  - 53317/tcp
+  - 53317/udp
+
+tailscale_udp_port: 41641/udp
+
+flatpak_apps:
+  - com.brave.Browser
+  - io.github.CyberTimon.RapidRAW
+  - io.github.josephmawa.Bella
+  - md.obsidian.Obsidian
+  - org.darktable.Darktable
+  - org.gnome.World.Iotas
+  - org.localsend.localsend_app
+  - org.onlyoffice.desktopeditors
+  - org.signal.Signal

@@ -129,7 +129,7 @@
 (cua-mode 1)
 (add-to-list 'default-frame-alist
              `(font . ,(format "FantasqueSansM Nerd Font Mono-%d"
-                               (if (eq system-type 'darwin) 16 13))))
+                               (if (eq system-type 'darwin) 15 13))))
 
 (setq select-active-regions nil
       mouse-drag-copy-region nil)

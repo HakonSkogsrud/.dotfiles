@@ -1,0 +1,6 @@
+---
+- name: Configure networking
+  ansible.builtin.import_playbook: networking.yml
+
+- name: Install desktop applications
+  ansible.builtin.import_playbook: apps.yml
