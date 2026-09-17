@@ -3,7 +3,7 @@
 Minimal Ansible configuration for the parts of the laptop that are useful to
 keep declarative:
 
-- Tailscale, Syncthing, Avahi, firewalld, and systemd-resolved
+- Git, Tailscale, Syncthing, Avahi, firewalld, and systemd-resolved
 - LocalSend and mDNS firewall access
 - Loose reverse-path filtering for Tailscale policy routing
 - Preference for the physical LAN route to `10.0.0.0/24`

@@ -11,6 +11,7 @@ manage_systemd_resolved: true
 silverblue_network_packages:
   - avahi
   - firewalld
+  - git
   - nss-mdns
   - syncthing
   - tailscale
