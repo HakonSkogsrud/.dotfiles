@@ -279,6 +279,7 @@
     emacs-pgtk
     brave
     tailscale
+    ptyxis
 
     # Other Tools
     nodejs
