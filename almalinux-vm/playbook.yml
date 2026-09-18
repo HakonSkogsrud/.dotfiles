@@ -1,0 +1,154 @@
+---
+- name: Set up AlmaLinux VM tools and zsh
+  hosts: vm
+  become: true
+  vars:
+    target_user: haaksk
+    target_home: /home/haaksk
+    rpm_packages:
+      - git
+      - vim-enhanced
+      - curl
+      - wget
+      - fzf
+      - fd-find
+      - bat
+      - ripgrep
+      - perl-Image-ExifTool
+      - uv
+      - neovim
+      - gh
+      - stow
+      - gcc
+      - python3
+      - nodejs
+      - tmux
+      - zsh
+      - nix
+      - policycoreutils-python-utils
+    nix_packages:
+      - { name: eza, binary: eza }
+      - { name: zoxide, binary: zoxide }
+      - { name: lazygit, binary: lazygit }
+      - { name: delta, binary: delta }
+      - { name: nixd, binary: nixd }
+      - { name: nixfmt, binary: nixfmt }
+
+  tasks:
+    - name: Enable EPEL
+      ansible.builtin.dnf:
+        name: epel-release
+        state: present
+
+    - name: Install available RPM packages
+      ansible.builtin.dnf:
+        name: "{{ rpm_packages }}"
+        state: present
+
+    - name: Read custom SELinux file contexts
+      ansible.builtin.command: semanage fcontext -l -C
+      register: nix_custom_contexts
+      changed_when: false
+
+    - name: Label the Nix store for SELinux
+      ansible.builtin.command:
+        argv: [semanage, fcontext, -a, -t, var_lib_t, '/nix(/.*)?']
+      when: "'/nix(/.*)?' not in nix_custom_contexts.stdout"
+
+    - name: Label the Nix daemon socket for SELinux
+      ansible.builtin.command:
+        argv: [semanage, fcontext, -a, -t, var_run_t, '/nix/var/nix/daemon-socket(/.*)?']
+      when: "'/nix/var/nix/daemon-socket(/.*)?' not in nix_custom_contexts.stdout"
+
+    - name: Apply Nix SELinux file contexts
+      ansible.builtin.command: restorecon -RF /nix
+      changed_when: false
+
+    - name: Enable Nix daemon
+      ansible.builtin.systemd_service:
+        name: nix-daemon.socket
+        enabled: true
+        state: started
+
+    - name: Enable Nix commands and flakes
+      ansible.builtin.lineinfile:
+        path: /etc/nix/nix.conf
+        regexp: '^experimental-features\s*='
+        line: experimental-features = nix-command flakes
+        create: true
+        mode: '0644'
+
+    - name: Set haaksk's login shell to zsh
+      ansible.builtin.user:
+        name: "{{ target_user }}"
+        shell: /usr/bin/zsh
+
+    - name: Read current git user name
+      become: false
+      ansible.builtin.command: git config --global --get user.name
+      register: git_user_name
+      changed_when: false
+      failed_when: false
+
+    - name: Set git user name
+      become: false
+      ansible.builtin.command:
+        argv: [git, config, --global, user.name, 'Håkon Skogsrud']
+      when: git_user_name.stdout != 'Håkon Skogsrud'
+
+    - name: Read current git user email
+      become: false
+      ansible.builtin.command: git config --global --get user.email
+      register: git_user_email
+      changed_when: false
+      failed_when: false
+
+    - name: Set git user email
+      become: false
+      ansible.builtin.command:
+        argv: [git, config, --global, user.email, haakon.skogsrud@pm.me]
+      when: git_user_email.stdout != 'haakon.skogsrud@pm.me'
+
+    - name: Install zsh autosuggestions
+      become: false
+      ansible.builtin.git:
+        repo: https://github.com/zsh-users/zsh-autosuggestions.git
+        dest: "{{ target_home }}/.local/share/zsh-autosuggestions"
+        version: v0.7.1
+
+    - name: Set editor and load zsh autosuggestions
+      become: false
+      ansible.builtin.blockinfile:
+        path: "{{ target_home }}/.zshrc"
+        create: true
+        mode: '0644'
+        marker: '# {mark} ANSIBLE MANAGED VM ZSH'
+        block: |
+          export EDITOR=nvim
+          export PATH="$HOME/.local/bin:$HOME/.nix-profile/bin:$PATH"
+          source "$HOME/.local/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+
+    - name: Install Nix-only tools into the user profile
+      become: false
+      ansible.builtin.command:
+        argv:
+          - /usr/bin/nix
+          - profile
+          - install
+          - "nixpkgs#{{ item.name }}"
+        creates: "{{ target_home }}/.nix-profile/bin/{{ item.binary }}"
+      environment:
+        NIX_CONFIG: experimental-features = nix-command flakes
+      loop: "{{ nix_packages }}"
+
+    - name: Install Codex CLI into the user prefix
+      become: false
+      ansible.builtin.command:
+        argv:
+          - /usr/bin/npm
+          - install
+          - --global
+          - --prefix
+          - "{{ target_home }}/.local"
+          - '@openai/codex'
+        creates: "{{ target_home }}/.local/bin/codex"
