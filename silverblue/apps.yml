@@ -5,6 +5,10 @@
   vars_files:
     - vars.yml
 
+  pre_tasks:
+    - name: Validate the Fedora Atomic host
+      ansible.builtin.import_tasks: tasks/require-fedora-atomic.yml
+
   tasks:
     - name: Add Flathub
       community.general.flatpak_remote:
@@ -15,11 +19,28 @@
 
     - name: Install Flatpak applications
       community.general.flatpak:
-        name: "{{ item }}"
+        name: "{{ flatpak_apps }}"
         remote: flathub
         method: system
         state: present
-      loop: "{{ flatpak_apps }}"
+
+    - name: Create the Flatpak override directory
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/.local/share/flatpak/overrides"
+        state: directory
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0755"
+
+    - name: Allow Flatpaks to read user fonts
+      ansible.builtin.copy:
+        dest: "{{ desktop_home }}/.local/share/flatpak/overrides/global"
+        content: |
+          [Context]
+          filesystems={{ desktop_home }}/.local/share/fonts:ro;{{ desktop_home }}/.fonts:ro;
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"
 
     - name: Create the RapidRAW photo directory
       ansible.builtin.file:
@@ -30,15 +51,11 @@
         mode: "0755"
 
     - name: Allow RapidRAW to access the photo directory
-      ansible.builtin.command:
-        argv:
-          - flatpak
-          - override
-          - --user
-          - "--filesystem={{ desktop_home }}/Photos"
-          - io.github.CyberTimon.RapidRAW
-      become: true
-      become_user: "{{ desktop_user }}"
-      environment:
-        HOME: "{{ desktop_home }}"
-      changed_when: false
+      ansible.builtin.copy:
+        dest: "{{ desktop_home }}/.local/share/flatpak/overrides/io.github.CyberTimon.RapidRAW"
+        content: |
+          [Context]
+          filesystems={{ desktop_home }}/Photos;
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"

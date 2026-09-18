@@ -1,20 +1,45 @@
 ---
 desktop_user: haaksk
-desktop_home: /home/haaksk
 
 local_subnet: 10.0.0.0/24
 local_route_rule_priority: 5000
+home_network_connection: virus.exe
+home_firewall_zone: home
 
 rpm_ostree_apply_live: true
 manage_systemd_resolved: true
 
 silverblue_network_packages:
   - avahi
-  - firewalld
-  - git
-  - nss-mdns
   - syncthing
   - tailscale
+
+rpm_fusion_release_packages:
+  - "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_facts.distribution_major_version }}.noarch.rpm"
+  - "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_facts.distribution_major_version }}.noarch.rpm"
+
+silverblue_multimedia_packages:
+  - gstreamer1-plugin-libav
+  - gstreamer1-plugins-bad-free-extras
+  - gstreamer1-plugins-bad-freeworld
+  - gstreamer1-plugins-ugly
+  - gstreamer1-vaapi
+
+# Lunar Lake uses Intel's current VA-API media driver.
+silverblue_hardware_codec_packages:
+  - intel-media-driver
+
+silverblue_ffmpeg_free_packages:
+  - fdk-aac-free
+  - libavcodec-free
+  - libavdevice-free
+  - libavfilter-free
+  - libavformat-free
+  - libavutil-free
+  - libpostproc-free
+  - libswresample-free
+  - libswscale-free
+  - ffmpeg-free
 
 localsend_ports:
   - 53317/tcp
@@ -23,12 +48,61 @@ localsend_ports:
 tailscale_udp_port: 41641/udp
 
 flatpak_apps:
+  - app.devsuite.Ptyxis
   - com.brave.Browser
   - io.github.CyberTimon.RapidRAW
   - io.github.josephmawa.Bella
   - md.obsidian.Obsidian
   - org.darktable.Darktable
+  - org.gnu.emacs
   - org.gnome.World.Iotas
   - org.localsend.localsend_app
   - org.onlyoffice.desktopeditors
   - org.signal.Signal
+
+dev_toolbox_name: dev
+
+dev_toolbox_packages:
+  - bat
+  - curl
+  - direnv
+  - eza
+  - fd-find
+  - fzf
+  - gcc
+  - gh
+  - git
+  - git-delta
+  - neovim
+  - nodejs
+  - perl-Image-ExifTool
+  - python3
+  - ripgrep
+  - stow
+  - tmux
+  - uv
+  - vim
+  - wget
+  - zoxide
+  - zsh
+  - zsh-autosuggestions
+
+dev_toolbox_npm_packages:
+  - "@openai/codex"
+
+dev_toolbox_lazygit_version: 0.65.1
+dev_toolbox_lazygit_checksum: 02beacbcda0fa342e50ae3480ba8147307353af3fb28e1d5f790e02329c201a6
+
+silverblue_font_packages:
+  - rsms-inter-fonts
+
+nerd_fonts_version: v3.4.0
+nerd_fonts:
+  - name: ComicShannsMono
+    checksum: 23d90d18dae663b7d0dcdb4edd2f5087eecb40b00f046a1f46a9abf3ecb47651
+  - name: FantasqueSansMono
+    checksum: 462b5490475fb8560dded4eb6cdd9cfd0049b800acee329094def095557d0ffd
+  - name: JetBrainsMono
+    checksum: ef552a3e638f25125c6ad4c51176a6adcdce295ab1d2ffacf0db060caf8c1582
+  - name: CommitMono
+    checksum: 44cdabae7708de3548fdd78ed59cdbb1fedbca18e16644047ed4a23623a530ca

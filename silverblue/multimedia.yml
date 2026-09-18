@@ -1,0 +1,117 @@
+---
+- name: Configure Silverblue multimedia
+  hosts: silverblue
+  become: true
+  vars_files:
+    - vars.yml
+
+  pre_tasks:
+    - name: Validate the Fedora Atomic host
+      ansible.builtin.import_tasks: tasks/require-fedora-atomic.yml
+
+  tasks:
+    - name: Layer RPM Fusion repositories
+      community.general.rpm_ostree_pkg:
+        name: "{{ rpm_fusion_release_packages }}"
+        state: present
+      register: rpm_fusion_repositories
+
+    - name: Require a reboot after adding RPM Fusion  # noqa no-handler
+      ansible.builtin.debug:
+        msg: RPM Fusion was staged. Reboot, then rerun this playbook to install multimedia codecs.
+      when: rpm_fusion_repositories.changed
+
+    - name: Stop until RPM Fusion is active  # noqa no-handler
+      ansible.builtin.meta: end_play
+      when: rpm_fusion_repositories.changed
+
+    - name: Read installed RPM names
+      ansible.builtin.command:
+        argv:
+          - rpm
+          - --query
+          - --all
+          - "--queryformat=%{NAME}\n"
+      register: installed_rpm_names
+      changed_when: false
+
+    - name: Read rpm-ostree deployment state
+      ansible.builtin.command:
+        argv:
+          - rpm-ostree
+          - status
+          - --json
+      register: rpm_ostree_status
+      changed_when: false
+
+    - name: Classify rpm-ostree deployments
+      ansible.builtin.set_fact:
+        rpm_ostree_staged_deployments: >-
+          {{
+            (rpm_ostree_status.stdout | from_json).deployments
+            | selectattr('staged', 'defined')
+            | selectattr('staged', 'equalto', true)
+            | list
+          }}
+        rpm_ostree_booted_deployments: >-
+          {{
+            (rpm_ostree_status.stdout | from_json).deployments
+            | selectattr('booted', 'defined')
+            | selectattr('booted', 'equalto', true)
+            | list
+          }}
+
+    - name: Require an rpm-ostree target deployment
+      ansible.builtin.assert:
+        that:
+          - >-
+            rpm_ostree_staged_deployments | length > 0
+            or rpm_ostree_booted_deployments | length > 0
+        fail_msg: rpm-ostree did not report a staged or booted deployment.
+
+    - name: Select the target rpm-ostree deployment
+      ansible.builtin.set_fact:
+        rpm_ostree_target_deployment: >-
+          {{ (rpm_ostree_staged_deployments + rpm_ostree_booted_deployments) | first }}
+
+    - name: Calculate missing multimedia packages
+      ansible.builtin.set_fact:
+        missing_multimedia_packages: >-
+          {{
+            (silverblue_multimedia_packages + silverblue_hardware_codec_packages)
+            | difference(
+                installed_rpm_names.stdout_lines
+                + (rpm_ostree_target_deployment['requested-packages'] | default([]))
+              )
+          }}
+        full_ffmpeg_pending: >-
+          {{
+            'ffmpeg-free'
+            in (rpm_ostree_target_deployment['requested-base-removals'] | default([]))
+            and 'ffmpeg'
+            in (rpm_ostree_target_deployment['requested-packages'] | default([]))
+          }}
+
+    - name: Layer missing multimedia codecs
+      ansible.builtin.command:
+        argv: "{{ ['rpm-ostree', 'install', '--idempotent', '--allow-inactive'] + missing_multimedia_packages }}"
+      when: missing_multimedia_packages | length > 0
+      changed_when: true
+      register: layered_multimedia_packages
+
+    - name: Replace Fedora's restricted FFmpeg build
+      ansible.builtin.command:
+        argv: "{{ ['rpm-ostree', 'override', 'remove'] + silverblue_ffmpeg_free_packages + ['--install', 'ffmpeg'] }}"
+      when:
+        - "'ffmpeg' not in installed_rpm_names.stdout_lines"
+        - not full_ffmpeg_pending
+      changed_when: true
+      register: full_ffmpeg_override
+
+    - name: Report pending multimedia deployment
+      ansible.builtin.debug:
+        msg: Multimedia codecs were staged; reboot when convenient.
+      when:
+        - >-
+          layered_multimedia_packages.changed | default(false)
+          or full_ffmpeg_override.changed | default(false)

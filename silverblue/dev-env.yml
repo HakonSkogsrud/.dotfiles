@@ -1,0 +1,232 @@
+---
+- name: Configure development Toolbox
+  hosts: silverblue
+  become: true
+  vars_files:
+    - vars.yml
+
+  pre_tasks:
+    - name: Validate the Fedora Atomic host
+      ansible.builtin.import_tasks: tasks/require-fedora-atomic.yml
+
+  tasks:
+    - name: Check Toolbx availability
+      ansible.builtin.command:
+        argv:
+          - toolbox
+          - --version
+      become_user: "{{ desktop_user }}"
+      become: true
+      environment:
+        HOME: "{{ desktop_home }}"
+      changed_when: false
+
+    - name: Check the development Toolbox container
+      ansible.builtin.command:
+        argv:
+          - podman
+          - container
+          - exists
+          - "{{ dev_toolbox_name }}"
+      become_user: "{{ desktop_user }}"
+      become: true
+      environment:
+        HOME: "{{ desktop_home }}"
+      register: dev_toolbox_container
+      changed_when: false
+      failed_when: false
+
+    - name: Create the development Toolbox container
+      ansible.builtin.command:
+        argv:
+          - toolbox
+          - create
+          - --distro
+          - fedora
+          - --release
+          - "f{{ ansible_facts.distribution_major_version }}"
+          - "{{ dev_toolbox_name }}"
+      become_user: "{{ desktop_user }}"
+      become: true
+      environment:
+        HOME: "{{ desktop_home }}"
+      when: dev_toolbox_container.rc != 0
+      changed_when: true
+
+    - name: Inspect the development container
+      ansible.builtin.command:
+        argv:
+          - podman
+          - container
+          - inspect
+          - "{{ dev_toolbox_name }}"
+      become_user: "{{ desktop_user }}"
+      become: true
+      environment:
+        HOME: "{{ desktop_home }}"
+      register: dev_toolbox_inspect
+      changed_when: false
+
+    - name: Parse the development container metadata
+      ansible.builtin.set_fact:
+        dev_toolbox_metadata: "{{ dev_toolbox_inspect.stdout | from_json | first }}"
+
+    - name: Require a Toolbx-managed development container
+      ansible.builtin.assert:
+        that:
+          - >-
+            (dev_toolbox_metadata.Config.Labels | default({})).get(
+              'com.github.containers.toolbox', 'false'
+            ) == 'true'
+        fail_msg: >-
+          A container named '{{ dev_toolbox_name }}' exists but was not created
+          by Toolbx. Rename or remove it before rerunning this playbook.
+
+    - name: Verify the development Toolbox container
+      ansible.builtin.command:
+        argv:
+          - toolbox
+          - run
+          - --container
+          - "{{ dev_toolbox_name }}"
+          - "true"
+      become_user: "{{ desktop_user }}"
+      become: true
+      environment:
+        HOME: "{{ desktop_home }}"
+      changed_when: false
+
+    - name: Read the development Toolbox Fedora release
+      ansible.builtin.command:
+        argv:
+          - toolbox
+          - run
+          - --container
+          - "{{ dev_toolbox_name }}"
+          - rpm
+          - --eval
+          - "%{fedora}"
+      become_user: "{{ desktop_user }}"
+      become: true
+      environment:
+        HOME: "{{ desktop_home }}"
+      register: dev_toolbox_fedora_release
+      changed_when: false
+
+    - name: Require the Toolbox to match the host Fedora release
+      ansible.builtin.assert:
+        that:
+          - >-
+            dev_toolbox_fedora_release.stdout | trim
+            == ansible_facts.distribution_major_version
+        fail_msg: >-
+          The '{{ dev_toolbox_name }}' Toolbox uses Fedora
+          {{ dev_toolbox_fedora_release.stdout | trim }}, but the host uses
+          Fedora {{ ansible_facts.distribution_major_version }}. Remove it with
+          'toolbox rm --force {{ dev_toolbox_name }}' and rerun this playbook.
+
+    - name: Check installed development packages
+      ansible.builtin.command:
+        argv: "{{ ['toolbox', 'run', '--container', dev_toolbox_name, 'rpm', '-q'] + dev_toolbox_packages }}"
+      become_user: "{{ desktop_user }}"
+      become: true
+      environment:
+        HOME: "{{ desktop_home }}"
+      register: dev_toolbox_packages_installed
+      changed_when: false
+      failed_when: false
+
+    - name: Install development packages
+      ansible.builtin.command:
+        argv: "{{ ['toolbox', 'run', '--container', dev_toolbox_name, 'sudo', 'dnf', 'install', '--assumeyes'] + dev_toolbox_packages }}"
+      become_user: "{{ desktop_user }}"
+      become: true
+      environment:
+        HOME: "{{ desktop_home }}"
+      when: dev_toolbox_packages_installed.rc != 0
+      changed_when: true
+
+    - name: Check installed Codex package
+      ansible.builtin.command:
+        argv: "{{ ['toolbox', 'run', '--container', dev_toolbox_name, 'npm', 'list', '--global', '--depth=0'] + dev_toolbox_npm_packages }}"
+      become_user: "{{ desktop_user }}"
+      become: true
+      environment:
+        HOME: "{{ desktop_home }}"
+      register: dev_toolbox_npm_packages_installed
+      changed_when: false
+      failed_when: false
+
+    - name: Install Codex package
+      ansible.builtin.command:
+        argv: "{{ ['toolbox', 'run', '--container', dev_toolbox_name, 'sudo', 'npm', 'install', '--global'] + dev_toolbox_npm_packages }}"
+      become_user: "{{ desktop_user }}"
+      become: true
+      environment:
+        HOME: "{{ desktop_home }}"
+      when: dev_toolbox_npm_packages_installed.rc != 0
+      changed_when: true
+
+    - name: Create the development download cache
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/.cache/ansible"
+        state: directory
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0755"
+
+    - name: Download LazyGit
+      ansible.builtin.get_url:
+        url: >-
+          {{
+            'https://github.com/jesseduffield/lazygit/releases/download/v'
+            ~ dev_toolbox_lazygit_version
+            ~ '/lazygit_'
+            ~ dev_toolbox_lazygit_version
+            ~ '_linux_x86_64.tar.gz'
+          }}
+        dest: "{{ desktop_home }}/.cache/ansible/lazygit-{{ dev_toolbox_lazygit_version }}-linux-x86_64.tar.gz"
+        checksum: "sha256:{{ dev_toolbox_lazygit_checksum }}"
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"
+
+    - name: Check the LazyGit version
+      ansible.builtin.command:
+        argv:
+          - toolbox
+          - run
+          - --container
+          - "{{ dev_toolbox_name }}"
+          - lazygit
+          - --version
+      become_user: "{{ desktop_user }}"
+      become: true
+      environment:
+        HOME: "{{ desktop_home }}"
+      register: dev_toolbox_lazygit
+      changed_when: false
+      failed_when: false
+
+    - name: Install LazyGit
+      ansible.builtin.command:
+        argv:
+          - toolbox
+          - run
+          - --container
+          - "{{ dev_toolbox_name }}"
+          - sudo
+          - tar
+          - --extract
+          - --gzip
+          - "--file={{ desktop_home }}/.cache/ansible/lazygit-{{ dev_toolbox_lazygit_version }}-linux-x86_64.tar.gz"
+          - --directory=/usr/local/bin
+          - lazygit
+      become_user: "{{ desktop_user }}"
+      become: true
+      environment:
+        HOME: "{{ desktop_home }}"
+      when:
+        - dev_toolbox_lazygit.rc != 0
+          or dev_toolbox_lazygit_version not in dev_toolbox_lazygit.stdout
+      changed_when: true

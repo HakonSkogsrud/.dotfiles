@@ -1,0 +1,124 @@
+---
+- name: Configure desktop fonts
+  hosts: silverblue
+  become: true
+  vars_files:
+    - vars.yml
+
+  pre_tasks:
+    - name: Validate the Fedora Atomic host
+      ansible.builtin.import_tasks: tasks/require-fedora-atomic.yml
+
+  tasks:
+    - name: Check installed system fonts
+      ansible.builtin.command:
+        argv: "{{ ['rpm', '-q'] + silverblue_font_packages }}"
+      register: system_fonts
+      changed_when: false
+      failed_when: false
+
+    - name: Layer missing system fonts
+      community.general.rpm_ostree_pkg:
+        name: "{{ silverblue_font_packages }}"
+        state: present
+        apply_live: "{{ rpm_ostree_apply_live }}"
+      when: system_fonts.rc != 0
+      register: layered_system_fonts
+
+    - name: Create the user font directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0755"
+      loop:
+        - "{{ desktop_home }}/.local/share/fonts"
+        - "{{ desktop_home }}/.local/share/fonts/nerd-fonts"
+        - "{{ desktop_home }}/.cache/ansible/fonts"
+
+    - name: Find installed Nerd Font versions
+      ansible.builtin.find:
+        paths: "{{ desktop_home }}/.local/share/fonts/nerd-fonts"
+        file_type: directory
+        recurse: false
+      register: installed_nerd_font_versions
+
+    - name: Remove superseded Nerd Font versions
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: absent
+      loop: "{{ installed_nerd_font_versions.files }}"
+      when: item.path | basename != nerd_fonts_version
+      notify: Refresh user font cache
+
+    - name: Remove legacy Nerd Font directories
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/.local/share/fonts/{{ item.name }}"
+        state: absent
+      loop: "{{ nerd_fonts }}"
+      notify: Refresh user font cache
+
+    - name: Create the current Nerd Font directories
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/.local/share/fonts/nerd-fonts/{{ nerd_fonts_version }}/{{ item.name }}"
+        state: directory
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0755"
+      loop: "{{ nerd_fonts }}"
+
+    - name: Check installed Nerd Fonts
+      ansible.builtin.stat:
+        path: "{{ desktop_home }}/.local/share/fonts/nerd-fonts/{{ nerd_fonts_version }}/{{ item.name }}/.installed"
+      loop: "{{ nerd_fonts }}"
+      register: nerd_font_installations
+
+    - name: Download Nerd Fonts
+      ansible.builtin.get_url:
+        url: "https://github.com/ryanoasis/nerd-fonts/releases/download/{{ nerd_fonts_version }}/{{ item.item.name }}.tar.xz"
+        dest: "{{ desktop_home }}/.cache/ansible/fonts/{{ item.item.name }}-{{ nerd_fonts_version }}.tar.xz"
+        checksum: "sha256:{{ item.item.checksum }}"
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"
+      loop: "{{ nerd_font_installations.results }}"
+      when: not item.stat.exists
+
+    - name: Install Nerd Fonts
+      ansible.builtin.unarchive:
+        src: "{{ desktop_home }}/.cache/ansible/fonts/{{ item.item.name }}-{{ nerd_fonts_version }}.tar.xz"
+        dest: "{{ desktop_home }}/.local/share/fonts/nerd-fonts/{{ nerd_fonts_version }}/{{ item.item.name }}"
+        remote_src: true
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+      loop: "{{ nerd_font_installations.results }}"
+      when: not item.stat.exists
+      notify: Refresh user font cache
+
+    - name: Record installed Nerd Font version
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/.local/share/fonts/nerd-fonts/{{ nerd_fonts_version }}/{{ item.item.name }}/.installed"
+        state: touch
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"
+      loop: "{{ nerd_font_installations.results }}"
+      when: not item.stat.exists
+
+    - name: Report pending system font deployment
+      ansible.builtin.debug:
+        msg: System fonts were staged; reboot when convenient.
+      when: layered_system_fonts.needs_reboot | default(false)
+
+  handlers:
+    - name: Refresh user font cache
+      ansible.builtin.command:
+        argv:
+          - fc-cache
+          - --force
+      become_user: "{{ desktop_user }}"
+      become: true
+      environment:
+        HOME: "{{ desktop_home }}"
+      changed_when: true

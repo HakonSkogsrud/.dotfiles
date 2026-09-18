@@ -3,15 +3,22 @@
 Minimal Ansible configuration for the parts of the laptop that are useful to
 keep declarative:
 
-- Git, Tailscale, Syncthing, Avahi, firewalld, and systemd-resolved
-- LocalSend and mDNS firewall access
+- Tailscale, Syncthing, Avahi, and systemd-resolved
+- Configuration of Silverblue's built-in firewalld service
+- Ptyxis terminal as a Flatpak
+- Inter and the Comic Shanns Mono, Fantasque Sans Mono, JetBrains Mono, and Commit Mono Nerd Fonts
+- RPM Fusion's full FFmpeg build and GStreamer codec plugins
+- Home-network-only LocalSend and mDNS firewall access
 - Loose reverse-path filtering for Tailscale policy routing
 - Preference for the physical LAN route to `10.0.0.0/24`
-- Non-development Flatpak applications
+- Bluetooth mouse DPI overrides
+- Flatpak desktop applications
+- A Fedora Toolbx development environment
 
 The playbooks deliberately do not manage GNOME settings, user accounts,
-authentication, Tailscale login, Syncthing configuration, development tools, fonts, shells,
-printing, browser policy, hardware tweaks, or RPM Fusion.
+authentication, Tailscale login, Syncthing configuration, login shells,
+printer configuration, browser policy, or general hardware tweaks beyond the
+declared mouse DPI overrides.
 
 ## Run from an Ansible controller
 
@@ -28,8 +35,8 @@ cp inventory.example.ini inventory.ini
 $EDITOR inventory.ini
 ```
 
-Review [`vars.yml`](vars.yml), particularly `desktop_user`, `desktop_home`,
-and `local_subnet`, then run:
+Review [`vars.yml`](vars.yml), particularly `desktop_user`,
+`home_network_connection`, and `local_subnet`, then run:
 
 ```sh
 ansible-playbook site.yml --ask-become-pass
@@ -39,21 +46,91 @@ Run only one part with:
 
 ```sh
 ansible-playbook networking.yml --ask-become-pass
+ansible-playbook multimedia.yml --ask-become-pass
 ansible-playbook apps.yml --ask-become-pass
+ansible-playbook fonts.yml --ask-become-pass
+ansible-playbook dev-env.yml --ask-become-pass
 ```
 
-The host RPMs are applied live and also staged in the next rpm-ostree
-deployment. Reboot when the play reports that rpm-ostree has created a pending
-deployment.
+The top-level playbook also supports `networking`, `multimedia`, `apps`,
+`fonts`, and `dev` tags:
 
-The playbook enables `tailscaled` but does not authenticate the machine. After
-the first run, log in manually:
+```sh
+ansible-playbook site.yml --tags networking,apps --ask-become-pass
+```
+
+The networking RPMs are applied live and also staged in the next rpm-ostree
+deployment. RPM Fusion and multimedia packages are staged, so the first
+multimedia run adds RPM Fusion and stops; reboot and run it again to stage the
+codecs, then reboot once more.
+
+The configured codecs follow RPM Fusion's Atomic Desktop guidance: full
+FFmpeg plus the libav, bad-free extras, bad-freeworld, ugly, and VA-API
+GStreamer plugins. Commercial DVD CSS decryption is intentionally excluded:
+it requires RPM Fusion's separate tainted repository and may be unlawful in
+some jurisdictions.
+
+All Flatpaks receive read-only access to the user's font directories. Theme
+and color-scheme integration is left to the desktop portal and Flatpak runtime
+extensions instead of exposing host GTK configuration. The playbook owns the
+user-level global Flatpak override file.
+
+For hardware-accelerated codecs, set
+`silverblue_hardware_codec_packages` in [`vars.yml`](vars.yml) to the one
+driver appropriate for the GPU:
+
+- Recent Intel: `intel-media-driver`
+- Older Intel: `libva-intel-driver`
+- AMD: `mesa-va-drivers-freeworld`
+- NVIDIA proprietary driver: `libva-nvidia-driver`
+
+When rebasing to a new Fedora major version, replace the RPM Fusion release
+packages as part of the rebase, following
+[RPM Fusion's OSTree guidance](https://rpmfusion.org/Howto/OSTree). The release
+packages are Fedora-version-specific.
+
+LocalSend and mDNS are opened only in firewalld's `home` zone. The
+NetworkManager connection named by `home_network_connection` is assigned to
+that zone; the default is the home Wi-Fi connection `virus.exe`.
+
+The playbook enables `tailscaled` but does not authenticate the machine or
+place `tailscale0` in firewalld's unrestricted `trusted` zone. After the first
+run, log in manually:
 
 ```sh
 sudo tailscale up
 ```
 
 Syncthing is installed, but its service, configuration, and firewall ports remain manual.
+
+## Development Toolbox
+
+Toolbx is included with Fedora Silverblue. Run `dev-env.yml` to create the
+`dev` Toolbx container for the same Fedora release as the host and install the
+development tools previously configured on the NixOS VM: editor and shell
+tools, Git/GitHub tooling, GCC, Python, Node.js, LazyGit, and Codex. Those
+packages stay in the container rather than being layered on the host. Enter it
+with:
+
+```sh
+toolbox enter dev
+```
+
+The playbook refuses to use a non-Toolbx container named `dev` or a Toolbox
+from an older Fedora release. After a Fedora major upgrade, remove the old
+container with `toolbox rm --force dev` and rerun the playbook. Project files
+remain in the shared home directory.
+
+The Nix-specific VM tools (`nixd`, `nixfmt`, and `nix-direnv`) are intentionally
+not installed in this Toolbox.
+
+## Fonts
+
+The fonts configured on NixOS are installed here too. Inter is a small Fedora
+package; the Nerd Fonts are downloaded to `~/.local/share/fonts` and therefore
+do not add their large files to the rpm-ostree deployment. Their source version
+and SHA-256 checksums are pinned in [`vars.yml`](vars.yml). Superseded
+playbook-managed Nerd Font versions are removed automatically.
 
 ## Verify local routing
 

@@ -6,20 +6,11 @@
     - vars.yml
 
   pre_tasks:
-    - name: Check for an ostree boot
-      ansible.builtin.stat:
-        path: /run/ostree-booted
-      register: ostree_boot
-
-    - name: Require Fedora Atomic
-      ansible.builtin.assert:
-        that:
-          - ansible_facts.distribution == "Fedora"
-          - ostree_boot.stat.exists
-        fail_msg: This playbook must run against a Fedora Atomic host.
+    - name: Validate the Fedora Atomic host
+      ansible.builtin.import_tasks: tasks/require-fedora-atomic.yml
 
   tasks:
-    - name: Layer networking packages
+    - name: Layer required networking packages
       community.general.rpm_ostree_pkg:
         name: "{{ silverblue_network_packages }}"
         state: present
@@ -46,7 +37,78 @@
         state: started
       when: manage_systemd_resolved
 
-    - name: Read the default firewalld zone
+    - name: Verify the home network connection
+      ansible.builtin.command:
+        argv:
+          - nmcli
+          - --get-values
+          - connection.id
+          - connection
+          - show
+          - "{{ home_network_connection }}"
+      changed_when: false
+
+    - name: Read the home connection firewalld zone
+      ansible.builtin.command:
+        argv:
+          - nmcli
+          - --get-values
+          - connection.zone
+          - connection
+          - show
+          - "{{ home_network_connection }}"
+      register: home_connection_zone
+      changed_when: false
+
+    - name: Assign the home connection to the home zone
+      ansible.builtin.command:
+        argv:
+          - nmcli
+          - connection
+          - modify
+          - "{{ home_network_connection }}"
+          - connection.zone
+          - "{{ home_firewall_zone }}"
+      when: home_connection_zone.stdout | trim != home_firewall_zone
+      changed_when: true
+
+    - name: Read the active home network device
+      ansible.builtin.command:
+        argv:
+          - nmcli
+          - --get-values
+          - GENERAL.DEVICES
+          - connection
+          - show
+          - "{{ home_network_connection }}"
+      register: home_network_device
+      changed_when: false
+
+    - name: Read the active home device zone
+      ansible.builtin.command:
+        argv:
+          - firewall-cmd
+          - "--get-zone-of-interface={{ home_network_device.stdout | trim }}"
+      register: active_home_device_zone
+      when:
+        - home_network_device.stdout | trim
+        - home_network_device.stdout | trim != "--"
+      changed_when: false
+      failed_when: false
+
+    - name: Move the active home device to the home zone
+      ansible.builtin.command:
+        argv:
+          - firewall-cmd
+          - "--zone={{ home_firewall_zone }}"
+          - "--change-interface={{ home_network_device.stdout | trim }}"
+      when:
+        - home_network_device.stdout | trim
+        - home_network_device.stdout | trim != "--"
+        - active_home_device_zone.stdout | default('') | trim != home_firewall_zone
+      changed_when: true
+
+    - name: Read the default firewalld zone for Tailscale
       ansible.builtin.command:
         argv:
           - firewall-cmd
@@ -56,7 +118,7 @@
 
     - name: Allow LocalSend ports
       ansible.posix.firewalld:
-        zone: "{{ firewalld_default_zone.stdout }}"
+        zone: "{{ home_firewall_zone }}"
         port: "{{ item }}"
         permanent: true
         immediate: true
@@ -73,32 +135,11 @@
 
     - name: Allow mDNS discovery
       ansible.posix.firewalld:
-        zone: "{{ firewalld_default_zone.stdout }}"
+        zone: "{{ home_firewall_zone }}"
         service: mdns
         permanent: true
         immediate: true
         state: enabled
-
-    - name: Read the permanent Tailscale interface zone
-      ansible.builtin.command:
-        argv:
-          - firewall-cmd
-          - --permanent
-          - --get-zone-of-interface=tailscale0
-      register: tailscale_firewall_zone
-      changed_when: false
-      failed_when: false
-
-    - name: Trust the Tailscale interface
-      ansible.builtin.command:
-        argv:
-          - firewall-cmd
-          - --permanent
-          - --zone=trusted
-          - --change-interface=tailscale0
-      when: tailscale_firewall_zone.stdout | trim != "trusted"
-      changed_when: true
-      notify: Reload firewalld
 
     - name: Configure loose reverse-path filtering
       ansible.builtin.template:
@@ -109,24 +150,16 @@
         mode: "0644"
       notify: Apply sysctl settings
 
-    - name: Create systemd-resolved drop-in directory
-      ansible.builtin.file:
-        path: /etc/systemd/resolved.conf.d
-        state: directory
-        owner: root
-        group: root
-        mode: "0755"
-      when: manage_systemd_resolved
-
-    - name: Configure systemd-resolved fallback routing
+    - name: Configure Bluetooth mouse DPI
       ansible.builtin.template:
-        src: templates/99-default-fallback.conf.j2
-        dest: /etc/systemd/resolved.conf.d/99-default-fallback.conf
+        src: templates/99-mouse-dpi.hwdb.j2
+        dest: /etc/udev/hwdb.d/99-mouse-dpi.hwdb
         owner: root
         group: root
         mode: "0644"
-      when: manage_systemd_resolved
-      notify: Restart systemd-resolved
+      notify:
+        - Update udev hardware database
+        - Refresh input device properties
 
     - name: Use the systemd-resolved stub resolver
       ansible.builtin.file:
@@ -191,18 +224,28 @@
       when: rpm_ostree_packages.needs_reboot | default(false)
 
   handlers:
-    - name: Reload firewalld
-      ansible.builtin.command:
-        argv:
-          - firewall-cmd
-          - --reload
-      changed_when: true
-
     - name: Apply sysctl settings
       ansible.builtin.command:
         argv:
           - sysctl
           - --system
+      changed_when: true
+
+    - name: Update udev hardware database
+      ansible.builtin.command:
+        argv:
+          - udevadm
+          - hwdb
+          - --update
+      changed_when: true
+
+    - name: Refresh input device properties
+      ansible.builtin.command:
+        argv:
+          - udevadm
+          - trigger
+          - --subsystem-match=input
+          - --action=change
       changed_when: true
 
     - name: Restart systemd-resolved
