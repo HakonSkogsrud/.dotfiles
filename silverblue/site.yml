@@ -19,6 +19,11 @@
   tags:
     - fonts
 
+- name: Configure desktop appearance
+  ansible.builtin.import_playbook: appearance.yml
+  tags:
+    - appearance
+
 - name: Configure development Toolbox
   ansible.builtin.import_playbook: dev-env.yml
   tags:

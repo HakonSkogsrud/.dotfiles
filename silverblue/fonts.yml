@@ -10,20 +10,39 @@
       ansible.builtin.import_tasks: tasks/require-fedora-atomic.yml
 
   tasks:
-    - name: Check installed system fonts
+    - name: Read rpm-ostree deployment state
       ansible.builtin.command:
-        argv: "{{ ['rpm', '-q'] + silverblue_font_packages }}"
-      register: system_fonts
+        argv:
+          - rpm-ostree
+          - status
+          - --json
+      register: rpm_ostree_status
       changed_when: false
-      failed_when: false
 
-    - name: Layer missing system fonts
-      community.general.rpm_ostree_pkg:
-        name: "{{ silverblue_font_packages }}"
-        state: present
-        apply_live: "{{ rpm_ostree_apply_live }}"
-      when: system_fonts.rc != 0
-      register: layered_system_fonts
+    - name: Find retired layered system fonts
+      ansible.builtin.set_fact:
+        retired_layered_system_fonts: >-
+          {{
+            retired_system_font_packages
+            | intersect(
+              (
+                (
+                  (rpm_ostree_status.stdout | from_json).deployments
+                  | selectattr('booted', 'defined')
+                  | selectattr('booted', 'equalto', true)
+                  | first
+                )['requested-packages']
+                | default([])
+              )
+            )
+          }}
+
+    - name: Remove retired layered system fonts
+      ansible.builtin.command:
+        argv: "{{ ['rpm-ostree', 'uninstall'] + retired_layered_system_fonts }}"
+      register: removed_system_fonts
+      when: retired_layered_system_fonts | length > 0
+      changed_when: true
 
     - name: Create the user font directories
       ansible.builtin.file:
@@ -34,8 +53,43 @@
         mode: "0755"
       loop:
         - "{{ desktop_home }}/.local/share/fonts"
+        - "{{ desktop_home }}/.local/share/fonts/inter/{{ inter_font_version }}"
         - "{{ desktop_home }}/.local/share/fonts/nerd-fonts"
         - "{{ desktop_home }}/.cache/ansible/fonts"
+
+    - name: Check installed Inter font version
+      ansible.builtin.stat:
+        path: "{{ desktop_home }}/.local/share/fonts/inter/{{ inter_font_version }}/.installed"
+      register: inter_font_installation
+
+    - name: Download Inter fonts
+      ansible.builtin.get_url:
+        url: "https://github.com/rsms/inter/releases/download/{{ inter_font_version }}/Inter-{{ inter_font_version | regex_replace('^v', '') }}.zip"
+        dest: "{{ desktop_home }}/.cache/ansible/fonts/Inter-{{ inter_font_version }}.zip"
+        checksum: "sha256:{{ inter_font_checksum }}"
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"
+      when: not inter_font_installation.stat.exists
+
+    - name: Install Inter fonts
+      ansible.builtin.unarchive:
+        src: "{{ desktop_home }}/.cache/ansible/fonts/Inter-{{ inter_font_version }}.zip"
+        dest: "{{ desktop_home }}/.local/share/fonts/inter/{{ inter_font_version }}"
+        remote_src: true
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+      when: not inter_font_installation.stat.exists
+      notify: Refresh user font cache
+
+    - name: Record installed Inter font version
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/.local/share/fonts/inter/{{ inter_font_version }}/.installed"
+        state: touch
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"
+      when: not inter_font_installation.stat.exists
 
     - name: Find installed Nerd Font versions
       ansible.builtin.find:
@@ -106,10 +160,10 @@
       loop: "{{ nerd_font_installations.results }}"
       when: not item.stat.exists
 
-    - name: Report pending system font deployment
+    - name: Report pending system font removal
       ansible.builtin.debug:
-        msg: System fonts were staged; reboot when convenient.
-      when: layered_system_fonts.needs_reboot | default(false)
+        msg: System font removal was staged; reboot when convenient.
+      when: removed_system_fonts is defined and removed_system_fonts.changed
 
   handlers:
     - name: Refresh user font cache

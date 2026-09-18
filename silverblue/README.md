@@ -5,8 +5,9 @@ keep declarative:
 
 - Tailscale, Syncthing, Avahi, and systemd-resolved
 - Configuration of Silverblue's built-in firewalld service
-- Ptyxis terminal as a Flatpak
-- Inter and the Comic Shanns Mono, Fantasque Sans Mono, JetBrains Mono, and Commit Mono Nerd Fonts
+- Ptyxis terminal as a Flatpak and GNOME Tweaks as a host package
+- User-local Inter and Comic Shanns Mono, Fantasque Sans Mono, JetBrains Mono, and Commit Mono Nerd Fonts
+- User-local Papirus icons with PaleBrown folders
 - RPM Fusion's full FFmpeg build and GStreamer codec plugins
 - Home-network-only LocalSend and mDNS firewall access
 - Loose reverse-path filtering for Tailscale policy routing
@@ -15,8 +16,8 @@ keep declarative:
 - Flatpak desktop applications
 - A Fedora Toolbx development environment
 
-The playbooks deliberately do not manage GNOME settings, user accounts,
-authentication, Tailscale login, Syncthing configuration, login shells,
+The playbooks deliberately do not manage user accounts, authentication,
+Tailscale login, Syncthing configuration, login shells,
 printer configuration, browser policy, or general hardware tweaks beyond the
 declared mouse DPI overrides.
 
@@ -49,11 +50,12 @@ ansible-playbook networking.yml --ask-become-pass
 ansible-playbook multimedia.yml --ask-become-pass
 ansible-playbook apps.yml --ask-become-pass
 ansible-playbook fonts.yml --ask-become-pass
+ansible-playbook appearance.yml --ask-become-pass
 ansible-playbook dev-env.yml --ask-become-pass
 ```
 
 The top-level playbook also supports `networking`, `multimedia`, `apps`,
-`fonts`, and `dev` tags:
+`fonts`, `appearance`, and `dev` tags:
 
 ```sh
 ansible-playbook site.yml --tags networking,apps --ask-become-pass
@@ -126,11 +128,17 @@ not installed in this Toolbox.
 
 ## Fonts
 
-The fonts configured on NixOS are installed here too. Inter is a small Fedora
-package; the Nerd Fonts are downloaded to `~/.local/share/fonts` and therefore
-do not add their large files to the rpm-ostree deployment. Their source version
-and SHA-256 checksums are pinned in [`vars.yml`](vars.yml). Superseded
+The fonts configured on NixOS are installed in `~/.local/share/fonts` and do
+not add their files to the rpm-ostree deployment. Their source versions and
+SHA-256 checksums are pinned in [`vars.yml`](vars.yml). Superseded
 playbook-managed Nerd Font versions are removed automatically.
+
+## Appearance
+
+Papirus is installed in `~/.local/share/icons`, with its PaleBrown folder
+variant applied there. GNOME's icon-theme preference is set for the desktop
+user. GNOME Tweaks is layered because it needs access to the host GNOME
+settings and is not available from Flathub.
 
 ## Verify local routing
 

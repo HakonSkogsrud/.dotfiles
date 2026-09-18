@@ -92,8 +92,19 @@ dev_toolbox_npm_packages:
 dev_toolbox_lazygit_version: 0.65.1
 dev_toolbox_lazygit_checksum: 02beacbcda0fa342e50ae3480ba8147307353af3fb28e1d5f790e02329c201a6
 
-silverblue_font_packages:
+retired_system_font_packages:
   - rsms-inter-fonts
+
+inter_font_version: v4.1
+inter_font_checksum: 9883fdd4a49d4fb66bd8177ba6625ef9a64aa45899767dde3d36aa425756b11e
+
+papirus_icon_theme_version: "20250501"
+papirus_icon_theme_checksum: 3831a487f813479ad3224fdbfb0c7023f23056899bc78c93737f341aa655558e
+papirus_folders_checksum: b30a6848a00690302accffc050549218b0b114d3178b28bd3a16891817821b06
+papirus_folder_color: palebrown
+
+silverblue_appearance_packages:
+  - gnome-tweaks
 
 nerd_fonts_version: v3.4.0
 nerd_fonts:
