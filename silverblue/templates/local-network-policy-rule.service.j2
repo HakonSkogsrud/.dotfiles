@@ -11,4 +11,4 @@ ExecStart=/usr/sbin/ip rule add to {{ local_subnet }} priority {{ local_route_ru
 ExecStop=-/usr/sbin/ip rule delete to {{ local_subnet }} priority {{ local_route_rule_priority }} table main
 
 [Install]
-WantedBy=network-online.target
+WantedBy=multi-user.target

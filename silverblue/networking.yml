@@ -91,7 +91,7 @@
           - "--get-zone-of-interface={{ home_network_device.stdout | trim }}"
       register: active_home_device_zone
       when:
-        - home_network_device.stdout | trim
+        - home_network_device.stdout | trim | length > 0
         - home_network_device.stdout | trim != "--"
       changed_when: false
       failed_when: false
@@ -103,7 +103,7 @@
           - "--zone={{ home_firewall_zone }}"
           - "--change-interface={{ home_network_device.stdout | trim }}"
       when:
-        - home_network_device.stdout | trim
+        - home_network_device.stdout | trim | length > 0
         - home_network_device.stdout | trim != "--"
         - active_home_device_zone.stdout | default('') | trim != home_firewall_zone
       changed_when: true
@@ -178,6 +178,11 @@
         group: root
         mode: "0644"
       register: local_route_service
+
+    - name: Remove the legacy local-subnet policy-routing service link
+      ansible.builtin.file:
+        path: /etc/systemd/system/network-online.target.wants/local-network-policy-rule.service
+        state: absent
 
     - name: Enable the local-subnet policy-routing service
       ansible.builtin.systemd_service:

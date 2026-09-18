@@ -23,7 +23,6 @@ silverblue_multimedia_packages:
   - gstreamer1-plugins-bad-free-extras
   - gstreamer1-plugins-bad-freeworld
   - gstreamer1-plugins-ugly
-  - gstreamer1-vaapi
 
 # Lunar Lake uses Intel's current VA-API media driver.
 silverblue_hardware_codec_packages:
@@ -74,15 +73,15 @@ dev_toolbox_packages:
   - git
   - git-delta
   - neovim
-  - nodejs
+  - nodejs22
   - perl-Image-ExifTool
   - python3
   - ripgrep
   - stow
   - tmux
   - uv
-  - vim
-  - wget
+  - vim-enhanced
+  - wget2
   - zoxide
   - zsh
   - zsh-autosuggestions

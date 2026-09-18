@@ -91,6 +91,8 @@
             and 'ffmpeg'
             in (rpm_ostree_target_deployment['requested-packages'] | default([]))
           }}
+        installed_ffmpeg_free_packages: >-
+          {{ silverblue_ffmpeg_free_packages | intersect(installed_rpm_names.stdout_lines) }}
 
     - name: Layer missing multimedia codecs
       ansible.builtin.command:
@@ -101,7 +103,7 @@
 
     - name: Replace Fedora's restricted FFmpeg build
       ansible.builtin.command:
-        argv: "{{ ['rpm-ostree', 'override', 'remove'] + silverblue_ffmpeg_free_packages + ['--install', 'ffmpeg'] }}"
+        argv: "{{ ['rpm-ostree', 'override', 'remove'] + installed_ffmpeg_free_packages + ['--install', 'ffmpeg'] }}"
       when:
         - "'ffmpeg' not in installed_rpm_names.stdout_lines"
         - not full_ffmpeg_pending
