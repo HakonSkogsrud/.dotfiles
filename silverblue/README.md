@@ -136,9 +136,12 @@ playbook-managed Nerd Font versions are removed automatically.
 ## Appearance
 
 Papirus is installed in `~/.local/share/icons`, with its PaleBrown folder
-variant applied there. GNOME's icon-theme preference is set for the desktop
-user. GNOME Tweaks is layered because it needs access to the host GNOME
-settings and is not available from Flathub.
+variant applied there. adw-gtk3 is installed in `~/.local/share/themes` and
+selected as the GTK3 theme. Its light and dark GTK3 runtime extensions are
+installed from Flathub, so GTK3 Flatpaks use the corresponding theme without
+a host package layer. GTK4 and libadwaita Flatpaks follow GNOME's color scheme
+and accent settings instead. GNOME Tweaks is layered because it needs access
+to the host GNOME settings and is not available from Flathub.
 
 ## Verify local routing
 

@@ -17,6 +17,9 @@
         key: icon-theme
         value: "'Papirus'"
       - schema: org.gnome.desktop.interface
+        key: gtk-theme
+        value: "'adw-gtk3'"
+      - schema: org.gnome.desktop.interface
         key: font-name
         value: "'Inter 11'"
       - schema: org.gnome.desktop.interface
@@ -69,7 +72,7 @@
         apply_live: "{{ rpm_ostree_apply_live }}"
       register: appearance_packages
 
-    - name: Create user icon and cache directories
+    - name: Create user appearance directories
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
@@ -78,8 +81,66 @@
         mode: "0755"
       loop:
         - "{{ desktop_home }}/.local/share/icons"
+        - "{{ desktop_home }}/.local/share/themes"
         - "{{ desktop_home }}/.local/bin"
         - "{{ desktop_home }}/.cache/ansible/icons"
+        - "{{ desktop_home }}/.cache/ansible/themes"
+
+    - name: Add Flathub for theme runtime extensions
+      community.general.flatpak_remote:
+        name: flathub
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        method: system
+        state: present
+
+    - name: Install adw-gtk3 Flatpak runtime extensions
+      community.general.flatpak:
+        name: "{{ adw_gtk3_flatpak_themes }}"
+        remote: flathub
+        method: system
+        state: present
+
+    - name: Check installed adw-gtk3 version
+      ansible.builtin.stat:
+        path: "{{ desktop_home }}/.local/share/themes/.adw-gtk3-{{ adw_gtk3_version }}-installed"
+      register: adw_gtk3_installation
+
+    - name: Remove superseded user-local adw-gtk3 themes
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/.local/share/themes/{{ item }}"
+        state: absent
+      loop:
+        - adw-gtk3
+        - adw-gtk3-dark
+      when: not adw_gtk3_installation.stat.exists
+
+    - name: Download adw-gtk3 theme
+      ansible.builtin.get_url:
+        url: "https://github.com/lassekongo83/adw-gtk3/releases/download/{{ adw_gtk3_version }}/adw-gtk3{{ adw_gtk3_version }}.tar.xz"
+        dest: "{{ desktop_home }}/.cache/ansible/themes/adw-gtk3-{{ adw_gtk3_version }}.tar.xz"
+        checksum: "sha256:{{ adw_gtk3_checksum }}"
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"
+      when: not adw_gtk3_installation.stat.exists
+
+    - name: Install adw-gtk3 theme
+      ansible.builtin.unarchive:
+        src: "{{ desktop_home }}/.cache/ansible/themes/adw-gtk3-{{ adw_gtk3_version }}.tar.xz"
+        dest: "{{ desktop_home }}/.local/share/themes"
+        remote_src: true
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+      when: not adw_gtk3_installation.stat.exists
+
+    - name: Record installed adw-gtk3 version
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/.local/share/themes/.adw-gtk3-{{ adw_gtk3_version }}-installed"
+        state: touch
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"
+      when: not adw_gtk3_installation.stat.exists
 
     - name: Check installed Papirus icon theme version
       ansible.builtin.stat:
