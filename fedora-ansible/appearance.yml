@@ -1,0 +1,155 @@
+---
+- name: Configure desktop appearance
+  hosts: fedora_workstation
+  become: true
+  vars_files: [vars.yml]
+  vars:
+    gnome_preferences:
+      - {schema: org.gnome.desktop.interface, key: accent-color, value: "'blue'"}
+      - {schema: org.gnome.desktop.interface, key: show-battery-percentage, value: "true"}
+      - {schema: org.gnome.desktop.interface, key: icon-theme, value: "'Papirus'"}
+      - {schema: org.gnome.desktop.interface, key: gtk-theme, value: "'adw-gtk3'"}
+      - {schema: org.gnome.desktop.interface, key: font-name, value: "'Inter 11'"}
+      - {schema: org.gnome.desktop.interface, key: document-font-name, value: "'Inter 11'"}
+      - {schema: org.gnome.desktop.input-sources, key: xkb-options, value: "['ctrl:nocaps']"}
+      - {schema: org.gnome.system.locale, key: region, value: "'nb_NO.UTF-8'"}
+      - {schema: org.gnome.desktop.peripherals.mouse, key: speed, value: "-0.2"}
+      - {schema: org.gnome.desktop.peripherals.touchpad, key: tap-and-drag, value: "false"}
+      - {schema: org.gnome.desktop.peripherals.touchpad, key: disable-while-typing, value: "true"}
+      - {schema: org.gnome.settings-daemon.plugins.power, key: power-button-action, value: "'nothing'"}
+      - {schema: org.gnome.settings-daemon.plugins.power, key: sleep-inactive-ac-type, value: "'nothing'"}
+      - {schema: org.gnome.desktop.wm.preferences, key: button-layout, value: "'appmenu:close'"}
+      - {schema: org.gnome.desktop.wm.preferences, key: titlebar-font, value: "'Inter Bold 11'"}
+      - schema: org.gnome.shell
+        key: favorite-apps
+        value: "['brave-browser.desktop', 'emacs.desktop', 'org.gnome.Nautilus.desktop', 'md.obsidian.Obsidian.desktop', 'org.onlyoffice.desktopeditors.desktop', 'org.localsend.localsend_app.desktop', 'org.darktable.Darktable.desktop']"
+
+  pre_tasks:
+    - ansible.builtin.import_tasks: tasks/require-fedora-workstation.yml
+
+  tasks:
+    - name: Create appearance directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0755"
+      loop:
+        - "{{ desktop_home }}/.local/share/icons"
+        - "{{ desktop_home }}/.local/share/themes"
+        - "{{ desktop_home }}/.local/bin"
+        - "{{ desktop_home }}/.cache/ansible/icons"
+        - "{{ desktop_home }}/.cache/ansible/themes"
+
+    - name: Check installed adw-gtk3 version
+      ansible.builtin.stat:
+        path: "{{ desktop_home }}/.local/share/themes/.adw-gtk3-{{ adw_gtk3_version }}-installed"
+      register: adw_installation
+
+    - name: Download adw-gtk3
+      ansible.builtin.get_url:
+        url: "https://github.com/lassekongo83/adw-gtk3/releases/download/{{ adw_gtk3_version }}/adw-gtk3{{ adw_gtk3_version }}.tar.xz"
+        dest: "{{ desktop_home }}/.cache/ansible/themes/adw-gtk3-{{ adw_gtk3_version }}.tar.xz"
+        checksum: "sha256:{{ adw_gtk3_checksum }}"
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+      when: not adw_installation.stat.exists
+
+    - name: Install adw-gtk3
+      ansible.builtin.unarchive:
+        src: "{{ desktop_home }}/.cache/ansible/themes/adw-gtk3-{{ adw_gtk3_version }}.tar.xz"
+        dest: "{{ desktop_home }}/.local/share/themes"
+        remote_src: true
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+      when: not adw_installation.stat.exists
+
+    - name: Record installed adw-gtk3 version
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/.local/share/themes/.adw-gtk3-{{ adw_gtk3_version }}-installed"
+        state: touch
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+      when: not adw_installation.stat.exists
+
+    - name: Check installed Papirus version
+      ansible.builtin.stat:
+        path: "{{ desktop_home }}/.local/share/icons/.papirus-{{ papirus_icon_theme_version }}-installed"
+      register: papirus_installation
+
+    - name: Download Papirus
+      ansible.builtin.get_url:
+        url: "https://github.com/PapirusDevelopmentTeam/papirus-icon-theme/archive/refs/tags/{{ papirus_icon_theme_version }}.tar.gz"
+        dest: "{{ desktop_home }}/.cache/ansible/icons/papirus-{{ papirus_icon_theme_version }}.tar.gz"
+        checksum: "sha256:{{ papirus_icon_theme_checksum }}"
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+      when: not papirus_installation.stat.exists
+
+    - name: Install Papirus
+      ansible.builtin.unarchive:
+        src: "{{ desktop_home }}/.cache/ansible/icons/papirus-{{ papirus_icon_theme_version }}.tar.gz"
+        dest: "{{ desktop_home }}/.local/share/icons"
+        remote_src: true
+        extra_opts: [--strip-components=1]
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+      when: not papirus_installation.stat.exists
+
+    - name: Record installed Papirus version
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/.local/share/icons/.papirus-{{ papirus_icon_theme_version }}-installed"
+        state: touch
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+      when: not papirus_installation.stat.exists
+
+    - name: Install Papirus folder-color tool
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-folders/master/papirus-folders
+        dest: "{{ desktop_home }}/.local/bin/papirus-folders"
+        checksum: "sha256:{{ papirus_folders_checksum }}"
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0755"
+
+    - name: Read current Papirus folder color
+      ansible.builtin.command:
+        argv: ["{{ desktop_home }}/.local/bin/papirus-folders", --theme, Papirus, --list]
+      become_user: "{{ desktop_user }}"
+      environment: {HOME: "{{ desktop_home }}", XDG_DATA_HOME: "{{ desktop_home }}/.local/share"}
+      register: papirus_colors
+      changed_when: false
+
+    - name: Apply Papirus folder color
+      ansible.builtin.command:
+        argv: ["{{ desktop_home }}/.local/bin/papirus-folders", --theme, Papirus, --color, "{{ papirus_folder_color }}"]
+      become_user: "{{ desktop_user }}"
+      environment: {HOME: "{{ desktop_home }}", XDG_DATA_HOME: "{{ desktop_home }}/.local/share"}
+      when: "(' > ' ~ papirus_folder_color) not in papirus_colors.stdout_lines"
+      changed_when: true
+
+    - name: Read GNOME preferences
+      ansible.builtin.command:
+        argv: [gsettings, get, "{{ item.schema }}", "{{ item.key }}"]
+      become_user: "{{ desktop_user }}"
+      environment:
+        HOME: "{{ desktop_home }}"
+        XDG_RUNTIME_DIR: "/run/user/{{ ansible_facts.getent_passwd[desktop_user][1] }}"
+        DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_facts.getent_passwd[desktop_user][1] }}/bus"
+      loop: "{{ gnome_preferences }}"
+      register: current_preferences
+      changed_when: false
+
+    - name: Set GNOME preferences
+      ansible.builtin.command:
+        argv: [gsettings, set, "{{ item.0.schema }}", "{{ item.0.key }}", "{{ item.0.value }}"]
+      become_user: "{{ desktop_user }}"
+      environment:
+        HOME: "{{ desktop_home }}"
+        XDG_RUNTIME_DIR: "/run/user/{{ ansible_facts.getent_passwd[desktop_user][1] }}"
+        DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_facts.getent_passwd[desktop_user][1] }}/bus"
+      loop: "{{ gnome_preferences | zip(current_preferences.results) | list }}"
+      when: item.1.stdout | trim != item.0.value
+      changed_when: true

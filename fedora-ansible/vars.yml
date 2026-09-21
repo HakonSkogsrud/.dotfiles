@@ -1,0 +1,97 @@
+---
+desktop_user: haaksk
+
+local_subnet: 10.0.0.0/24
+local_route_rule_priority: 5000
+home_network_connection: virus.exe
+home_firewall_zone: home
+manage_systemd_resolved: true
+
+tailscale_repository: https://pkgs.tailscale.com/stable/fedora/tailscale.repo
+
+network_packages:
+  - avahi
+  - firewalld
+  - syncthing
+  - tailscale
+
+rpm_fusion_release_packages:
+  - "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_facts.distribution_major_version }}.noarch.rpm"
+  - "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_facts.distribution_major_version }}.noarch.rpm"
+
+multimedia_packages:
+  - ffmpeg
+  - gstreamer1-plugin-libav
+  - gstreamer1-plugins-bad-free-extras
+  - gstreamer1-plugins-bad-freeworld
+  - gstreamer1-plugins-ugly
+  - intel-media-driver
+
+localsend_ports:
+  - 53317/tcp
+  - 53317/udp
+tailscale_udp_port: 41641/udp
+
+# Fedora/RPM Fusion packages are preferred. The remainder have no suitable
+# Fedora RPM and stay as Flatpaks.
+rpm_apps:
+  - darktable
+  - emacs
+  - flatpak
+  - gnome-tweaks
+  - unzip
+flatpak_apps:
+  - io.github.CyberTimon.RapidRAW
+  - io.github.josephmawa.Bella
+  - md.obsidian.Obsidian
+  - org.gnome.World.Iotas
+  - org.localsend.localsend_app
+  - org.onlyoffice.desktopeditors
+  - org.signal.Signal
+
+dev_packages:
+  - bat
+  - curl
+  - direnv
+  - eza
+  - fd-find
+  - fzf
+  - gcc
+  - gh
+  - git
+  - git-delta
+  - neovim
+  - nodejs22
+  - perl-Image-ExifTool
+  - python3
+  - ripgrep
+  - stow
+  - tmux
+  - uv
+  - vim-enhanced
+  - wget2
+  - zoxide
+  - zsh
+  - zsh-autosuggestions
+dev_npm_packages:
+  - "@openai/codex"
+lazygit_version: 0.65.1
+lazygit_checksum: 02beacbcda0fa342e50ae3480ba8147307353af3fb28e1d5f790e02329c201a6
+
+retired_system_font_packages:
+  - rsms-inter-fonts
+inter_font_version: v4.1
+inter_font_checksum: 9883fdd4a49d4fb66bd8177ba6625ef9a64aa45899767dde3d36aa425756b11e
+nerd_fonts_version: v3.4.0
+nerd_fonts:
+  - {name: ComicShannsMono, checksum: 23d90d18dae663b7d0dcdb4edd2f5087eecb40b00f046a1f46a9abf3ecb47651}
+  - {name: FantasqueSansMono, checksum: 462b5490475fb8560dded4eb6cdd9cfd0049b800acee329094def095557d0ffd}
+  - {name: JetBrainsMono, checksum: ef552a3e638f25125c6ad4c51176a6adcdce295ab1d2ffacf0db060caf8c1582}
+  - {name: CommitMono, checksum: 44cdabae7708de3548fdd78ed59cdbb1fedbca18e16644047ed4a23623a530ca}
+
+papirus_icon_theme_version: "20250501"
+papirus_icon_theme_checksum: 3831a487f813479ad3224fdbfb0c7023f23056899bc78c93737f341aa655558e
+papirus_folders_checksum: b30a6848a00690302accffc050549218b0b114d3178b28bd3a16891817821b06
+papirus_folder_color: palebrown
+adw_gtk3_version: v6.4
+adw_gtk3_checksum: c396e4f0df3eea081186ae13321345f21b9934691b4b4d75b4956f00cbd033d1

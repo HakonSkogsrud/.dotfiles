@@ -1,0 +1,61 @@
+---
+- name: Configure host development environment
+  hosts: fedora_workstation
+  become: true
+  vars_files: [vars.yml]
+
+  pre_tasks:
+    - ansible.builtin.import_tasks: tasks/require-fedora-workstation.yml
+
+  tasks:
+    - name: Install development RPMs on the host
+      ansible.builtin.dnf:
+        name: "{{ dev_packages }}"
+        state: present
+
+    - name: Check globally installed npm packages
+      ansible.builtin.command:
+        argv: "{{ ['npm', 'list', '--global', '--depth=0'] + dev_npm_packages }}"
+      register: npm_packages_installed
+      changed_when: false
+      failed_when: false
+
+    - name: Install global npm packages
+      community.general.npm:
+        name: "{{ item }}"
+        global: true
+        state: present
+      loop: "{{ dev_npm_packages }}"
+      when: npm_packages_installed.rc != 0
+
+    - name: Create the development download cache
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/.cache/ansible"
+        state: directory
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0755"
+
+    - name: Download LazyGit
+      ansible.builtin.get_url:
+        url: "https://github.com/jesseduffield/lazygit/releases/download/v{{ lazygit_version }}/lazygit_{{ lazygit_version }}_linux_x86_64.tar.gz"
+        dest: "{{ desktop_home }}/.cache/ansible/lazygit-{{ lazygit_version }}-linux-x86_64.tar.gz"
+        checksum: "sha256:{{ lazygit_checksum }}"
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"
+
+    - name: Check the LazyGit version
+      ansible.builtin.command: {argv: [lazygit, --version]}
+      register: lazygit_installed
+      changed_when: false
+      failed_when: false
+
+    - name: Install LazyGit
+      ansible.builtin.unarchive:
+        src: "{{ desktop_home }}/.cache/ansible/lazygit-{{ lazygit_version }}-linux-x86_64.tar.gz"
+        dest: /usr/local/bin
+        remote_src: true
+        include: [lazygit]
+        mode: "0755"
+      when: lazygit_installed.rc != 0 or lazygit_version not in lazygit_installed.stdout

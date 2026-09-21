@@ -1,0 +1,73 @@
+---
+- name: Install Fedora Workstation desktop applications
+  hosts: fedora_workstation
+  become: true
+  vars_files: [vars.yml]
+
+  pre_tasks:
+    - ansible.builtin.import_tasks: tasks/require-fedora-workstation.yml
+
+  tasks:
+    - name: Add the Brave Browser repository
+      ansible.builtin.yum_repository:
+        name: brave-browser
+        description: Brave Browser
+        baseurl: https://brave-browser-rpm-release.s3.brave.com/$basearch
+        gpgkey: https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
+        gpgcheck: true
+        enabled: true
+
+    - name: Install RPM desktop applications
+      ansible.builtin.dnf:
+        name: "{{ rpm_apps + ['brave-browser'] }}"
+        state: present
+
+    - name: Add Flathub for applications without suitable RPMs
+      community.general.flatpak_remote:
+        name: flathub
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        method: system
+        state: present
+
+    - name: Install remaining Flatpak applications
+      community.general.flatpak:
+        name: "{{ flatpak_apps }}"
+        remote: flathub
+        method: system
+        state: present
+
+    - name: Create the Flatpak override directory
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/.local/share/flatpak/overrides"
+        state: directory
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0755"
+
+    - name: Allow Flatpaks to read user fonts
+      ansible.builtin.copy:
+        dest: "{{ desktop_home }}/.local/share/flatpak/overrides/global"
+        content: |
+          [Context]
+          filesystems={{ desktop_home }}/.local/share/fonts:ro;{{ desktop_home }}/.fonts:ro;
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"
+
+    - name: Create the RapidRAW photo directory
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/Photos"
+        state: directory
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0755"
+
+    - name: Allow RapidRAW to access the photo directory
+      ansible.builtin.copy:
+        dest: "{{ desktop_home }}/.local/share/flatpak/overrides/io.github.CyberTimon.RapidRAW"
+        content: |
+          [Context]
+          filesystems={{ desktop_home }}/Photos;
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"

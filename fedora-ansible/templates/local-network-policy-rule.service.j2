@@ -1,0 +1,14 @@
+[Unit]
+Description=Route the local subnet through the main routing table
+Wants=NetworkManager-wait-online.service tailscaled.service
+After=NetworkManager-wait-online.service tailscaled.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=-/usr/sbin/ip rule delete to {{ local_subnet }} priority {{ local_route_rule_priority }} table main
+ExecStart=/usr/sbin/ip rule add to {{ local_subnet }} priority {{ local_route_rule_priority }} table main suppress_prefixlength 0
+ExecStop=-/usr/sbin/ip rule delete to {{ local_subnet }} priority {{ local_route_rule_priority }} table main
+
+[Install]
+WantedBy=multi-user.target

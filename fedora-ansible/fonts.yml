@@ -1,0 +1,114 @@
+---
+- name: Configure desktop fonts
+  hosts: fedora_workstation
+  become: true
+  vars_files: [vars.yml]
+
+  pre_tasks:
+    - ansible.builtin.import_tasks: tasks/require-fedora-workstation.yml
+
+  tasks:
+    - name: Remove retired system font packages
+      ansible.builtin.dnf:
+        name: "{{ retired_system_font_packages }}"
+        state: absent
+
+    - name: Create user font and cache directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0755"
+      loop:
+        - "{{ desktop_home }}/.local/share/fonts/inter/{{ inter_font_version }}"
+        - "{{ desktop_home }}/.local/share/fonts/nerd-fonts/{{ nerd_fonts_version }}"
+        - "{{ desktop_home }}/.cache/ansible/fonts"
+
+    - name: Check installed Inter version
+      ansible.builtin.stat:
+        path: "{{ desktop_home }}/.local/share/fonts/inter/{{ inter_font_version }}/.installed"
+      register: inter_installation
+
+    - name: Download Inter fonts
+      ansible.builtin.get_url:
+        url: "https://github.com/rsms/inter/releases/download/{{ inter_font_version }}/Inter-{{ inter_font_version | regex_replace('^v', '') }}.zip"
+        dest: "{{ desktop_home }}/.cache/ansible/fonts/Inter-{{ inter_font_version }}.zip"
+        checksum: "sha256:{{ inter_font_checksum }}"
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"
+      when: not inter_installation.stat.exists
+
+    - name: Install Inter fonts
+      ansible.builtin.unarchive:
+        src: "{{ desktop_home }}/.cache/ansible/fonts/Inter-{{ inter_font_version }}.zip"
+        dest: "{{ desktop_home }}/.local/share/fonts/inter/{{ inter_font_version }}"
+        remote_src: true
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+      when: not inter_installation.stat.exists
+      notify: Refresh user font cache
+
+    - name: Record installed Inter version
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/.local/share/fonts/inter/{{ inter_font_version }}/.installed"
+        state: touch
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"
+      when: not inter_installation.stat.exists
+
+    - name: Create Nerd Font family directories
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/.local/share/fonts/nerd-fonts/{{ nerd_fonts_version }}/{{ item.name }}"
+        state: directory
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0755"
+      loop: "{{ nerd_fonts }}"
+
+    - name: Check installed Nerd Fonts
+      ansible.builtin.stat:
+        path: "{{ desktop_home }}/.local/share/fonts/nerd-fonts/{{ nerd_fonts_version }}/{{ item.name }}/.installed"
+      loop: "{{ nerd_fonts }}"
+      register: nerd_font_installations
+
+    - name: Download Nerd Fonts
+      ansible.builtin.get_url:
+        url: "https://github.com/ryanoasis/nerd-fonts/releases/download/{{ nerd_fonts_version }}/{{ item.item.name }}.tar.xz"
+        dest: "{{ desktop_home }}/.cache/ansible/fonts/{{ item.item.name }}-{{ nerd_fonts_version }}.tar.xz"
+        checksum: "sha256:{{ item.item.checksum }}"
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"
+      loop: "{{ nerd_font_installations.results }}"
+      when: not item.stat.exists
+
+    - name: Install Nerd Fonts
+      ansible.builtin.unarchive:
+        src: "{{ desktop_home }}/.cache/ansible/fonts/{{ item.item.name }}-{{ nerd_fonts_version }}.tar.xz"
+        dest: "{{ desktop_home }}/.local/share/fonts/nerd-fonts/{{ nerd_fonts_version }}/{{ item.item.name }}"
+        remote_src: true
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+      loop: "{{ nerd_font_installations.results }}"
+      when: not item.stat.exists
+      notify: Refresh user font cache
+
+    - name: Record installed Nerd Font versions
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/.local/share/fonts/nerd-fonts/{{ nerd_fonts_version }}/{{ item.item.name }}/.installed"
+        state: touch
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"
+      loop: "{{ nerd_font_installations.results }}"
+      when: not item.stat.exists
+
+  handlers:
+    - name: Refresh user font cache
+      ansible.builtin.command: {argv: [fc-cache, --force]}
+      become_user: "{{ desktop_user }}"
+      environment: {HOME: "{{ desktop_home }}"}
+      changed_when: true

@@ -1,0 +1,26 @@
+---
+- name: Configure Fedora Workstation multimedia
+  hosts: fedora_workstation
+  become: true
+  vars_files: [vars.yml]
+
+  pre_tasks:
+    - ansible.builtin.import_tasks: tasks/require-fedora-workstation.yml
+
+  tasks:
+    - name: Install RPM Fusion repositories
+      ansible.builtin.dnf:
+        name: "{{ rpm_fusion_release_packages }}"
+        state: present
+        disable_gpg_check: true
+
+    - name: Replace Fedora's restricted FFmpeg build
+      ansible.builtin.dnf:
+        name: ffmpeg
+        state: present
+        allowerasing: true
+
+    - name: Install multimedia codecs
+      ansible.builtin.dnf:
+        name: "{{ multimedia_packages }}"
+        state: present
