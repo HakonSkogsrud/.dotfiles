@@ -1,7 +1,7 @@
 {
   // ── Window ──────────────────────────────────────────────
   "window.zoomLevel": 0.7,
-  "window.titleBarStyle": "custom",
+  "window.titleBarStyle": "native",
   // ── Editor ──────────────────────────────────────────────
   "editor.fontSize": 13,
   "editor.fontFamily": "JetBrainsMono Nerd Font Mono",
@@ -41,6 +41,6 @@
   "window.autoDetectColorScheme": true,
   "window.openFoldersInNewWindow": "on",
   "window.menuBarVisibility": "toggle",
-  "workbench.preferredDarkColorTheme": "Dark 2026",
+  "workbench.preferredDarkColorTheme": "Dark Modern",
   "workbench.preferredLightColorTheme": "Light 2026"
 }

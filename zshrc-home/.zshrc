@@ -50,6 +50,10 @@ cd() {
   fi
 }
 
+# Enable zsh command and path completion.
+autoload -Uz compinit
+compinit
+
 # Autosuggestions
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246'
 if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
@@ -84,6 +88,7 @@ alias loki='ssh haaksk@10.0.0.83'
 alias grafana='ssh haaksk@10.0.0.84'
 alias pihole='ssh haaksk@10.0.0.77'
 alias subnet-router='ssh haaksk@10.0.0.78'
+alias almadev='ssh haaksk@10.0.0.211'
 
 # fzf: use fd for file search (respects .gitignore, shows hidden files except .git)
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
