@@ -112,7 +112,7 @@ setopt HIST_FIND_NO_DUPS      # Do not display duplicate entries when searching
 setopt SHARE_HISTORY          # Share history across all active terminal sessions
 
 precmd() {
-  local prompt_text='%F{cyan}%~%f'
+  local prompt_text='%F{yellow}%m%f %F{cyan}%~%f'
 
   if [[ -n $VIRTUAL_ENV ]]; then
     prompt_text+=" %F{green} (🐍 ${VIRTUAL_ENV:t})%f"
