@@ -73,7 +73,7 @@ path+=("$HOME/.lmstudio/bin")
 export PATH
 
 precmd() {
-  local prompt_text='%F{cyan}%~%f'
+  local prompt_text='%F{yellow}%m%f %F{cyan}%~%f'
 
   if [[ -n $VIRTUAL_ENV ]]; then
     prompt_text+=" %F{green} (🐍 ${VIRTUAL_ENV:t})%f"
