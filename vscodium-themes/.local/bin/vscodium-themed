@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+case "$(gsettings get org.gnome.desktop.interface color-scheme)" in
+  "'prefer-dark'") theme=Adwaita-Codium-Dark ;;
+  *) theme=Adwaita-Codium-Light ;;
+esac
+
+args=(run --env="GTK_THEME=$theme" --branch=stable --command=com.vscodium.codium --file-forwarding com.vscodium.codium)
+
+if [[ ${1:-} == --new-window ]]; then
+  args+=(--new-window)
+  shift
+fi
+
+if (( $# )); then
+  args+=(@@ "$@" @@)
+fi
+
+exec /usr/bin/flatpak "${args[@]}"

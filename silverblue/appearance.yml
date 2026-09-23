@@ -55,8 +55,8 @@
       - schema: org.gnome.shell
         key: favorite-apps
         value: >-
-          ['com.brave.Browser.desktop', 'org.gnu.emacs.desktop',
-          'org.gnome.Nautilus.desktop', 'md.obsidian.Obsidian.desktop',
+          ['com.brave.Browser.desktop', 'org.gnome.Nautilus.desktop',
+          'md.obsidian.Obsidian.desktop',
           'org.onlyoffice.desktopeditors.desktop',
           'org.localsend.localsend_app.desktop', 'org.darktable.Darktable.desktop']
 

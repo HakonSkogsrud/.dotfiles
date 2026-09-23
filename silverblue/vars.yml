@@ -47,13 +47,11 @@ localsend_ports:
 tailscale_udp_port: 41641/udp
 
 flatpak_apps:
-  - app.devsuite.Ptyxis
   - com.brave.Browser
   - io.github.CyberTimon.RapidRAW
   - io.github.josephmawa.Bella
   - md.obsidian.Obsidian
   - org.darktable.Darktable
-  - org.gnu.emacs
   - org.gnome.World.Iotas
   - org.localsend.localsend_app
   - org.onlyoffice.desktopeditors

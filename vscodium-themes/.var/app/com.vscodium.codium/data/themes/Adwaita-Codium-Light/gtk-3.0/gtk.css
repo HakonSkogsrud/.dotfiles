@@ -1,0 +1,16 @@
+@import url("resource:///org/gtk/libgtk/theme/Adwaita/gtk-contained.css");
+
+headerbar,
+.titlebar,
+headerbar:backdrop,
+.titlebar:backdrop {
+  background-color: #f0f0f0;
+  background-image: none;
+}
+
+headerbar button.titlebutton:not(:hover),
+.titlebar button.titlebutton:not(:hover) {
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+}
