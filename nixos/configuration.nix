@@ -324,11 +324,11 @@ in
   # INPUT DEVICES
   # ============================================================================
 
-  # Scale down mouse speed at driver level (before GNOME settings)
-  # Higher DPI value = libinput scales movement DOWN
+  # Mouse motion normalization before GNOME settings.
+  # Libinput scales motion down for DPI values above 1000.
   services.udev.extraHwdb = ''
     mouse:bluetooth:v1915p0040:name:*:
-     MOUSE_DPI=1600@1000
+     MOUSE_DPI=1200@1000
 
     mouse:bluetooth:v046Dp0B020:name:*:
      MOUSE_DPI=1800@1000
