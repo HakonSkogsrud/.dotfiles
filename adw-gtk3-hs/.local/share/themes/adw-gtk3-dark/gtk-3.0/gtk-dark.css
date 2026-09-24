@@ -62,7 +62,7 @@
 @define-color window_fg_color white;
 @define-color view_bg_color #1d1d20;
 @define-color view_fg_color white;
-@define-color headerbar_bg_color #191a1b;
+@define-color headerbar_bg_color #181818;
 @define-color headerbar_fg_color white;
 @define-color headerbar_border_color white;
 @define-color headerbar_backdrop_color @headerbar_bg_color;
