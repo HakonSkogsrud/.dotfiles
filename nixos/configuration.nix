@@ -1,5 +1,14 @@
-{ config, pkgs, ... }:
+{ config, pkgs, herdr, ... }:
 
+let
+  setPowerProfile = pkgs.writeShellScript "set-power-profile" ''
+    profile=balanced
+    if read -r online < /sys/class/power_supply/ADP0/online && [ "$online" = 1 ]; then
+      profile=performance
+    fi
+    exec ${pkgs.power-profiles-daemon}/bin/powerprofilesctl set "$profile"
+  '';
+in
 {
   # ============================================================================
   # IMPORTS
@@ -128,6 +137,7 @@
 
   fonts.fontconfig.defaultFonts = {
     sansSerif = [ "Inter" ];
+    monospace = [ "JetBrainsMono Nerd Font" ];
   };
 
   # ============================================================================
@@ -209,7 +219,7 @@
 
   programs.nh = {
     enable = true;
-    flake = "/home/haaksk/.dotfiles/nixos";
+    flake = "git+file:///home/haaksk/.dotfiles?dir=nixos";
   };
 
   services.flatpak = {
@@ -250,6 +260,7 @@
     delta
     neovim
     gh
+    herdr.packages.${pkgs.stdenv.hostPlatform.system}.default
     stow
     gcc
     python3
@@ -276,6 +287,7 @@
     darktable
     syncthing
     vscode
+    vscodium
     emacs-pgtk
     brave
     tailscale
@@ -316,7 +328,7 @@
   # Higher DPI value = libinput scales movement DOWN
   services.udev.extraHwdb = ''
     mouse:bluetooth:v1915p0040:name:*:
-     MOUSE_DPI=2000@1000
+     MOUSE_DPI=1600@1000
 
     mouse:bluetooth:v046Dp0B020:name:*:
      MOUSE_DPI=1800@1000
@@ -347,6 +359,21 @@
   # ============================================================================
 
   services.power-profiles-daemon.enable = true;
+
+  services.udev.extraRules = ''
+    ACTION=="change", SUBSYSTEM=="power_supply", KERNEL=="ADP0", RUN+="${setPowerProfile}"
+  '';
+
+  systemd.services.power-profile-on-boot = {
+    description = "Set power profile for current charger state";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "power-profiles-daemon.service" ];
+    requires = [ "power-profiles-daemon.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = setPowerProfile;
+    };
+  };
 
   services.syncthing = {
     enable = true;

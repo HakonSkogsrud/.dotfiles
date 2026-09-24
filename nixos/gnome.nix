@@ -10,6 +10,7 @@
   environment.systemPackages = with pkgs; [
     hicolor-icon-theme
     adwaita-icon-theme
+    (papirus-icon-theme.override { color = "palebrown"; })
 
     ghostty
     bella
@@ -34,6 +35,7 @@
           icon-theme = "Papirus";
           font-name = "Inter 11";
           document-font-name = "Inter 11";
+          monospace-font-name = "JetBrainsMono Nerd Font 11";
         };
         "org/gnome/desktop/input-sources" = {
           xkb-options = [ "ctrl:nocaps" ];

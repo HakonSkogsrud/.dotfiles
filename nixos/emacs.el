@@ -1,0 +1,625 @@
+;;; .emacs --- Personal Emacs configuration -*- lexical-binding: t; -*-
+
+;; ==========================================
+;; 1. PERFORMANCE & FOUNDATION
+;; ==========================================
+
+
+(setq gc-cons-threshold 100000000
+      read-process-output-max (* 4 1024 1024)
+      eglot-events-buffer-size 0
+      redisplay-skip-fontification-on-input t
+      bidi-inhibit-bpa t)
+
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+
+(setq custom-file (locate-user-emacs-file "custom.el"))
+(load custom-file 'noerror)
+
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+
+;; Refresh package archives if stale (older than 7 days)
+(unless (and package-archive-contents
+             (let ((archive-time (nth 5 (file-attributes
+                                         (expand-file-name "archives/melpa/archive-contents"
+                                                           package-user-dir)))))
+               (and archive-time
+                    (< (float-time (time-subtract nil archive-time)) 604800))))
+  (package-refresh-contents))
+
+(require 'use-package)
+(setq use-package-always-ensure t)
+
+;; Locate Zsh before exec-path-from-shell tries to use it
+(when-let ((zsh-path (executable-find "zsh")))
+  (setq shell-file-name zsh-path
+        explicit-shell-file-name zsh-path))
+
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns x pgtk))
+  :config
+  (dolist (var '("PATH" "GOPATH" "LC_ALL"))
+    (exec-path-from-shell-copy-env var)))
+
+;; NixOS / nix-shell / direnv integration
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
+
+;; ==========================================
+;; 2. UI & UX
+;; ==========================================
+
+;; --- 2. List of Themes to Override ---
+;; Replace these with the theme symbols you want to affect (e.g. doom-one, misterioso, etc.)
+(defvar my-cosmic-themes '(doom-sourcerer misterioso modus-vivendi)
+  "List of theme symbols that should trigger the Cosmic Dark override.")
+
+
+;; --- 3. Override Function ---
+(defun my/apply-cosmic-dark-override (&optional theme &rest _)
+  "Override background and modeline, but ONLY for themes in `my-cosmic-themes`."
+  (interactive)
+  (let ((active-theme (or theme (car custom-enabled-themes))))
+    ;; Check if the loaded theme is in our allowed list (or if run manually)
+    (when (or (called-interactively-p 'any)
+              (memq active-theme my-cosmic-themes))
+      (let ((bg          "#1B1B1B")  ; Main Background
+            (bg-alt      "#282828")  ; Modeline & current line
+            (fg          "#e1e3e8")  ; Text
+            (fg-dim      "#707585")  ; Dimmed text
+            (cosmic-teal "#32b4ac")) ; Accent color
+
+        ;; Main Editor Area & Padding
+        (set-face-attribute 'default nil :background bg :foreground fg)
+        (set-face-attribute 'fringe nil :background bg)
+        (set-face-attribute 'line-number nil :background bg :foreground fg-dim)
+        (set-face-attribute 'line-number-current-line nil :background bg-alt :foreground cosmic-teal :weight 'bold)
+
+        ;; Active Mode-Line
+        (set-face-attribute 'mode-line nil
+                            :background bg-alt
+                            :foreground fg
+                            :box (list :line-width 1 :color cosmic-teal))
+        (set-face-attribute 'mode-line-buffer-id nil
+                            :foreground cosmic-teal
+                            :weight 'bold)
+
+        ;; Inactive Mode-Line
+        (set-face-attribute 'mode-line-inactive nil
+                            :background bg
+                            :foreground fg-dim
+                            :box (list :line-width 1 :color bg-alt))
+
+        ;; Vertical Window Dividers
+        (set-face-attribute 'vertical-border nil :foreground bg-alt)
+        (when (facep 'window-divider)
+          (set-face-attribute 'window-divider nil :foreground bg-alt))))))
+
+;; Automatically trigger on theme switches
+(if (boundp 'enable-theme-functions)
+    (add-hook 'enable-theme-functions #'my/apply-cosmic-dark-override)
+  (advice-add 'load-theme :after #'my/apply-cosmic-dark-override))
+
+(defun my/apply-light-fringe-override (&optional theme &rest _)
+  "Make the light-theme fringe inherit the editor background."
+  (when (eq (or theme (car custom-enabled-themes)) 'modus-operandi)
+    (set-face-attribute 'fringe nil :background 'unspecified)))
+
+(if (boundp 'enable-theme-functions)
+    (add-hook 'enable-theme-functions #'my/apply-light-fringe-override)
+  (advice-add 'load-theme :after #'my/apply-light-fringe-override))
+
+(use-package doom-themes)
+
+;; Trust built-in themes, hashes approved in custom.el, and this reviewed
+;; version of doom-sourcerer. Theme updates require explicit approval.
+(add-to-list 'custom-safe-themes 'default)
+(add-to-list 'custom-safe-themes
+             "0d2c5679b6d087686dcfd4d7e57ed8e8aedcccc7f1a478cd69704c02e4ee36fe")
+
+(use-package auto-dark
+  :init
+  (setq auto-dark-themes           '((doom-sourcerer) (modus-operandi))
+        auto-dark-detection-method 'dbus)
+  :config (auto-dark-mode t))
+
+(cua-mode 1)
+(add-to-list 'default-frame-alist
+             `(font . ,(format "FantasqueSansM Nerd Font Mono-%d"
+                               (if (eq system-type 'darwin) 15 13))))
+
+(setq select-active-regions nil
+      mouse-drag-copy-region nil)
+
+(setq inhibit-startup-screen t
+      initial-scratch-message nil
+      confirm-kill-processes nil
+      vc-follow-symlinks t
+      sentence-end-double-space nil
+      ring-bell-function 'ignore
+      scroll-conservatively 101
+      scroll-margin 0
+      fast-but-imprecise-scrolling t
+      mouse-wheel-scroll-amount '(2 ((shift) . 5))
+      mouse-wheel-progressive-speed nil)
+
+(pixel-scroll-precision-mode 1)
+
+(setq-default indent-tabs-mode nil
+              tab-width 4)
+
+(defun my/underscore-is-word-constituent ()
+  (modify-syntax-entry ?_ "w"))
+(add-hook 'after-change-major-mode-hook #'my/underscore-is-word-constituent)
+
+;; macOS: AltGr (arrives as right Cmd due to OS swap) — Norwegian keyboard bindings
+(when (eq system-type 'darwin)
+  (setq ns-right-command-modifier 'super)
+  (global-set-key (kbd "s-7") (lambda () (interactive) (insert "{")))
+  (global-set-key (kbd "s-8") (lambda () (interactive) (insert "[")))
+  (global-set-key (kbd "s-9") (lambda () (interactive) (insert "]")))
+  (global-set-key (kbd "s-0") (lambda () (interactive) (insert "}")))
+  (global-set-key (kbd "§") (lambda () (interactive) (insert "|"))))
+
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(set-fringe-mode '(16 . 16))
+(column-number-mode t)
+(savehist-mode 1)
+(recentf-mode 1)
+
+(setq save-interprogram-paste-before-kill t
+      kill-do-not-save-duplicates t
+      ffap-machine-p-known 'reject)
+
+(add-to-list 'savehist-additional-variables 'kill-ring)
+
+(setq-default cursor-in-non-selected-windows nil)
+(setq highlight-nonselected-windows nil)
+
+(defun my/mode-line-git-branch ()
+  "Return the current Git branch for the mode line, if available."
+  (when vc-mode
+    (concat "Git: "
+            (string-trim
+             (replace-regexp-in-string "\\`[[:space:]]*Git[-:]?" "" vc-mode)))))
+
+(setq-default mode-line-format
+              '("%e" mode-line-front-space
+                (:eval (if (buffer-modified-p) "* " "  "))
+                mode-line-buffer-identification
+                mode-line-format-right-align
+                (:eval (when-let ((branch (my/mode-line-git-branch)))
+                         (concat branch " | ")))
+                mode-name " | " "%l:%c  "))
+
+(add-hook 'dired-mode-hook 'dired-hide-details-mode)
+(setq dired-kill-when-opening-new-dired-buffer t
+      dired-auto-revert-buffer t)
+
+;; ==========================================
+;; 3. SEARCH & COMPLETION
+;; ==========================================
+
+(use-package vertico
+  :init (vertico-mode)
+  :config (setq vertico-cycle t))
+
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package marginalia
+  :init (marginalia-mode))
+
+(use-package corfu
+  :init (global-corfu-mode)
+  :custom
+  (corfu-auto t)
+  (corfu-auto-delay 0.0)
+  (corfu-auto-prefix 1)
+  (corfu-preselect 'first)
+  (corfu-quit-at-boundary t))
+
+(defun my/find-file-home ()
+  "Search for files under home directory with fd."
+  (interactive)
+  (consult-fd "~/"))
+
+(use-package consult
+  :bind (("C-c f" . project-find-file)
+         ("C-c h" . my/find-file-home))
+  :config
+  (setq consult-fd-args '((if (executable-find "fdfind") "fdfind" "fd")
+                          "--full-path --color=never --hidden --exclude .git")))
+
+(use-package which-key
+  :init (which-key-mode)
+  :custom
+  (which-key-idle-delay 0.4)
+  (which-key-sort-order 'which-key-key-order-alpha))
+
+(use-package treemacs
+  :preface
+  (defun my/treemacs-visible-p ()
+    (seq-some (lambda (window)
+                (with-current-buffer (window-buffer window)
+                  (derived-mode-p 'treemacs-mode)))
+              (window-list nil 'no-minibuffer)))
+  (defun my/treemacs-toggle-current-project ()
+    (interactive)
+    (if (my/treemacs-visible-p)
+        (treemacs)
+      (treemacs-add-and-display-current-project-exclusively)))
+  :bind (("C-c V" . treemacs)
+         ("C-c v" . my/treemacs-toggle-current-project))
+  :custom
+  (treemacs-width 32)
+  (treemacs-is-never-other-window t)
+  :config
+  (set-face-attribute 'treemacs-root-face nil
+                      :height 0.9
+                      :weight 'normal
+                      :underline nil)
+  (add-hook 'treemacs-mode-hook
+            (lambda ()
+              (face-remap-add-relative 'default :height 0.9))))
+
+;; ==========================================
+;; 4. TREESITTER & LSP
+;; ==========================================
+
+;; Fallback for systems where the YAML tree-sitter grammar has not yet been
+;; installed.  Without this declaration, the auto-mode fallback below points
+;; at an unknown major mode and opening a .yml/.yaml file prompts to ignore it.
+(use-package yaml-mode)
+
+(setq treesit-font-lock-level 4)
+
+(setq treesit-language-source-alist
+      '((yaml   . ("https://github.com/ikatyang/tree-sitter-yaml"))
+        (python . ("https://github.com/tree-sitter/tree-sitter-python"))
+        (bash   . ("https://github.com/tree-sitter/tree-sitter-bash"))
+        (json   . ("https://github.com/tree-sitter/tree-sitter-json"))
+        (nix    . ("https://github.com/nix-community/tree-sitter-nix"))))
+
+(defun my/treesit-install-grammars ()
+  "Install any configured tree-sitter grammars that are currently missing."
+  (interactive)
+  (dolist (lang (mapcar #'car treesit-language-source-alist))
+    (unless (treesit-language-available-p lang)
+      (treesit-install-language-grammar lang))))
+
+(setq major-mode-remap-alist nil)
+(dolist (entry '((python python-mode python-ts-mode)
+                 (yaml   yaml-mode   yaml-ts-mode)
+                 (bash   bash-mode   bash-ts-mode)
+                 (json   json-mode   json-ts-mode)
+                 (nix    nix-mode    nix-ts-mode)))
+  (when (treesit-language-available-p (nth 0 entry))
+    (add-to-list 'major-mode-remap-alist
+                 (cons (nth 1 entry) (nth 2 entry)))))
+
+(add-to-list 'auto-mode-alist
+             `("\\.ya?ml\\'" . ,(if (treesit-language-available-p 'yaml)
+                                    'yaml-ts-mode
+                                  'yaml-mode)))
+
+(use-package nix-ts-mode
+  :mode "\\.nix\\'")
+
+;; Recognize .j2 files by the extension before it: foo.yml.j2 → yaml-ts-mode, etc.
+;; The (nil t) form strips .j2 and re-checks auto-mode-alist on the remainder.
+(add-to-list 'auto-mode-alist '("\\.j2\\'" nil t))
+
+(defun my/python-project-find (directory)
+  "Return the nearest pyproject.toml project containing DIRECTORY."
+  ;; Prefer a nested Python project over an enclosing Git repository.
+  (when-let ((root (locate-dominating-file directory "pyproject.toml")))
+    (cons 'transient root)))
+
+(defun my/python-venv ()
+  "Return a local .venv, falling back to the current project root."
+  ;; A venv beside the file is more specific than one at the project root.
+  (let* ((local-directory (file-name-directory
+                           (or (buffer-file-name) default-directory)))
+         (local-venv (expand-file-name ".venv" local-directory)))
+    (if (file-directory-p local-venv)
+        local-venv
+      (when-let* ((project (project-current))
+                  (project-venv (expand-file-name ".venv"
+                                                  (project-root project)))
+                  ((file-directory-p project-venv)))
+        project-venv))))
+
+(defun my/python-eglot-ensure ()
+  "Start Eglot using the current project's uv environment."
+  (require 'eglot)
+  (add-hook 'project-find-functions #'my/python-project-find nil t)
+  (let* ((venv (my/python-venv))
+         (venv-python (and venv (expand-file-name "bin/python" venv))))
+    (when (and venv-python (file-executable-p venv-python))
+      ;; Keep the selected environment local to this buffer and LSP process.
+      (setq-local process-environment (copy-sequence process-environment))
+      (setenv "VIRTUAL_ENV" venv)
+      (setenv "PATH" (concat (expand-file-name "bin" venv)
+                             path-separator
+                             (getenv "PATH")))
+      (setq-local eglot-workspace-configuration
+                  (plist-put (copy-sequence eglot-workspace-configuration)
+                             :python `(:pythonPath ,venv-python))))
+    (eglot-ensure)))
+
+(use-package eglot
+  :hook ((python-mode     . my/python-eglot-ensure)
+         (python-ts-mode  . my/python-eglot-ensure)
+         (ansible-ts-mode . eglot-ensure)
+         (bash-ts-mode    . eglot-ensure)
+         (nix-ts-mode     . eglot-ensure))
+  :bind (:map eglot-mode-map
+              ("C-c r" . eglot-rename)
+              ("C-c a" . eglot-code-actions)
+              ("C-c i" . eglot-inlay-hints-mode)
+              ("M-."   . xref-find-definitions)
+              ("M-?"   . xref-find-references))
+  :config
+  (add-hook 'eglot-managed-mode-hook
+            (lambda () (eglot-inlay-hints-mode -1)))
+  (add-to-list 'eglot-server-programs
+               '(ansible-ts-mode . ("ansible-language-server" "--stdio")))
+  (add-to-list 'eglot-server-programs
+               '((python-mode python-ts-mode) . ("basedpyright-langserver" "--stdio")))
+  (add-to-list 'eglot-server-programs
+               '(nix-ts-mode . ("nixd"))))
+
+(use-package apheleia
+  :config (apheleia-global-mode +1))
+
+;; ==========================================
+;; 5. ANSIBLE / YAML
+;; ==========================================
+;; ansible-ts-mode derives from yaml-ts-mode so eglot can target it separately.
+
+(define-derived-mode ansible-ts-mode yaml-ts-mode "Ansible"
+  "Major mode for Ansible YAML files.")
+
+(defun my/ansible-maybe-activate ()
+  (unless (derived-mode-p 'ansible-ts-mode)
+    (when (locate-dominating-file default-directory "ansible.cfg")
+      (ansible-ts-mode))))
+(add-hook 'yaml-ts-mode-hook #'my/ansible-maybe-activate)
+
+(defun my/ansible-variable-at-point ()
+  "Return the root Ansible variable in the Jinja expression at point.
+For example, return `virtiofs_tags' for
+`{{ virtiofs_tags.nextcloud }}'."
+  (let ((origin (point)) start end expression)
+    (save-excursion
+      (setq start (search-backward "{{" (line-beginning-position) t))
+      (when start
+        ;; Do not borrow an opening delimiter from an earlier expression.
+        (unless (search-forward "}}" origin t)
+          (goto-char (+ start 2))
+          (setq end (search-forward "}}" (line-end-position) t)))))
+    (when (and start end (<= (+ start 2) origin) (<= origin end))
+      (setq expression
+            (buffer-substring-no-properties (+ start 2) (- end 2)))
+      ;; The first identifier is the useful lookup target for ordinary
+      ;; Ansible/Jinja expressions, including dotted and indexed values.
+      (when (string-match "[[:alpha:]_][[:alnum:]_]*" expression)
+        (match-string 0 expression)))))
+
+(defun my/ansible-find-variable (&optional prompt)
+  "Find the YAML definition of the Ansible variable around point.
+Nested references are searched by their root key.  With prefix argument
+PROMPT, allow editing the detected variable before searching."
+  (interactive "P")
+  (let* ((root (or (locate-dominating-file default-directory "ansible.cfg")
+                   (when-let ((project (project-current)))
+                     (project-root project))
+                   (user-error "This file is not inside a project")))
+         (detected (my/ansible-variable-at-point))
+         (variable (if (or prompt (not detected))
+                       (read-string "Ansible variable: " detected)
+                     detected)))
+    (when (string-empty-p variable)
+      (user-error "No Ansible variable at point"))
+    ;; Anchoring the key avoids matches in Jinja uses and prose.  Keeping the
+    ;; project search UI means duplicate definitions remain visible/selectable.
+    (let ((default-directory root)
+          ;; Treat the Ansible root as the project even if its Git repository
+          ;; is higher up.  This also works with Emacs versions whose
+          ;; `project-find-regexp' accepts only REGEXP and FILES.
+          (project-find-functions
+           (list (lambda (_directory) (cons 'transient root)))))
+      (project-find-regexp
+       (format "^[[:space:]]*%s:[[:space:]]*" (regexp-quote variable))))))
+
+(define-key ansible-ts-mode-map (kbd "C-c v") #'my/ansible-find-variable)
+
+(with-eval-after-load 'eglot
+  (setq-default eglot-workspace-configuration
+                '(:basedpyright.analysis
+                  (:typeCheckingMode "standard"
+                                     :diagnosticSeverityOverrides
+                                     (:reportAny "none"
+                                                 :reportUnusedCallResult "none"
+                                                 :reportUnknownVariableType "none"))
+                  :ansible
+                  (:ansible
+                   (:path "ansible"
+                          :useFullyQualifiedCollectionNames t)
+                   :validation
+                   (:enabled t
+                             :lint (:enabled t
+                                             :path "ansible-lint"))
+                   :completion
+                   (:provideRedirectModules t
+                                            :provideModuleOptionAliases t)))))
+
+;; ==========================================
+;; 6. PYTHON
+;; ==========================================
+
+(defun my/python-run ()
+  "Run the current Python file with uv in an asynchronous shell buffer."
+  (interactive)
+  (unless buffer-file-name
+    (user-error "Current buffer is not visiting a file"))
+  (when (buffer-modified-p) (save-buffer))
+  (async-shell-command
+   (format "uv run %s" (shell-quote-argument buffer-file-name))))
+
+(use-package dape
+  :preface (setq dape-buffer-window-arrangement 'right)
+  :config
+  (defun my/dape-python-command ()
+    "Return .venv python if in project, else python3."
+    (let ((venv-python
+           (expand-file-name
+            ".venv/bin/python"
+            (or (when-let ((project (project-current)))
+                  (project-root project))
+                default-directory))))
+      (if (file-executable-p venv-python) venv-python "python3")))
+
+  ;; Add a brand new, bulletproof configuration specifically for uv projects 
+  ;; instead of mutating the built-in lists, which can fail silently.
+  (add-to-list 'dape-configs
+               `(uv-python
+                 modes (python-mode python-ts-mode)
+                 command my/dape-python-command
+                 command-args ("-m" "debugpy.adapter" "--host" "127.0.0.1" "--port" :autoport)
+                 port :autoport
+                 :request "launch"
+                 :type "python"
+                 :cwd dape-cwd
+                 :program dape-buffer-default))
+
+  (add-to-list 'dape-configs
+               `(uv-pytest
+                 modes (python-mode python-ts-mode)
+                 command my/dape-python-command
+                 command-args ("-m" "debugpy.adapter" "--host" "127.0.0.1" "--port" :autoport)
+                 port :autoport
+                 :request "launch"
+                 :type "python"
+                 :module "pytest"
+                 :cwd dape-cwd
+                 :args my/dape-pytest-args))
+
+  (defun my/dape-pytest-args ()
+    "Return pytest args for the test function at point."
+    (let* ((file (file-relative-name (buffer-file-name)
+                                     (funcall dape-cwd-function)))
+           (func (save-excursion
+                   (end-of-line)
+                   (when (re-search-backward "^\\s-*def \\(test[a-zA-Z0-9_]*\\)" nil t)
+                     (match-string-no-properties 1))))
+           (node (if func (format "%s::%s" file func) file)))
+      (vector "-x" "-s" "--no-header" node))))
+
+(with-eval-after-load 'python
+  (define-key python-mode-map    (kbd "C-c C-r") #'my/python-run)
+  (define-key python-mode-map    (kbd "C-c C-d") #'dape)
+  (define-key python-mode-map    (kbd "C-c b")   #'dape-breakpoint-toggle)
+  (define-key python-ts-mode-map (kbd "C-c C-r") #'my/python-run)
+  (define-key python-ts-mode-map (kbd "C-c C-d") #'dape)
+  (define-key python-ts-mode-map (kbd "C-c b")   #'dape-breakpoint-toggle))
+
+;; ==========================================
+;; 7. SHELL & GIT
+;; ==========================================
+
+(defun my/toggle-shell ()
+  "Toggle a shell at project root."
+  (interactive)
+  (let ((shell-buf (get-buffer "*shell*")))
+    (if (and shell-buf (get-buffer-window shell-buf))
+        (quit-window nil (get-buffer-window shell-buf))
+      (project-shell))))
+
+(defun my/shell-mode-setup ()
+  (ansi-color-for-comint-mode-on)
+  (corfu-mode -1)
+  (setq-local comint-prompt-regexp "^[^\n]* \\$ "))
+
+(add-hook 'shell-mode-hook #'my/shell-mode-setup) 
+(add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
+
+(with-eval-after-load 'comint
+  (define-key comint-mode-map (kbd "<up>") #'comint-previous-input)
+  (define-key comint-mode-map (kbd "<down>") #'comint-next-input))
+
+(use-package magit
+  :bind ("C-x g" . magit-status))
+
+;; ==========================================
+;; 8. KEYBINDINGS & HOUSEKEEPING
+;; ==========================================
+(global-unset-key (kbd "C-d"))
+
+(global-set-key (kbd "M-h") 'windmove-left)
+(global-set-key (kbd "M-j") 'windmove-down)
+(global-set-key (kbd "M-k") 'windmove-up)
+(global-set-key (kbd "M-l") 'windmove-right)
+
+(global-set-key (kbd "C-c t") 'my/toggle-shell)
+(global-set-key (kbd "C-c p") 'project-switch-project)
+(global-set-key (kbd "C-c e") 'dired-jump)
+(global-set-key (kbd "C-c k") 'where-is)
+(global-set-key (kbd "C-c s") (lambda () (interactive)
+                                (project-find-regexp (thing-at-point 'symbol t))))
+
+(global-set-key (kbd "C-/") 'undo-only)
+(global-set-key (kbd "M-/") 'undo-redo)
+
+(setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
+      select-enable-clipboard t)
+
+;; ==========================================
+;; 9. NIXOS
+;; ==========================================
+
+(defun my-nixos-rebuild ()
+  "Run nixos-rebuild switch for the local flake configuration."
+  (interactive)
+  (async-shell-command "sudo nixos-rebuild switch --flake ~/.dotfiles/nixos#nixos"))
+
+(defun open-nixos-config ()
+  "Open the main NixOS configuration file."
+  (interactive)
+  (find-file (expand-file-name "~/.dotfiles/nixos/configuration.nix")))
+
+;; Define a prefix key for all NixOS shortcuts
+(define-prefix-command 'nixos-map)
+(global-set-key (kbd "C-c n") 'nixos-map)
+
+;; Bind your commands inside the prefix map
+(define-key nixos-map (kbd "r") 'my-nixos-rebuild)   ; Press 'C-c n r' to rebuild
+(define-key nixos-map (kbd "o") 'open-nixos-config) ; Press 'C-c n o' to open config
+
+;; ==========================================
+;; 10. WINDOW MANAGEMENT
+;; ==========================================
+
+(setq window-combination-resize t)
+
+(winner-mode +1)
+
+(defun toggle-delete-other-windows ()
+  "Delete other windows in frame if any, or restore previous window config."
+  (interactive)
+  (if (and winner-mode
+           (equal (selected-window) (next-window)))
+      (winner-undo)
+    (delete-other-windows)))
+
+(global-set-key (kbd "C-x 1") #'toggle-delete-other-windows)
+
+(setq set-mark-command-repeat-pop t)
