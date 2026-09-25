@@ -1,6 +1,6 @@
 # AlmaLinux VM playbook
 
-The inventory targets an existing AlmaLinux VM user with passwordless sudo. The playbook installs the command-line tools from [`../nixos-vm/configuration.nix`](../nixos-vm/configuration.nix), configures git and zsh, and intentionally omits direnv and nix-direnv. It does not manage NixOS boot, hardware, networking, or service settings because this VM runs AlmaLinux.
+The inventory targets an existing AlmaLinux VM user with passwordless sudo. The playbook installs the command-line tools from [`../not-in-use/nixos-vm/configuration.nix`](../not-in-use/nixos-vm/configuration.nix), configures git and zsh, and intentionally omits direnv and nix-direnv. It does not manage NixOS boot, hardware, networking, or service settings because this VM runs AlmaLinux.
 
 Run from this directory:
 
