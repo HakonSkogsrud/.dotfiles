@@ -1,7 +1,0 @@
-# Copy to ~/.gitconfig.local and adjust the gh path for this machine.
-[credential "https://github.com"]
-	helper =
-	helper = !gh auth git-credential
-[credential "https://gist.github.com"]
-	helper =
-	helper = !gh auth git-credential
