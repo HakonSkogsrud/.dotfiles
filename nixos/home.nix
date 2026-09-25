@@ -12,5 +12,4 @@
   home.file.".config/lazygit/config.yml".source = ./lazygit.yml;
   home.file.".emacs".source = ./emacs.el;
   home.file.".codex/config.toml".source = ./codex-config.toml;
-  home.file.".gitconfig".source = ./gitconfig;
 }
