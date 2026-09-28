@@ -22,6 +22,7 @@
   "terminal.integrated.enableMultiLinePasteWarning": "never",
   // ── Workbench & Theme ───────────────────────────────────
   "workbench.startupEditor": "none",
+  "workbench.colorTheme": "Omarchy",
   "workbench.iconTheme": "symbols",
   // ── Files & Explorer ────────────────────────────────────
   "files.autoSave": "afterDelay",
@@ -38,9 +39,6 @@
   // ── Extensions ──────────────────────────────────────────
   "hediet.vscode-drawio.resizeImages": null,
   "window.customTitleBarVisibility": "never",
-  "window.autoDetectColorScheme": true,
   "window.openFoldersInNewWindow": "on",
-  "window.menuBarVisibility": "toggle",
-  "workbench.preferredDarkColorTheme": "Dark Modern",
-  "workbench.preferredLightColorTheme": "Light Modern"
+  "window.menuBarVisibility": "toggle"
 }

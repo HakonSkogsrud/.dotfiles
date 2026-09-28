@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Use Omarchy's generated palette in VSCodium, including themes whose
+# preferred VS Code extension is unavailable from VSCodium's gallery.
+command -v codium >/dev/null || exit 0
+
+theme_file="$HOME/.local/state/omarchy/current/theme/vscode-theme.json"
+[[ -f $theme_file ]] || exit 0
+
+extensions_dir="$HOME/.vscode-oss/extensions"
+extension_dir="$extensions_dir/omarchy-theme"
+mkdir -p "$extension_dir/themes"
+ln -sfn "$theme_file" "$extension_dir/themes/omarchy-color-theme.json"
+
+theme_type=$(jq -r '.type // "dark"' "$theme_file")
+if [[ $theme_type == light ]]; then
+  ui_theme=vs
+else
+  ui_theme=vs-dark
+fi
+
+jq -n --arg ui_theme "$ui_theme" '{
+  name: "omarchy-theme",
+  displayName: "Omarchy",
+  publisher: "local",
+  version: "1.0.0",
+  engines: {vscode: "^1.70.0"},
+  categories: ["Themes"],
+  contributes: {themes: [{label: "Omarchy", uiTheme: $ui_theme,
+                          path: "./themes/omarchy-color-theme.json"}]}
+}' >"$extension_dir/package.json"
+
+extensions_file="$extensions_dir/extensions.json"
+[[ -f $extensions_file ]] || printf '[]\n' >"$extensions_file"
+tmp=$(mktemp)
+trap 'rm -f "$tmp"' EXIT
+jq --arg path "$extension_dir" '
+  map(select(.identifier.id != "local.omarchy-theme")) + [{
+    identifier: {id: "local.omarchy-theme"},
+    version: "1.0.0",
+    location: {"$mid": 1, fsPath: $path, external: ("file://" + $path),
+               path: $path, scheme: "file"},
+    relativeLocation: "omarchy-theme"
+  }]
+' "$extensions_file" >"$tmp"
+mv "$tmp" "$extensions_file"

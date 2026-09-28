@@ -1,0 +1,16 @@
+# Follow Omarchy theme changes without pinning a Ghostty theme.
+config-file = ?"~/.local/state/omarchy/current/theme/ghostty.conf"
+
+window-height = 25
+window-width = 100
+window-theme = ghostty
+cursor-style-blink = true
+cursor-style = block
+linux-cgroup = always
+command = /usr/bin/zsh
+shell-integration = zsh
+clipboard-paste-protection = false
+font-family = BitstromWera Nerd Font
+font-size = 11
+scrollbar = never
+term = xterm-256color
