@@ -47,6 +47,7 @@ vim.filetype.add({
     pattern = {
         [".*%.sh%.j2"] = "sh",
         [".*%.bash%.j2"] = "sh",
+        [".*%.ya?ml%.j2"] = "yaml.ansible",
     },
 })
 -- 2. LAZY.NVIM BOOTSTRAP
@@ -83,23 +84,6 @@ require("lazy").setup({
             vim.cmd.colorscheme("github_dark_dimmed")
         end,
     },
-    -- The universal transparency plugin
-    {
-        "xiyaowong/transparent.nvim",
-        lazy = false, -- Critical: prevents lazy-loading issues
-        opts = {
-            extra_groups = {
-                "NormalFloat",
-                "NeoTreeNormal",
-                "NeoTreeNormalNC",
-                "NeoTreeWinSeparator",
-            },
-        },
-        config = function(_, opts)
-            require("transparent").setup(opts)
-            vim.cmd("TransparentEnable") -- Automatically triggers the transparency logic
-        end,
-    },
     { "nvim-tree/nvim-web-devicons" },
     { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
     {
@@ -119,53 +103,39 @@ require("lazy").setup({
             },
         },
     },
+    -- Install Python and Ansible servers, then use Neovim's native LSP API.
     {
-        "sindrets/diffview.nvim",
-        dependencies = { "nvim-lua/plenary.nvim", "nvim-tree/nvim-web-devicons" },
-    },
-    {
-        "kdheepak/lazygit.nvim",
-        cmd = "LazyGit",
-        dependencies = { "nvim-lua/plenary.nvim" },
-        keys = {
-            { "<leader>gg", "<cmd>LazyGit<CR>", desc = "Git: LazyGit" },
-        },
-    },
-
-    -- LSP Configuration (Modern Neovim 0.12.x native setup)
-    {
-        "neovim/nvim-lspconfig",
+        "mason-org/mason-lspconfig.nvim",
         dependencies = {
+            { "mason-org/mason.nvim", opts = {} },
+            "neovim/nvim-lspconfig",
             "saghen/blink.cmp",
         },
         config = function()
             local caps = require("blink.cmp").get_lsp_capabilities()
-
-            -- Define your target servers
-            local servers = {
-                basedpyright = { settings = { basedpyright = { analysis = { typeCheckingMode = "basic" } } } },
-                ansiblels = {},
-                ruff = {},
-                lua_ls = {},
-                nixd = {},
-            }
-
-            -- Set up and enable each server natively using the 0.11+ vim.lsp API
-            for server_name, server in pairs(servers) do
-                server.capabilities = vim.tbl_deep_extend("force", {}, caps, server.capabilities or {})
-
-                -- 1. Register the server settings natively
-                vim.lsp.config(server_name, server)
-
-                -- 2. Enable/Activate the server natively
-                vim.lsp.enable(server_name)
-            end
+            vim.lsp.config("*", { capabilities = caps })
+            vim.lsp.config("basedpyright", {
+                settings = { basedpyright = { analysis = { typeCheckingMode = "basic" } } },
+            })
+            require("mason-lspconfig").setup({
+                ensure_installed = { "basedpyright", "ansiblels", "ruff", "lua_ls" },
+                automatic_enable = { "basedpyright", "ansiblels", "ruff", "lua_ls" },
+            })
+            -- nixd is supplied by NixOS rather than Mason.
+            vim.lsp.enable("nixd")
         end,
+    },
+    {
+        "WhoIsSethDaniel/mason-tool-installer.nvim",
+        dependencies = { "mason-org/mason.nvim" },
+        opts = {
+            ensure_installed = { "ansible-lint", "prettier", "stylua", "taplo", "tree-sitter-cli" },
+        },
     },
     -- Autocomplete
     {
         "saghen/blink.cmp",
-        version = "v0.*",
+        version = "1.*",
         opts = {
             keymap = {
                 preset = "none",
@@ -191,9 +161,14 @@ require("lazy").setup({
     {
         "stevearc/conform.nvim",
         opts = {
-            format_on_save = { timeout_ms = 500, lsp_format = "fallback" },
+            format_on_save = function(bufnr)
+                return {
+                    timeout_ms = vim.bo[bufnr].filetype == "yaml.ansible" and 5000 or 500,
+                    lsp_format = "fallback",
+                }
+            end,
             formatters_by_ft = {
-                ansible = { "ansible-lint" },
+                ["yaml.ansible"] = { "ansible-lint" },
                 json = { "prettier" },
                 jsonc = { "prettier" },
                 lua = { "stylua" },
@@ -204,55 +179,21 @@ require("lazy").setup({
         },
     },
 
-    -- Debugging
-    {
-        "mfussenegger/nvim-dap",
-        dependencies = {
-            {
-                "rcarriga/nvim-dap-ui",
-                dependencies = { "nvim-neotest/nvim-nio" },
-            },
-            "mfussenegger/nvim-dap-python",
-        },
-        config = function()
-            local dap, dapui = require("dap"), require("dapui")
-            local dap_python = require("dap-python")
-            dap_python.setup("uv")
-            dap_python.test_runner = "pytest"
-            dapui.setup()
-            dap.listeners.after.event_initialized["dapui_config"] = dapui.open
-            dap.listeners.before.event_terminated["dapui_config"] = dapui.close
-            dap.listeners.before.event_exited["dapui_config"] = dapui.close
-
-            vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
-            vim.keymap.set("n", "<F10>", dap.step_over, { desc = "Debug: Step Over" })
-            vim.keymap.set("n", "<F11>", dap.step_into, { desc = "Debug: Step Into" })
-            vim.keymap.set("n", "<F12>", dap.step_out, { desc = "Debug: Step Out" })
-            vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
-            vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Debug: Toggle UI" })
-            vim.keymap.set("n", "<leader>dq", function()
-                dap.terminate()
-                dapui.close()
-            end, { desc = "Debug: Terminate and Close UI" })
-            vim.keymap.set("n", "<leader>dc", function()
-                dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
-            end, { desc = "Debug: Set Conditional Breakpoint" })
-            vim.keymap.set("n", "<leader>dt", dap_python.test_method, { desc = "Debug: Nearest Test Method" })
-            vim.keymap.set("n", "<leader>dT", dap_python.test_class, { desc = "Debug: Nearest Test Class" })
-            vim.keymap.set("n", "<leader>dl", dap.run_last, { desc = "Debug: Re-run Last Session" })
-        end,
-    },
-
     -- Treesitter
     {
         "nvim-treesitter/nvim-treesitter",
+        lazy = false,
         build = ":TSUpdate",
         config = function()
-            require("nvim-treesitter").setup({
-                ensure_installed = { "python", "ansible", "yaml", "lua", "bash", "markdown", "nix" },
+            if vim.fn.executable("tree-sitter") == 1 then
+                require("nvim-treesitter").install({ "python", "yaml", "lua", "bash", "markdown", "nix" })
+            end
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = { "python", "yaml", "yaml.ansible", "lua", "sh", "bash", "markdown", "nix" },
+                callback = function()
+                    pcall(vim.treesitter.start)
+                end,
             })
-            -- Enable treesitter-based indentation (v1.0.0+ uses native vim option)
-            vim.o.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
         end,
     },
 })
@@ -322,12 +263,6 @@ vim.keymap.set("n", "<C-Up>", ":resize +4<CR>")
 vim.keymap.set("n", "<C-Down>", ":resize -4<CR>")
 vim.keymap.set("n", "<C-Left>", ":vertical resize -4<CR>")
 vim.keymap.set("n", "<C-Right>", ":vertical resize +4<CR>")
-vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen HEAD<CR>", { desc = "Git: Diff against HEAD" })
-vim.keymap.set("n", "<leader>gD", "<cmd>DiffviewOpen --cached<CR>", { desc = "Git: Staged diff" })
-vim.keymap.set("n", "<leader>gw", "<cmd>DiffviewOpen<CR>", { desc = "Git: Worktree vs index" })
-vim.keymap.set("n", "<leader>gf", "<cmd>DiffviewFileHistory %<CR>", { desc = "Git: File history" })
-vim.keymap.set("n", "<leader>gF", "<cmd>DiffviewFileHistory<CR>", { desc = "Git: Branch history" })
-vim.keymap.set("n", "<leader>gq", "<cmd>DiffviewClose<CR>", { desc = "Git: Close diff view" })
 vim.keymap.set("n", "<leader>gp", "<cmd>Gitsigns preview_hunk_inline<CR>", { desc = "Git: Preview hunk" })
 vim.keymap.set("n", "<leader>gb", "<cmd>Gitsigns blame_line<CR>", { desc = "Git: Blame line" })
 vim.keymap.set("n", "<leader>gs", "<cmd>Gitsigns stage_hunk<CR>", { desc = "Git: Stage hunk" })
@@ -352,4 +287,4 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "TermOpen" }, {
 })
 vim.keymap.set("i", "jk", "<Esc>", { desc = "Exit Insert Mode" })
 
-vim.keymap.set("n", "<leader>ta", "<cmd>!python -m pytest<CR>", { desc = "Run All Tests (pytest)" })
+vim.keymap.set("n", "<leader>ta", "<cmd>!uv run pytest<CR>", { desc = "Run All Tests (pytest)" })

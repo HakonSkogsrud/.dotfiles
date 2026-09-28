@@ -3,7 +3,7 @@
   "window.zoomLevel": 0.7,
   "window.titleBarStyle": "native",
   // ── Editor ──────────────────────────────────────────────
-  "editor.fontSize": 13,
+  "editor.fontSize": 14,
   "editor.fontFamily": "JetBrainsMono Nerd Font Mono",
   "editor.minimap.enabled": false,
   "editor.formatOnSave": true,
