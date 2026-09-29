@@ -16,6 +16,8 @@
   networking.hostName = "nixos-vm";
   networking.networkmanager.enable = true;
 
+  nixpkgs.config.allowUnfree = true;
+
   time.timeZone = "Europe/Oslo";
   console.keyMap = "no";
 
@@ -60,7 +62,20 @@
     };
   };
 
-   environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs; [
+    # Apps currently pinned to the GNOME dash. YouTube Music runs as a Brave web app.
+    firefox
+    ghostty
+    brave
+    obsidian
+    nautilus
+    vscode
+    emacs
+    signal-desktop
+    darktable
+    onlyoffice-bin
+    localsend
+
     git
     vim
     curl
@@ -100,4 +115,3 @@
   system.stateVersion = "26.05"; # Did you read the comment?
 
 }
-
