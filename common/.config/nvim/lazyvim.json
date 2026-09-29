@@ -1,8 +1,7 @@
 {
   "extras": [
     "lazyvim.plugins.extras.lang.python",
-    "lazyvim.plugins.extras.lang.ansible",
-    "lazyvim.plugins.extras.lang.terraform"
+    "lazyvim.plugins.extras.lang.ansible"
   ],
   "install_version": 8,
   "news": {
