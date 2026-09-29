@@ -1,0 +1,7 @@
+{
+  "baseFontSize": 14,
+  "cssTheme": "Minimal",
+  "enabledCssSnippets": [
+    "hide-min-max-buttons"
+  ]
+}
