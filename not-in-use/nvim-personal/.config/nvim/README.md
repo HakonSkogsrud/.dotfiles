@@ -12,7 +12,13 @@ or on `PATH`.
 
 The GitHub theme's `transparent = true` option provides a transparent
 background without a separate transparency plugin. Neo-tree remains the
-file explorer. LazyGit can still be run from the terminal if installed.
+file explorer, without its Git status integration.
+
+Existing shortcuts use LazyVim's keys where an equivalent is available
+(for example `<leader>ff`, `<leader>sR`, `<leader>cd`, `gd`, and `gr`).
+The terminal still opens a split on `<C-/>`, not LazyVim's floating terminal.
+Visual `p`, `jk` to exit insert/terminal mode, and `<leader>ta` for pytest
+remain personal shortcuts without LazyVim equivalents.
 
 Tree-sitter needs its CLI. Mason installs it, and parser installation starts
 on the next Neovim launch if the CLI was not yet available on the first one.

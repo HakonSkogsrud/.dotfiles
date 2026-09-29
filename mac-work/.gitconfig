@@ -11,8 +11,11 @@
 [push]
 	autoSetupRemote = true
 [core]
+  editor = nvim
 	excludesfile = /Users/Hakon.Skogsrud/.gitignore_global
 	pager = delta
+[include]
+  path = /Users/Hakon.Skogsrud/.config/delta/themes.gitconfig
 
 [interactive]
 	diffFilter = delta --color-only
@@ -21,12 +24,17 @@
 	navigate = true
 	side-by-side = true
 	line-numbers = true
+  features = mellow-barbet
 
 [merge]
 	conflictstyle = zdiff3
 
 [diff]
 	colorMoved = default
+  algorith = histogram
+
+[rerere]
+  enabled = true
 
 [commit]
 	gpgsign = true

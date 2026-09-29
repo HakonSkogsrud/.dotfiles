@@ -9,6 +9,31 @@ export PATH
 
 # eza (modern ls)
 alias clear='pyroclear'
+unalias wsc 2>/dev/null
+unfunction wsc 2>/dev/null
+wsc() {
+  if [[ ${HERDR_ENV:-} != 1 ]]; then
+    print -u2 'wsc: must be run from a Herdr-managed pane'
+    return 1
+  fi
+
+  local -a switch_args opencode_args
+  while (( $# )); do
+    if [[ $1 == -- ]]; then
+      shift
+      opencode_args=("$@")
+      break
+    fi
+    switch_args+=("$1")
+    shift
+  done
+
+  wt switch --create --execute=sh "${switch_args[@]}" -- -c '
+    herdr tab rename "$HERDR_TAB_ID" "$2" || exit
+    shift 2
+    exec opencode "$@"
+  ' sh '{{ worktree_path }}' '{{ branch }}' "${opencode_args[@]}"
+}
 alias ls='eza -al --color=always --group-directories-first --icons=always'
 alias la='eza -a --color=always --group-directories-first --icons=always'
 alias ll='eza -l --color=always --group-directories-first --icons=always'
@@ -87,3 +112,5 @@ precmd() {
 }
 
 precmd
+
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi

@@ -1,17 +1,18 @@
 return {
   {
-    "Mofiqul/vscode.nvim",
+    "catppuccin/nvim",
+    name = "catppuccin",
     lazy = false,
     priority = 1000,
     opts = {
-      transparent = vim.uv.os_uname().sysname == "Darwin",
-      terminal_colors = true,
+      flavour = "mocha",
+      transparent_background = false,
     },
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "vscode",
+      colorscheme = "catppuccin",
     },
   },
 }
