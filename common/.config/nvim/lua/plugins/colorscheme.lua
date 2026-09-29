@@ -1,18 +1,12 @@
 return {
   {
-    "catppuccin/nvim",
-    name = "catppuccin",
+    "Mofiqul/vscode.nvim",
     lazy = false,
     priority = 1000,
-    opts = {
-      flavour = "mocha",
-      transparent_background = false,
-    },
+    opts = { style = "dark" },
   },
   {
     "LazyVim/LazyVim",
-    opts = {
-      colorscheme = "catppuccin",
-    },
+    opts = { colorscheme = "vscode" },
   },
 }
