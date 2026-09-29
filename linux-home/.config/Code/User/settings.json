@@ -48,5 +48,6 @@
   "telemetry.feedback.enabled": false,
   "telemetry.editStats.enabled": false,
   "workbench.enableExperiments": false,
-  "chat.disableAIFeatures": true
+  "chat.disableAIFeatures": true,
+  "workbench.preferredDarkColorTheme": "Dark Modern"
 }

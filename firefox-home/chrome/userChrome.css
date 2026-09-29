@@ -1,0 +1,19 @@
+/* 1. Remove background/circle from the button container when not hovering */
+.titlebar-button:not(:hover) {
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* 2. Force the icon image to remain visible */
+.titlebar-button .toolbarbutton-icon {
+    background-color: transparent !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* 3. Re-enable hover circle styling when mouse is over it */
+.titlebar-button:hover {
+    border-radius: 9999px !important; /* Retains GNOME's circular hover effect */
+}
