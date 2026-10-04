@@ -42,6 +42,7 @@
   "window.autoDetectColorScheme": true,
   "window.openFoldersInNewWindow": "on",
   "window.menuBarVisibility": "toggle",
+  "workbench.experimental.modernUIEditorTabStyle": "pill",
   "workbench.preferredLightColorTheme": "Light 2026",
   // ── Privacy ─────────────────────────────────────────────
   "telemetry.telemetryLevel": "off",
@@ -49,5 +50,6 @@
   "telemetry.editStats.enabled": false,
   "workbench.enableExperiments": false,
   "chat.disableAIFeatures": true,
-  "workbench.preferredDarkColorTheme": "Dark Modern"
+  "workbench.preferredDarkColorTheme": "Dark Modern",
+  "chat.extensionUnification.enabled": false
 }
