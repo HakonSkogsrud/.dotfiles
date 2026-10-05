@@ -1,0 +1,3 @@
+[theme.templates.user.obsidian]
+input_path = "/home/haaksk/.config/noctalia/Obsidian/obsidian.css"
+output_path = "/home/haaksk/Obsidian/.obsidian/snippets/noctalia.css"
