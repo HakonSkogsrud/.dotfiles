@@ -5,3 +5,5 @@ headerbar button.titlebutton:not(:hover),
     background-image: none;
     box-shadow: none;
 }
+
+@import url("noctalia.css");

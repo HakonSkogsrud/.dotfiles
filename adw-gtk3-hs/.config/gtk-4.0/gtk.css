@@ -1,3 +1,5 @@
 windowcontrols button image:not(:hover) {
     background-color: transparent;
 }
+
+@import url("noctalia.css");
