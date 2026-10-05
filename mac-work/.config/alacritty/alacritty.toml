@@ -1,0 +1,40 @@
+[general]
+live_config_reload = true
+
+[terminal.shell]
+program = "/bin/zsh"
+args = ["-l"]
+
+[window]
+dimensions = { columns = 135, lines = 35 }
+padding = { x = 6, y = 28 }
+dynamic_padding = true
+decorations = "Transparent"
+opacity = 1.0
+option_as_alt = "Both"
+
+[font]
+normal = { family = "BitstromWera Nerd Font Mono", style = "Regular" }
+bold = { family = "BitstromWera Nerd Font Mono", style = "Bold" }
+italic = { family = "BitstromWera Nerd Font Mono", style = "Oblique" }
+bold_italic = { family = "BitstromWera Nerd Font Mono", style = "Bold Oblique" }
+size = 13.0
+
+[scrolling]
+history = 10000
+
+[selection]
+save_to_clipboard = true
+
+[cursor]
+style = { shape = "Block", blinking = "Off" }
+
+[keyboard]
+bindings = [
+  { key = "N", mods = "Command", action = "CreateNewWindow" },
+  { key = "Return", mods = "Shift", chars = "\u001b\r" },
+  { key = "Left", mods = "Command", chars = "\u0001" },
+  { key = "Right", mods = "Command", chars = "\u0005" },
+  { key = "Up", mods = "Command", action = "ScrollToTop" },
+  { key = "Down", mods = "Command", action = "ScrollToBottom" },
+]
