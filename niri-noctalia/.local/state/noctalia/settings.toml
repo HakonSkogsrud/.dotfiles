@@ -87,10 +87,13 @@ wallpaper_scheme = "muted"
     builtin_ids = [ "alacritty", "btop", "emacs", "gtk3", "gtk4", "helix", "niri" ]
 
 [wallpaper.default]
-path = "/home/haaksk/Pictures/wallhaven-gwwkql.jpg"
+path = "/home/haaksk/Pictures/wallpapers/test.png"
 
 [wallpaper.last]
-path = "/home/haaksk/Pictures/wallhaven-gwwkql.jpg"
+path = "/home/haaksk/Pictures/wallpapers/test.png"
 
 [wallpaper.monitors.DP-1]
 path = "/home/haaksk/Pictures/wallhaven-gwwkql.jpg"
+
+[wallpaper.monitors.eDP-1]
+path = "/home/haaksk/Pictures/wallpapers/test.png"
