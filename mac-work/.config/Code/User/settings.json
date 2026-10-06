@@ -1,112 +1,233 @@
 {
-  "window.zoomLevel": 0.5,
-  "window.titleBarStyle": "native",
-  "chat.editor.fontSize": 13,
-  "editor.fontSize": 13,
-  "editor.scrollbar.verticalScrollbarSize": 6,
-  "editor.scrollbar.horizontalScrollbarSize": 6,
-  "terminal.integrated.fontSize": 13,
-  "editor.minimap.enabled": false,
-  "git.confirmSync": false,
-  "git.autofetch": true,
-  "explorer.confirmDelete": false,
-  "editor.fontFamily": "Hack Nerd Font",
-  "terminal.integrated.fontFamily": "Hack Nerd Font",
-  "git.enableSmartCommit": true,
-  "terminal.integrated.defaultProfile.osx": "zsh",
-  "terminal.integrated.sendKeybindingsToShell": true,
-  "symbols.hidesExplorerArrows": false,
-  "workbench.iconTheme": "symbols",
-  "workbench.startupEditor": "none",
-  "window.autoDetectColorScheme": true,
-  "editor.renderWhitespace": "none",
-  "[yaml]": {
-    "editor.defaultFormatter": "redhat.vscode-yaml"
-  },
-  "editor.formatOnSave": true,
-  "chat.instructionsFilesLocations": {
-    "README.md": true
-  },
-  "python.defaultInterpreterPath": "/opt/homebrew/bin/python3",
-  "github.copilot.nextEditSuggestions.enabled": true,
-  "github.copilot.enable": {
-    "*": false,
-    "plaintext": false,
-    "markdown": false,
-    "scminput": false
-  },
-  "editor.multiCursorModifier": "ctrlCmd",
-  "workbench.preferredLightColorTheme": "Night Owl Light",
-  "workbench.colorCustomizations": {
-    "[Night Owl Light]": {
-      //========================================================
-      // General Window & Layout
-      //========================================================
-      "titleBar.activeBackground": "#f5f5f5",
-      "titleBar.inactiveBackground": "#eff0f1",
-      "activityBar.background": "#f5f5f5",
-      "activityBar.border": "#f5f5f5",
-      "statusBar.background": "#f5f5f5",
-      "statusBar.border": "#f5f5f5",
-      //========================================================
-      // Side Bar
-      //========================================================
-      "sideBar.background": "#f5f5f5",
-      "sideBar.border": "#fbfbfb",
-      "sideBarSectionHeader.background": "#f5f5f5",
-      //========================================================
-      // Editor & Tabs
-      //========================================================
-      "editorGroupHeader.tabsBackground": "#f5f5f5",
-      "tab.activeBackground": "#fbfbfb",
-      "tab.activeBorder": "#fbfbfb",
-      "tab.inactiveBackground": "#f5f5f5",
-      //========================================================
-      // Panel (Terminal, Output, Problems)
-      //========================================================
-      "panel.background": "#f5f5f5",
-      //========================================================
-      // Lists & Selections
-      //========================================================
-      "list.activeSelectionBackground": "#fbfbfb",
-      "list.inactiveSelectionBackground": "#fbfbfb"
+    "workbench.iconTheme": "symbols",
+    "workbench.startupEditor": "none",
+    "workbench.editor.empty.hint": "hidden",
+
+    // ── Window ─────────────────────────────────────────────────────────────────
+    "window.zoomLevel": 0.6,
+    "window.openFoldersInNewWindow": "off",
+    "window.customTitleBarVisibility": "windowed",
+
+    // ── Editor ─────────────────────────────────────────────────────────────────
+    "editor.fontSize": 13,
+    "editor.fontVariations": false,
+    "editor.minimap.enabled": false,
+    "editor.scrollbar.verticalScrollbarSize": 6,
+    "editor.scrollbar.horizontalScrollbarSize": 6,
+    "editor.accessibilitySupport": "off",
+    "editor.unicodeHighlight.ambiguousCharacters": false,
+    "editor.unicodeHighlight.invisibleCharacters": false,
+
+    // ── Diff editor ────────────────────────────────────────────────────────────
+    "diffEditor.ignoreTrimWhitespace": false,
+
+    // ── Debug ──────────────────────────────────────────────────────────────────
+    "debug.console.fontFamily": "",
+
+    // ── Files ──────────────────────────────────────────────────────────────────
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 10,
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/*_cache": true,
+        "**/*egg-info": true
     },
-    "[Default Dark Modern]": {
-      //========================================================
-      // General Window & Layout
-      //========================================================
-      "titleBar.activeBackground": "#292c30",
-      "titleBar.inactiveBackground": "#eff0f1",
-      "activityBar.background": "#292c30",
-      "activityBar.border": "#292c30",
-      "statusBar.background": "#292c30",
-      "statusBar.border": "#292c30",
-      //========================================================
-      // Side Bar
-      //========================================================
-      "sideBar.background": "#292c30",
-      "sideBar.border": "#1f1f1f",
-      "sideBarSectionHeader.background": "#292c30",
-      //========================================================
-      // Editor & Tabs
-      //========================================================
-      "editor.background": "#1f1f1f",
-      "editorGroupHeader.tabsBackground": "#292c30",
-      "tab.activeBackground": "#1f1f1f",
-      "tab.activeBorder": "#1f1f1f",
-      "tab.inactiveBackground": "#292c30",
-      //========================================================
-      // Panel (Terminal, Output, Problems)
-      //========================================================
-      "panel.background": "#292c30",
-      "terminal.background": "#292c30",
-      //========================================================
-      // Lists & Selections
-      //========================================================
-      "list.activeSelectionBackground": "#1f1f1f",
-      "list.inactiveSelectionBackground": "#1f1f1f"
-    }
-  },
-  "redhat.telemetry.enabled": false,
-  "hediet.vscode-drawio.resizeImages": null,
+
+    // ── Search ─────────────────────────────────────────────────────────────────
+    "search.exclude": {
+        "**/.venv": true
+    },
+
+    // ── Explorer ───────────────────────────────────────────────────────────────
+    "explorer.confirmDragAndDrop": false,
+    "explorer.confirmDelete": false,
+
+    // ── Terminal ───────────────────────────────────────────────────────────────
+    "terminal.integrated.fontSize": 13,
+    "terminal.integrated.fontFamily": "CommitMono Nerd Font Mono",
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.shellIntegration.enabled": true,
+    "terminal.integrated.shellIntegration.decorationsEnabled": "never",
+    "terminal.integrated.shellIntegration.history": 1000,
+    "terminal.integrated.shellIntegration.quickFixEnabled": false,
+    "terminal.integrated.shellIntegration.showCommandGuide": false,
+
+    // ── Git ────────────────────────────────────────────────────────────────────
+    "git.autofetch": true,
+    "git.path": "/opt/homebrew/bin/git",
+    "git.confirmSync": false,
+    "git.suggestSmartCommit": false,
+    "git.openAfterClone": "alwaysNewWindow",
+    "git.defaultCloneDirectory": "~/Workspace",
+    "git.blame.editorDecoration.enabled": false,
+    "git.blame.statusBarItem.enabled": true,
+
+    // ── Notebooks / Jupyter ────────────────────────────────────────────────────
+    "notebook.editorOptionsCustomizations": {
+        "editor.fontSize": 12
+    },
+    "notebook.output.fontSize": 12,
+    "notebook.output.fontFamily": "JetBrainsMono Nerd Font Mono",
+    "notebook.markup.fontSize": 14,
+    "notebook.markup.fontFamily": "Avenir Next",
+    "jupyter.askForKernelRestart": false,
+
+    // ── Markdown ───────────────────────────────────────────────────────────────
+    "markdown.preview.fontSize": 13,
+    "markdown.preview.fontFamily": "Avenir Next",
+
+    // ── Python ─────────────────────────────────────────────────────────────────
+    "python.analysis.typeCheckingMode": "basic",
+    "python.defaultInterpreterPath": "/opt/homebrew/bin/python3",
+
+    // ── GitHub Copilot ─────────────────────────────────────────────────────────
+    "github.copilot.enable": {
+        "*": false,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false
+    },
+    "github.copilot.nextEditSuggestions.enabled": true,
+
+    // ── GitHub Pull Requests ───────────────────────────────────────────────────
+    "githubPullRequests.pullBranch": "never",
+
+    // ── Chat ───────────────────────────────────────────────────────────────────
+    "chat.fontSize": 13,
+    "chat.viewSessions.orientation": "stacked",
+    "chat.mcp.gallery.enabled": true,
+    "chat.tools.terminal.autoApprove": {
+        "uv": true,
+        "git checkout": true,
+        "git add": true,
+        "git commit": true,
+        "git push": true,
+        "mkdir": true,
+        "mv": true,
+        "cp": true,
+        "gh": true,
+        "git stash": true,
+        "printf": true,
+        "git remote": true,
+        "git reset": true,
+        "git restore": true,
+        "git fetch": true,
+        "git rev-parse": true,
+        "git reflog": true,
+        "git patch-id": true,
+        "git switch": true,
+        "diff": true
+    },
+    "chat.tools.urls.autoApprove": {
+        "https://code.visualstudio.com": true,
+        "https://github.com/microsoft/vscode/wiki/*": true,
+        "https://docs.github.com": {
+            "approveRequest": false,
+            "approveResponse": true
+        },
+        "https://github.com": true,
+        "https://raw.githubusercontent.com": {
+            "approveRequest": false,
+            "approveResponse": true
+        },
+        "https://artificialanalysis.ai": true,
+        "https://lmarena.ai": {
+            "approveRequest": true,
+            "approveResponse": false
+        },
+        "https://mlflow.org/docs/latest/llms/tracing/index.html": true,
+        "https://mlflow.org/docs/latest/llms/tracing": true,
+        "https://mlflow.org/docs/latest/llms": true,
+        "https://mlflow.org/docs/latest": true,
+        "https://mlflow.org/docs": true,
+        "https://mlflow.org": true,
+        "https://github.com/mlflow/mlflow/issues": true,
+        "https://github.com/mlflow/mlflow": true,
+        "https://github.com/mlflow": true,
+        "https://builders-intranet-admin.apps-int.gjensidige.io": {
+            "approveRequest": true,
+            "approveResponse": false
+        },
+        "https://docs.streamlit.io": {
+            "approveRequest": false,
+            "approveResponse": true
+        }
+    },
+
+    // ── Security ───────────────────────────────────────────────────────────────
+    "security.workspace.trust.untrustedFiles": "open",
+
+    // ── Extensions ─────────────────────────────────────────────────────────────
+    "hediet.vscode-drawio.resizeImages": null,
+
+    // ── PostgreSQL ─────────────────────────────────────────────────────────────
+    "pgsql.serverGroups": [
+        {
+            "name": "Servers",
+            "id": "17AC6173-7CA4-41EC-BD33-AE876399F000",
+            "isDefault": true
+        }
+    ],
+    "pgsql.connections": [
+        {
+            "id": "38121C56-F073-4DDD-8C89-705E746F1E46",
+            "groupId": "17AC6173-7CA4-41EC-BD33-AE876399F000",
+            "authenticationType": "AzureMFA",
+            "connectTimeout": 15,
+            "applicationName": "vscode-pgsql",
+            "clientEncoding": "utf8",
+            "sslmode": "require",
+            "sshSavePassword": true,
+            "savePassword": true,
+            "sslRootCertMode": "none",
+            "server": "gpm-cpo-srvc-en-prod-psql-002.postgres.database.azure.com",
+            "emptyPasswordInput": false,
+            "azureAccountToken": "",
+            "expiresOn": 0,
+            "accountId": "afc0b95e-f777-49c1-9a87-aab764f0649e.80184e22-072c-440e-a8a9-22f52b82646d",
+            "tenantId": "80184e22-072c-440e-a8a9-22f52b82646d",
+            "entraUserName": "RBAC_AAD_GPM_EN_SRVC_002_kundekontakt_PSQLDB_REDR",
+            "database": "kundekontakt",
+            "profileName": "kundekontakt",
+            "user": "Håkon Skogsrud - Hakon.Skogsrud@gjensidige.no",
+            "email": "Hakon.Skogsrud@gjensidige.no",
+            "password": "",
+            "sshPassword": "",
+            "profileSource": 0
+        }
+    ],
+    "workbench.browser.openLocalhostLinks": false,
+    "terminal.integrated.profiles.osx": {
+        "bash": {
+            "path": "bash",
+            "args": [
+                "-l"
+            ],
+            "icon": "terminal-bash"
+        },
+        "zsh": {
+            "path": "/bin/zsh",
+            "args": [
+                "-l"
+            ]
+        },
+        "fish": {
+            "path": "fish",
+            "args": [
+                "-l"
+            ]
+        },
+        "tmux": {
+            "path": "tmux",
+            "icon": "terminal-tmux"
+        },
+        "pwsh": {
+            "path": "pwsh",
+            "icon": "terminal-powershell"
+        }
+    },
+    "dev.containers.dockerPath": "/opt/homebrew/bin/podman",
+    "workbench.colorTheme": "Dark Modern",
+    "workbench.experimental.modernUIEditorTabStyle": "pill",
+    "security.promptForLocalFileProtocolHandling": false
 }

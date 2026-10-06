@@ -18,9 +18,9 @@ require("lazy").setup({
   spec = {
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+    vim.fn.has("macunix") == 1 and { import = "lazyvim.plugins.extras.lang.terraform" } or nil,
     -- import/override with your plugins
     { import = "plugins" },
-    vim.fn.has("macunix") == 1 and { import = "lazyvim.plugins.extras.lang.terraform" } or nil,
   },
   defaults = {
     -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
