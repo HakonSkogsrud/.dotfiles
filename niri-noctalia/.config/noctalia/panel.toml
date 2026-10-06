@@ -1,0 +1,16 @@
+[bar.default]
+margin_ends = 0
+radius_top_left = 0
+radius_top_right = 0
+start = [ "workspaces" ]
+center = [ "clock" ]
+end = [ "tray", "notifications", "network", "bluetooth", "volume", "battery", "session" ]
+
+[widget.network]
+show_label = false
+
+[widget.bluetooth]
+show_label = false
+
+[widget.volume]
+show_label = false
