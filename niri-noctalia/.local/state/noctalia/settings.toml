@@ -81,19 +81,20 @@ builtin = "Eldritch"
 community_palette = "Oxocarbon"
 mode = "dark"
 source = "wallpaper"
-wallpaper_scheme = "muted"
+wallpaper_scheme = "soft"
 
     [theme.templates]
     builtin_ids = [ "alacritty", "btop", "emacs", "gtk3", "gtk4", "helix", "niri" ]
+    community_ids = [ "codex", "brave", "brave-origin", "pywalfox", "libreoffice", "neovim", "obsidian", "vscode", "herdr" ]
 
 [wallpaper.default]
-path = "/home/haaksk/Pictures/wallpapers/landscape/endless-road-mountain-range-landscape-death-valley-blue-sky-3840x2160-3909.jpg"
+path = "/home/haaksk/Pictures/wallhaven-7jxxp3.jpg"
 
 [wallpaper.last]
-path = "/home/haaksk/Pictures/wallpapers/landscape/endless-road-mountain-range-landscape-death-valley-blue-sky-3840x2160-3909.jpg"
+path = "/home/haaksk/Pictures/wallhaven-7jxxp3.jpg"
 
 [wallpaper.monitors.DP-1]
 path = "/home/haaksk/Pictures/wallhaven-gwwkql.jpg"
 
 [wallpaper.monitors.eDP-1]
-path = "/home/haaksk/Pictures/wallpapers/landscape/endless-road-mountain-range-landscape-death-valley-blue-sky-3840x2160-3909.jpg"
+path = "/home/haaksk/Pictures/wallhaven-7jxxp3.jpg"

@@ -50,6 +50,6 @@
   "telemetry.editStats.enabled": false,
   "workbench.enableExperiments": false,
   "chat.disableAIFeatures": true,
-  "workbench.preferredDarkColorTheme": "Dark Modern",
-  "chat.extensionUnification.enabled": false
+  "chat.extensionUnification.enabled": false,
+  "workbench.preferredDarkColorTheme": "NoctaliaTheme"
 }
