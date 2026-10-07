@@ -14,7 +14,8 @@ font-size = 13
 # Don't hang around
 quit-after-last-window-closed = true
 
-theme = Apple System Colors
+#theme = Apple System Colors
+theme = Xcode Dark
 window-width = 110
 window-height = 30
 font-family = "BitstromWera Nerd Font" 
