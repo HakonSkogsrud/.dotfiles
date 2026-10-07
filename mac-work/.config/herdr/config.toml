@@ -4,6 +4,12 @@ onboarding = false
 name = "terminal"
 auto_switch = false
 
+[ui]
+accent = "#C4A66A"
+pane_borders = "always"
+pane_outer_borders = true
+pane_gaps = true
+
 [keys]
 previous_tab = "alt+h"
 next_tab = "alt+l"
