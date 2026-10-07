@@ -1,2 +1,18 @@
 [shell]
+corner_radius_scale = 0.75
 polkit_agent = true
+
+# Idle timeouts apply on both AC and battery; suspend only on battery.
+[idle]
+pre_action_fade_seconds = 0
+
+[idle.behavior.screen-off]
+enabled = true
+timeout = 900
+action = "screen_off"
+
+[idle.behavior.suspend]
+enabled = true
+timeout = 1800
+action = "command"
+command = "if read -r online < /sys/class/power_supply/ADP0/online && [ \"$online\" = 0 ]; then noctalia msg session suspend; fi"

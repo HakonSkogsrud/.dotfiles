@@ -1,10 +1,13 @@
 [bar.default]
+radius = 9
+radius_bottom_left = 9
+radius_bottom_right = 9
 margin_ends = 0
 radius_top_left = 0
 radius_top_right = 0
 start = [ "workspaces" ]
 center = [ "clock" ]
-end = [ "tray", "notifications", "network", "bluetooth", "volume", "battery", "session" ]
+end = [ "tray", "notifications", "wallpaper", "network", "bluetooth", "volume", "battery", "session" ]
 
 [widget.network]
 show_label = false
@@ -14,3 +17,10 @@ show_label = false
 
 [widget.volume]
 show_label = false
+
+[dock]
+radius = 12
+radius_top_left = 12
+radius_top_right = 12
+radius_bottom_left = 12
+radius_bottom_right = 12
