@@ -1,0 +1,21 @@
+command = /bin/zsh
+macos-option-as-alt = left
+macos-titlebar-style = native
+macos-titlebar-style = transparent
+
+
+
+# Add some nice looking padding
+window-padding-x = 8
+window-padding-y = 0,2
+
+font-size = 13
+
+# Don't hang around
+quit-after-last-window-closed = true
+
+theme = Apple System Colors
+window-width = 110
+window-height = 30
+font-family = "BitstromWera Nerd Font" 
+ 

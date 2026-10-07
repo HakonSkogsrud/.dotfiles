@@ -1,0 +1,11 @@
+onboarding = false
+
+[theme]
+name = "terminal"
+auto_switch = false
+
+[keys]
+previous_tab = "alt+h"
+next_tab = "alt+l"
+previous_workspace = "alt+k"
+next_workspace = "alt+j"
