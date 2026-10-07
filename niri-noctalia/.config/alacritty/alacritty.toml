@@ -1,0 +1,20 @@
+[general]
+import = ["~/.config/alacritty/themes/noctalia.toml"]
+
+[cursor.style]
+blinking = "On"
+shape = "Block"
+
+[font]
+size = 12
+
+[font.normal]
+family = "BitstromWera Nerd Font"
+
+[window.dimensions]
+columns = 110
+lines = 30
+
+[window.padding]
+x = 12
+y = 12

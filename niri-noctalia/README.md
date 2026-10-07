@@ -25,8 +25,13 @@ Noctalia's GUI-managed settings are included at
 Clipboard contents, notifications, usage history, and other runtime state are
 excluded.
 
+Alacritty's configuration lives in this package and imports Noctalia's generated
+`~/.config/alacritty/themes/noctalia.toml`. Home Manager installs Alacritty via
+`home.packages` without managing its configuration. When migrating, move the
+old Home Manager configuration symlink to a backup before stowing this package.
+
 The snapshot includes generated Niri colours. Noctalia regenerates app theme
-outputs when applying the theme. GTK/app theme imports, dconf preferences,
+outputs when applying the theme. Other GTK/app theme imports, dconf preferences,
 installed fonts/themes, and Firefox extension installation are not included.
 The current GTK theme is `adw-gtk3-dark`, the cursor theme is
 `capitaine-cursors`, and the GNOME colour preference is `prefer-dark`.
