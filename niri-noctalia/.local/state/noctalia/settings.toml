@@ -85,7 +85,18 @@ wallpaper_scheme = "soft"
 
     [theme.templates]
     builtin_ids = [ "alacritty", "btop", "emacs", "gtk3", "gtk4", "helix", "niri" ]
-    community_ids = [ "codex", "brave", "brave-origin", "pywalfox", "libreoffice", "neovim", "obsidian", "vscode", "herdr" ]
+    community_ids = [
+        "codex",
+        "brave",
+        "brave-origin",
+        "pywalfox",
+        "libreoffice",
+        "neovim",
+        "obsidian",
+        "vscode",
+        "herdr",
+        "lazygit"
+    ]
 
 [wallpaper.default]
 path = "/home/haaksk/Pictures/wallhaven-7jxxp3.jpg"
