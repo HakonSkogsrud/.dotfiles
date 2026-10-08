@@ -84,7 +84,7 @@ source = "wallpaper"
 wallpaper_scheme = "m3-content"
 
     [theme.templates]
-    builtin_ids = [ "alacritty", "btop", "emacs", "gtk3", "gtk4", "helix", "niri" ]
+    builtin_ids = [ "alacritty", "btop", "emacs", "gtk3", "gtk4", "helix", "niri", "qt" ]
     community_ids = [
         "codex",
         "brave",
@@ -99,13 +99,13 @@ wallpaper_scheme = "m3-content"
     ]
 
 [wallpaper.default]
-path = "/home/haaksk/Pictures/wallhaven-7jxxp3.jpg"
+path = "/home/haaksk/Pictures/wallpapers/space/wallhaven-13j97w.jpg"
 
 [wallpaper.last]
-path = "/home/haaksk/Pictures/wallhaven-7jxxp3.jpg"
+path = "/home/haaksk/Pictures/wallpapers/space/wallhaven-13j97w.jpg"
 
 [wallpaper.monitors.DP-1]
 path = "/home/haaksk/Pictures/wallhaven-gwwkql.jpg"
 
 [wallpaper.monitors.eDP-1]
-path = "/home/haaksk/Pictures/wallhaven-7jxxp3.jpg"
+path = "/home/haaksk/Pictures/wallpapers/space/wallhaven-13j97w.jpg"
