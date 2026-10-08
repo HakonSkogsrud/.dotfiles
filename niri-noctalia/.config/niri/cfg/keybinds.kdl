@@ -10,6 +10,7 @@ binds {
     // ─── Applications ───
     Mod+Return                          hotkey-overlay-title="Open Terminal: Alacritty" { spawn "alacritty"; }
     Mod+B                               hotkey-overlay-title="Open Browser: firefox" { spawn "firefox"; }
+    Super+N                             hotkey-overlay-title="Open Obsidian" { spawn "flatpak" "run" "md.obsidian.Obsidian"; }
 
     // --- Noctalia ---
     Mod+D hotkey-overlay-title="Open Noctalia Launcher" { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
