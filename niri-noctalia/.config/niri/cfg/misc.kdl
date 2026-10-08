@@ -8,10 +8,12 @@
         QT_WAYLAND_DISABLE_WINDOWDECORATION "1"
         XDG_CURRENT_DESKTOP "niri"
         XDG_SESSION_TYPE "wayland"
+        XCURSOR_THEME "breeze_cursors"
+        XCURSOR_SIZE "30"
     }
 
     cursor {
-        xcursor-theme "capitaine-cursors"
+        xcursor-theme "breeze_cursors"
         xcursor-size 24
     }
 

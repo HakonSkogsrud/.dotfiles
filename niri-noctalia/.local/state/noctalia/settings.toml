@@ -78,7 +78,7 @@ telemetry_enabled = true
 
 [theme]
 builtin = "Eldritch"
-community_palette = "Oxocarbon"
+community_palette = "Creamy Forest"
 mode = "dark"
 source = "wallpaper"
 wallpaper_scheme = "m3-content"
