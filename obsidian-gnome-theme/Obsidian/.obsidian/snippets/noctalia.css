@@ -2,296 +2,296 @@
 
 .theme-dark {
   /* Background layers */
-  --background-primary:         #121315;
-  --background-primary-alt:     #1a1c1d;
-  --background-secondary:       #1f2021;
-  --background-secondary-alt:   #292a2c;
-  --background-modifier-border: #43474d;
-  --background-modifier-form-field: #0d0e10;
-  --background-modifier-form-field-highlighted: #1a1c1d;
+  --background-primary:         #17130d;
+  --background-primary-alt:     #1f1b15;
+  --background-secondary:       #241f19;
+  --background-secondary-alt:   #2e2923;
+  --background-modifier-border: #504538;
+  --background-modifier-form-field: #120d09;
+  --background-modifier-form-field-highlighted: #1f1b15;
   --background-modifier-box-shadow: #000000;
-  --background-modifier-success: rgba(175, 201, 230, 0.15);
+  --background-modifier-success: rgba(245, 188, 110, 0.15);
   --background-modifier-error:  rgba(255, 180, 171, 0.15);
   --background-modifier-error-rgb: 255,180,171;
   --background-modifier-error-hover: rgba(255, 180, 171, 0.25);
   --background-modifier-cover:  rgba(0, 0, 0, 0.6);
 
   /* Text colors */
-  --text-normal:                #e3e2e4;
-  --text-muted:                 #c3c7cd;
-  --text-faint:                 #8d9197;
-  --text-on-accent:             #183249;
-  --text-on-accent-inverted:    #afc9e6;
+  --text-normal:                #ebe1d8;
+  --text-muted:                 #d4c4b3;
+  --text-faint:                 #9c8e7f;
+  --text-on-accent:             #452b00;
+  --text-on-accent-inverted:    #f5bc6e;
   --text-error:                 #ffb4ab;
-  --text-success:               #afc9e6;
-  --text-selection:             rgba(175, 201, 230, 0.2);
-  --text-accent:                #afc9e6;
-  --text-highlight-bg:          rgba(220, 188, 224, 0.25);
+  --text-success:               #f5bc6e;
+  --text-selection:             rgba(245, 188, 110, 0.2);
+  --text-accent:                #f5bc6e;
+  --text-highlight-bg:          rgba(194, 205, 124, 0.25);
 
   /* Interactive accent */
-  --interactive-normal:         #1f2021;
-  --interactive-hover:          #292a2c;
-  --interactive-accent:         #afc9e6;
-  --interactive-accent-hover:   #b3cce7;
-  --interactive-accent-rgb:     175,201,230;
-  --interactive-success:        #afc9e6;
+  --interactive-normal:         #241f19;
+  --interactive-hover:          #2e2923;
+  --interactive-accent:         #f5bc6e;
+  --interactive-accent-hover:   #f5be73;
+  --interactive-accent-rgb:     245,188,110;
+  --interactive-success:        #f5bc6e;
 
   /* Scrollbar */
-  --scrollbar-bg:               #121315;
-  --scrollbar-thumb-bg:         rgba(67, 71, 77, 0.3);
-  --scrollbar-active-thumb-bg:  rgba(141, 145, 151, 0.5);
+  --scrollbar-bg:               #17130d;
+  --scrollbar-thumb-bg:         rgba(80, 69, 56, 0.3);
+  --scrollbar-active-thumb-bg:  rgba(156, 142, 127, 0.5);
 
   /* Tab styling */
-  --tab-text-color:             #c3c7cd;
-  --tab-text-color-focused:     #e3e2e4;
-  --tab-text-color-focused-active: #afc9e6;
-  --tab-background-active:      #121315;
-  --tab-divider-color:          #43474d;
+  --tab-text-color:             #d4c4b3;
+  --tab-text-color-focused:     #ebe1d8;
+  --tab-text-color-focused-active: #f5bc6e;
+  --tab-background-active:      #17130d;
+  --tab-divider-color:          #504538;
 
   /* Navigation */
-  --nav-item-color:             #c3c7cd;
-  --nav-item-color-hover:       #e3e2e4;
-  --nav-item-color-active:      #183249;
-  --nav-item-background-hover:  #292a2c;
-  --nav-item-background-active: rgba(175, 201, 230, 0.12);
-  --nav-collapse-icon-color:    #8d9197;
+  --nav-item-color:             #d4c4b3;
+  --nav-item-color-hover:       #ebe1d8;
+  --nav-item-color-active:      #452b00;
+  --nav-item-background-hover:  #2e2923;
+  --nav-item-background-active: rgba(245, 188, 110, 0.12);
+  --nav-collapse-icon-color:    #9c8e7f;
 
   /* Titlebar */
-  --titlebar-background:        #1f2021;
-  --titlebar-background-focused: #1f2021;
-  --titlebar-text-color:        #e3e2e4;
-  --titlebar-text-color-focused: #e3e2e4;
+  --titlebar-background:        #241f19;
+  --titlebar-background-focused: #241f19;
+  --titlebar-text-color:        #ebe1d8;
+  --titlebar-text-color-focused: #ebe1d8;
 
   /* Tags */
-  --tag-color:                  #bec7d4;
-  --tag-background:             rgba(190, 199, 212, 0.12);
-  --tag-color-hover:            #c1cad6;
-  --tag-background-hover:       rgba(190, 199, 212, 0.2);
+  --tag-color:                  #e0c29c;
+  --tag-background:             rgba(224, 194, 156, 0.12);
+  --tag-color-hover:            #e1c4a0;
+  --tag-background-hover:       rgba(224, 194, 156, 0.2);
 
   /* Headings */
-  --h1-color:                   #afc9e6;
-  --h2-color:                   #abc6e5;
-  --h3-color:                   #bec7d4;
-  --h4-color:                   #bbc4d2;
-  --h5-color:                   #dcbce0;
-  --h6-color:                   #dab9de;
+  --h1-color:                   #f5bc6e;
+  --h2-color:                   #f5ba69;
+  --h3-color:                   #e0c29c;
+  --h4-color:                   #dfc098;
+  --h5-color:                   #c2cd7c;
+  --h6-color:                   #c0cc78;
 
   /* Links */
-  --link-color:                 #afc9e6;
-  --link-color-hover:           #b3cce7;
-  --link-decoration-color:      rgba(175, 201, 230, 0.4);
-  --link-external-color:        #dcbce0;
-  --link-external-color-hover:  #debfe2;
+  --link-color:                 #f5bc6e;
+  --link-color-hover:           #f5be73;
+  --link-decoration-color:      rgba(245, 188, 110, 0.4);
+  --link-external-color:        #c2cd7c;
+  --link-external-color-hover:  #c4ce80;
   --link-unresolved-color:      rgba(255, 180, 171, 0.7);
 
   /* Code */
-  --code-normal:                #bec7d4;
-  --code-background:            #343537;
-  --code-comment:               #8d9197;
+  --code-normal:                #e0c29c;
+  --code-background:            #39342e;
+  --code-comment:               #9c8e7f;
 
   /* Blockquotes */
-  --blockquote-border-color:    rgba(175, 201, 230, 0.5);
+  --blockquote-border-color:    rgba(245, 188, 110, 0.5);
 
   /* Checkbox */
-  --checkbox-color:             #afc9e6;
-  --checkbox-color-hover:       #b3cce7;
-  --checkbox-border-color:      #8d9197;
+  --checkbox-color:             #f5bc6e;
+  --checkbox-color-hover:       #f5be73;
+  --checkbox-border-color:      #9c8e7f;
 
   /* Graph view */
-  --graph-line:                 rgba(67, 71, 77, 0.4);
-  --graph-node:                 #afc9e6;
-  --graph-node-focused:         #dcbce0;
-  --graph-node-tag:             #bec7d4;
-  --graph-node-attachment:      #dcbce0;
+  --graph-line:                 rgba(80, 69, 56, 0.4);
+  --graph-node:                 #f5bc6e;
+  --graph-node-focused:         #c2cd7c;
+  --graph-node-tag:             #e0c29c;
+  --graph-node-attachment:      #c2cd7c;
 
   /* Vault name */
-  --vault-name-color:           #e3e2e4;
+  --vault-name-color:           #ebe1d8;
 
   /* Indentation guide */
-  --indentation-guide-color:    rgba(67, 71, 77, 0.3);
-  --indentation-guide-color-active: rgba(67, 71, 77, 0.6);
+  --indentation-guide-color:    rgba(80, 69, 56, 0.3);
+  --indentation-guide-color-active: rgba(80, 69, 56, 0.6);
 
   /* Obsidian 1.0+ variables */
-  --color-accent:               #afc9e6;
-  --color-accent-1:             rgba(175, 201, 230, 0.12);
-  --color-accent-2:             rgba(175, 201, 230, 0.25);
+  --color-accent:               #f5bc6e;
+  --color-accent-1:             rgba(245, 188, 110, 0.12);
+  --color-accent-2:             rgba(245, 188, 110, 0.25);
 
   /* Icon colors */
-  --icon-color:                 #c3c7cd;
-  --icon-color-hover:           #e3e2e4;
-  --icon-color-active:          #afc9e6;
-  --icon-color-focused:         #afc9e6;
+  --icon-color:                 #d4c4b3;
+  --icon-color-hover:           #ebe1d8;
+  --icon-color-active:          #f5bc6e;
+  --icon-color-focused:         #f5bc6e;
 
   /* Divider */
-  --divider-color:              #43474d;
-  --divider-color-hover:        #8d9197;
+  --divider-color:              #504538;
+  --divider-color-hover:        #9c8e7f;
 
   /* Status bar */
-  --status-bar-background:      #1f2021;
-  --status-bar-text-color:      #c3c7cd;
+  --status-bar-background:      #241f19;
+  --status-bar-text-color:      #d4c4b3;
 
   /* Modal */
-  --modal-background:           #1f2021;
-  --modal-border-color:         #43474d;
+  --modal-background:           #241f19;
+  --modal-border-color:         #504538;
 
   /* Prompt / suggestion */
-  --prompt-border-color:        #43474d;
+  --prompt-border-color:        #504538;
 
   /* Inline title */
-  --inline-title-color:         #e3e2e4;
+  --inline-title-color:         #ebe1d8;
 
   /* Bold / italic */
-  --bold-color:                 #e3e2e4;
-  --italic-color:               #e3e2e4;
+  --bold-color:                 #ebe1d8;
+  --italic-color:               #ebe1d8;
 
   /* List markers */
-  --list-marker-color:          rgba(175, 201, 230, 0.7);
+  --list-marker-color:          rgba(245, 188, 110, 0.7);
 }
 
 .theme-light {
   /* Background layers */
-  --background-primary:         #faf9fb;
-  --background-primary-alt:     #f4f3f5;
-  --background-secondary:       #efedef;
-  --background-secondary-alt:   #e9e8ea;
-  --background-modifier-border: #c3c7cd;
+  --background-primary:         #fff8f4;
+  --background-primary-alt:     #fdf2e8;
+  --background-secondary:       #f7ece3;
+  --background-secondary-alt:   #f1e6dd;
+  --background-modifier-border: #d4c4b3;
   --background-modifier-form-field: #ffffff;
-  --background-modifier-form-field-highlighted: #f4f3f5;
+  --background-modifier-form-field-highlighted: #fdf2e8;
   --background-modifier-box-shadow: #000000;
-  --background-modifier-success: rgba(70, 94, 119, 0.1);
+  --background-modifier-success: rgba(117, 76, 3, 0.1);
   --background-modifier-error:  rgba(186, 26, 26, 0.1);
   --background-modifier-error-rgb: 186,26,26;
   --background-modifier-error-hover: rgba(186, 26, 26, 0.2);
   --background-modifier-cover:  rgba(0, 0, 0, 0.4);
 
   /* Text colors */
-  --text-normal:                #1a1c1d;
-  --text-muted:                 #43474d;
-  --text-faint:                 #73777d;
+  --text-normal:                #1f1b15;
+  --text-muted:                 #504538;
+  --text-faint:                 #827566;
   --text-on-accent:             #ffffff;
-  --text-on-accent-inverted:    #465e77;
+  --text-on-accent-inverted:    #754c03;
   --text-error:                 #ba1a1a;
-  --text-success:               #465e77;
-  --text-selection:             rgba(70, 94, 119, 0.15);
-  --text-accent:                #465e77;
-  --text-highlight-bg:          rgba(109, 83, 114, 0.2);
+  --text-success:               #754c03;
+  --text-selection:             rgba(117, 76, 3, 0.15);
+  --text-accent:                #754c03;
+  --text-highlight-bg:          rgba(80, 89, 21, 0.2);
 
   /* Interactive accent */
-  --interactive-normal:         #efedef;
-  --interactive-hover:          #e9e8ea;
-  --interactive-accent:         #465e77;
-  --interactive-accent-hover:   #445b74;
-  --interactive-accent-rgb:     70,94,119;
-  --interactive-success:        #465e77;
+  --interactive-normal:         #f7ece3;
+  --interactive-hover:          #f1e6dd;
+  --interactive-accent:         #754c03;
+  --interactive-accent-hover:   #704903;
+  --interactive-accent-rgb:     117,76,3;
+  --interactive-success:        #754c03;
 
   /* Scrollbar */
-  --scrollbar-bg:               #faf9fb;
-  --scrollbar-thumb-bg:         rgba(195, 199, 205, 0.3);
-  --scrollbar-active-thumb-bg:  rgba(115, 119, 125, 0.5);
+  --scrollbar-bg:               #fff8f4;
+  --scrollbar-thumb-bg:         rgba(212, 196, 179, 0.3);
+  --scrollbar-active-thumb-bg:  rgba(130, 117, 102, 0.5);
 
   /* Tab styling */
-  --tab-text-color:             #43474d;
-  --tab-text-color-focused:     #1a1c1d;
-  --tab-text-color-focused-active: #465e77;
-  --tab-background-active:      #faf9fb;
-  --tab-divider-color:          #c3c7cd;
+  --tab-text-color:             #504538;
+  --tab-text-color-focused:     #1f1b15;
+  --tab-text-color-focused-active: #754c03;
+  --tab-background-active:      #fff8f4;
+  --tab-divider-color:          #d4c4b3;
 
   /* Navigation */
-  --nav-item-color:             #43474d;
-  --nav-item-color-hover:       #1a1c1d;
+  --nav-item-color:             #504538;
+  --nav-item-color-hover:       #1f1b15;
   --nav-item-color-active:      #ffffff;
-  --nav-item-background-hover:  #e9e8ea;
-  --nav-item-background-active: rgba(70, 94, 119, 0.1);
-  --nav-collapse-icon-color:    #73777d;
+  --nav-item-background-hover:  #f1e6dd;
+  --nav-item-background-active: rgba(117, 76, 3, 0.1);
+  --nav-collapse-icon-color:    #827566;
 
   /* Titlebar */
-  --titlebar-background:        #efedef;
-  --titlebar-background-focused: #efedef;
-  --titlebar-text-color:        #1a1c1d;
-  --titlebar-text-color-focused: #1a1c1d;
+  --titlebar-background:        #f7ece3;
+  --titlebar-background-focused: #f7ece3;
+  --titlebar-text-color:        #1f1b15;
+  --titlebar-text-color-focused: #1f1b15;
 
   /* Tags */
-  --tag-color:                  #565f6a;
-  --tag-background:             rgba(86, 95, 106, 0.1);
-  --tag-color-hover:            #545c67;
-  --tag-background-hover:       rgba(86, 95, 106, 0.18);
+  --tag-color:                  #725a3c;
+  --tag-background:             rgba(114, 90, 60, 0.1);
+  --tag-color-hover:            #6f573a;
+  --tag-background-hover:       rgba(114, 90, 60, 0.18);
 
   /* Headings */
-  --h1-color:                   #465e77;
-  --h2-color:                   #48617a;
-  --h3-color:                   #565f6a;
-  --h4-color:                   #58626d;
-  --h5-color:                   #6d5372;
-  --h6-color:                   #705575;
+  --h1-color:                   #754c03;
+  --h2-color:                   #7a4f03;
+  --h3-color:                   #725a3c;
+  --h4-color:                   #755d3e;
+  --h5-color:                   #505915;
+  --h6-color:                   #545d16;
 
   /* Links */
-  --link-color:                 #465e77;
-  --link-color-hover:           #445b74;
-  --link-decoration-color:      rgba(70, 94, 119, 0.4);
-  --link-external-color:        #6d5372;
-  --link-external-color-hover:  #6a516f;
+  --link-color:                 #754c03;
+  --link-color-hover:           #704903;
+  --link-decoration-color:      rgba(117, 76, 3, 0.4);
+  --link-external-color:        #505915;
+  --link-external-color-hover:  #4c5514;
   --link-unresolved-color:      rgba(186, 26, 26, 0.7);
 
   /* Code */
-  --code-normal:                #565f6a;
-  --code-background:            #e3e2e4;
-  --code-comment:               #73777d;
+  --code-normal:                #725a3c;
+  --code-background:            #ebe1d8;
+  --code-comment:               #827566;
 
   /* Blockquotes */
-  --blockquote-border-color:    rgba(70, 94, 119, 0.5);
+  --blockquote-border-color:    rgba(117, 76, 3, 0.5);
 
   /* Checkbox */
-  --checkbox-color:             #465e77;
-  --checkbox-color-hover:       #445b74;
-  --checkbox-border-color:      #73777d;
+  --checkbox-color:             #754c03;
+  --checkbox-color-hover:       #704903;
+  --checkbox-border-color:      #827566;
 
   /* Graph view */
-  --graph-line:                 rgba(195, 199, 205, 0.4);
-  --graph-node:                 #465e77;
-  --graph-node-focused:         #6d5372;
-  --graph-node-tag:             #565f6a;
-  --graph-node-attachment:      #6d5372;
+  --graph-line:                 rgba(212, 196, 179, 0.4);
+  --graph-node:                 #754c03;
+  --graph-node-focused:         #505915;
+  --graph-node-tag:             #725a3c;
+  --graph-node-attachment:      #505915;
 
   /* Vault name */
-  --vault-name-color:           #1a1c1d;
+  --vault-name-color:           #1f1b15;
 
   /* Indentation guide */
-  --indentation-guide-color:    rgba(195, 199, 205, 0.3);
-  --indentation-guide-color-active: rgba(195, 199, 205, 0.6);
+  --indentation-guide-color:    rgba(212, 196, 179, 0.3);
+  --indentation-guide-color-active: rgba(212, 196, 179, 0.6);
 
   /* Obsidian 1.0+ variables */
-  --color-accent:               #465e77;
-  --color-accent-1:             rgba(70, 94, 119, 0.1);
-  --color-accent-2:             rgba(70, 94, 119, 0.2);
+  --color-accent:               #754c03;
+  --color-accent-1:             rgba(117, 76, 3, 0.1);
+  --color-accent-2:             rgba(117, 76, 3, 0.2);
 
   /* Icon colors */
-  --icon-color:                 #43474d;
-  --icon-color-hover:           #1a1c1d;
-  --icon-color-active:          #465e77;
-  --icon-color-focused:         #465e77;
+  --icon-color:                 #504538;
+  --icon-color-hover:           #1f1b15;
+  --icon-color-active:          #754c03;
+  --icon-color-focused:         #754c03;
 
   /* Divider */
-  --divider-color:              #c3c7cd;
-  --divider-color-hover:        #73777d;
+  --divider-color:              #d4c4b3;
+  --divider-color-hover:        #827566;
 
   /* Status bar */
-  --status-bar-background:      #efedef;
-  --status-bar-text-color:      #43474d;
+  --status-bar-background:      #f7ece3;
+  --status-bar-text-color:      #504538;
 
   /* Modal */
-  --modal-background:           #efedef;
-  --modal-border-color:         #c3c7cd;
+  --modal-background:           #f7ece3;
+  --modal-border-color:         #d4c4b3;
 
   /* Prompt / suggestion */
-  --prompt-border-color:        #c3c7cd;
+  --prompt-border-color:        #d4c4b3;
 
   /* Inline title */
-  --inline-title-color:         #1a1c1d;
+  --inline-title-color:         #1f1b15;
 
   /* Bold / italic */
-  --bold-color:                 #1a1c1d;
-  --italic-color:               #1a1c1d;
+  --bold-color:                 #1f1b15;
+  --italic-color:               #1f1b15;
 
   /* List markers */
-  --list-marker-color:          rgba(70, 94, 119, 0.7);
+  --list-marker-color:          rgba(117, 76, 3, 0.7);
 }

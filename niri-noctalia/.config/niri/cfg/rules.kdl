@@ -1,5 +1,5 @@
     window-rule {
-        opacity 0.9 // Use the same modest transparency for all application windows
+        opacity 0.9 // Default transparency; application overrides follow below
         draw-border-with-background false // Keep the border background from filling translucent windows
         geometry-corner-radius 14 // Keep window corners subtly rounded
         clip-to-geometry true
@@ -10,6 +10,24 @@
           blur true
           xray false
         }
+    }
+
+    // Restore the per-app scroll factors from the former GNOME scrollfix.nix.
+    // These apply to both axes, for touchpad and mouse-wheel scrolling.
+    window-rule {
+        match app-id=r#"(?i)^(md\.obsidian\.)?obsidian$"#
+        scroll-factor 0.30
+    }
+
+    window-rule {
+        match app-id=r#"(?i)^(brave(-browser|-origin)?|com\.brave\.Browser)$"#
+        scroll-factor 0.20
+    }
+
+    // Keep Darktable fully opaque for photo editing.
+    window-rule {
+        match app-id=r#"(?i)^(org\.darktable\.)?darktable$"#
+        opacity 1.0
     }
 
     // Floating Noctalia settings window.

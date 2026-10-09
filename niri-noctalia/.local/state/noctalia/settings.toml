@@ -22,11 +22,11 @@ widget_order = [ "lockscreen-login-box@eDP-1", "lockscreen-login-box@DP-1" ]
     [lockscreen_widgets.widget."lockscreen-login-box@DP-1"]
     box_height = 196.0
     box_width = 810.0
-    cx = 1280.0
-    cy = 1258.0
+    cx = 1371.5
+    cy = 1347.9818115234375
     output = "DP-1"
-    placement_height = 1440.0
-    placement_width = 2560.0
+    placement_height = 1543.0
+    placement_width = 2743.0
     rotation = 0.0
     type = "login_box"
 
@@ -99,13 +99,13 @@ wallpaper_scheme = "m3-content"
     ]
 
 [wallpaper.default]
-path = "/home/haaksk/Pictures/wallpapers/space/wallhaven-13j97w.jpg"
+path = "/home/haaksk/Pictures/wallpapers/mine/2012-09-08_15-23-50_IMG_1193-2.jpg"
 
 [wallpaper.last]
-path = "/home/haaksk/Pictures/wallpapers/space/wallhaven-13j97w.jpg"
+path = "/home/haaksk/Pictures/wallpapers/mine/2012-09-08_15-23-50_IMG_1193-2.jpg"
 
 [wallpaper.monitors.DP-1]
-path = "/home/haaksk/Pictures/wallhaven-gwwkql.jpg"
+path = "/home/haaksk/Pictures/wallpapers/mine/2012-09-08_15-23-50_IMG_1193-2.jpg"
 
 [wallpaper.monitors.eDP-1]
-path = "/home/haaksk/Pictures/wallpapers/space/wallhaven-13j97w.jpg"
+path = "/home/haaksk/Pictures/wallpapers/nixos/wallhaven-yqkrrx.png"
