@@ -1,4 +1,4 @@
-model = "gpt-6-astra"
+model = "gpt-6.1-sol"
 model_reasoning_effort = "low"
 approval_policy = "on-request"
 approvals_reviewer = "auto_review"
@@ -14,4 +14,7 @@ screen_reader_detection_done = true
 trust_level = "trusted"
 
 [projects."/home/haaksk/.dotfiles"]
+trust_level = "trusted"
+
+[projects."/home/haaksk/Workspace/serversetup"]
 trust_level = "trusted"
