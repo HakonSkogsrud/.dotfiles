@@ -81,7 +81,7 @@ builtin = "Eldritch"
 community_palette = "Creamy Forest"
 mode = "dark"
 source = "wallpaper"
-wallpaper_scheme = "m3-content"
+wallpaper_scheme = "m3-fruit-salad"
 
     [theme.templates]
     builtin_ids = [ "alacritty", "btop", "emacs", "gtk3", "gtk4", "helix", "niri", "qt" ]
@@ -99,13 +99,13 @@ wallpaper_scheme = "m3-content"
     ]
 
 [wallpaper.default]
-path = "/home/haaksk/Pictures/wallpapers/mine/2012-09-08_15-23-50_IMG_1193-2.jpg"
+path = "/home/haaksk/Pictures/wallpapers/landscape/wallhaven-e7kpl8.png"
 
 [wallpaper.last]
-path = "/home/haaksk/Pictures/wallpapers/mine/2012-09-08_15-23-50_IMG_1193-2.jpg"
+path = "/home/haaksk/Pictures/wallpapers/landscape/wallhaven-e7kpl8.png"
 
 [wallpaper.monitors.DP-1]
-path = "/home/haaksk/Pictures/wallpapers/mine/2012-09-08_15-23-50_IMG_1193-2.jpg"
+path = "/home/haaksk/Pictures/wallpapers/landscape/wallhaven-e7kpl8.png"
 
 [wallpaper.monitors.eDP-1]
 path = "/home/haaksk/Pictures/wallpapers/nixos/wallhaven-yqkrrx.png"
