@@ -10,15 +10,48 @@
       ansible.builtin.import_tasks: tasks/require-fedora-atomic.yml
 
   tasks:
+    - name: Check which networking packages are already available
+      ansible.builtin.command:
+        argv:
+          - rpm
+          - --query
+          - "{{ item }}"
+      loop: "{{ fedora_immutable_network_packages }}"
+      register: networking_package_checks
+      changed_when: false
+      failed_when: networking_package_checks.rc not in [0, 1]
+      check_mode: false
+
+    - name: Find missing networking packages
+      ansible.builtin.set_fact:
+        missing_network_packages: >-
+          {{ networking_package_checks.results
+             | selectattr('rc', 'equalto', 1)
+             | map(attribute='item') | list }}
+
     - name: Layer required networking packages
       community.general.rpm_ostree_pkg:
-        name: "{{ fedora_immutable_network_packages }}"
+        name: "{{ missing_network_packages }}"
         state: present
         apply_live: "{{ rpm_ostree_apply_live }}"
+      when: missing_network_packages | length > 0
       register: rpm_ostree_packages
       retries: 5
       delay: 15
       until: rpm_ostree_packages is not failed
+
+    - name: Request a reboot before configuring newly layered services
+      ansible.builtin.debug:
+        msg: Networking packages are staged. Reboot the host and rerun the playbook.
+      when:
+        - missing_network_packages | length > 0
+        - not rpm_ostree_apply_live
+
+    - name: Stop networking configuration until the packages are booted
+      ansible.builtin.meta: end_play
+      when:
+        - missing_network_packages | length > 0
+        - not rpm_ostree_apply_live
 
     - name: Enable networking services
       ansible.builtin.systemd_service:

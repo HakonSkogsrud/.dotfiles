@@ -147,27 +147,6 @@
       when: dev_toolbox_packages_installed.rc != 0
       changed_when: true
 
-    - name: Check installed Codex package
-      ansible.builtin.command:
-        argv: "{{ ['toolbox', 'run', '--container', dev_toolbox_name, 'npm', 'list', '--global', '--depth=0'] + dev_toolbox_npm_packages }}"
-      become_user: "{{ desktop_user }}"
-      become: true
-      environment:
-        HOME: "{{ desktop_home }}"
-      register: dev_toolbox_npm_packages_installed
-      changed_when: false
-      failed_when: false
-
-    - name: Install Codex package
-      ansible.builtin.command:
-        argv: "{{ ['toolbox', 'run', '--container', dev_toolbox_name, 'sudo', 'npm', 'install', '--global'] + dev_toolbox_npm_packages }}"
-      become_user: "{{ desktop_user }}"
-      become: true
-      environment:
-        HOME: "{{ desktop_home }}"
-      when: dev_toolbox_npm_packages_installed.rc != 0
-      changed_when: true
-
     - name: Create the development download cache
       ansible.builtin.file:
         path: "{{ desktop_home }}/.cache/ansible"

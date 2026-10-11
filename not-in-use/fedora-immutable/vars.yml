@@ -14,32 +14,6 @@ fedora_immutable_network_packages:
   - syncthing
   - tailscale
 
-rpm_fusion_release_packages:
-  - "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_facts.distribution_major_version }}.noarch.rpm"
-  - "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_facts.distribution_major_version }}.noarch.rpm"
-
-fedora_immutable_multimedia_packages:
-  - gstreamer1-plugin-libav
-  - gstreamer1-plugins-bad-free-extras
-  - gstreamer1-plugins-bad-freeworld
-  - gstreamer1-plugins-ugly
-
-# Lunar Lake uses Intel's current VA-API media driver.
-fedora_immutable_hardware_codec_packages:
-  - intel-media-driver
-
-fedora_immutable_ffmpeg_free_packages:
-  - fdk-aac-free
-  - libavcodec-free
-  - libavdevice-free
-  - libavfilter-free
-  - libavformat-free
-  - libavutil-free
-  - libpostproc-free
-  - libswresample-free
-  - libswscale-free
-  - ffmpeg-free
-
 localsend_ports:
   - 53317/tcp
   - 53317/udp
@@ -48,7 +22,6 @@ tailscale_udp_port: 41641/udp
 
 flatpak_apps:
   - com.brave.Browser
-  - io.github.josephmawa.Bella
   - md.obsidian.Obsidian
   - org.darktable.Darktable
   - org.localsend.localsend_app
@@ -76,36 +49,19 @@ dev_toolbox_packages:
   - stow
   - tmux
   - uv
-  - vim-enhanced
   - wget2
   - zoxide
   - zsh
   - zsh-autosuggestions
 
-dev_toolbox_npm_packages:
-  - "@openai/codex"
-
 dev_toolbox_lazygit_version: 0.65.1
 dev_toolbox_lazygit_checksum: 02beacbcda0fa342e50ae3480ba8147307353af3fb28e1d5f790e02329c201a6
-
-retired_system_font_packages:
-  - rsms-inter-fonts
 
 inter_font_version: v4.1
 inter_font_checksum: 9883fdd4a49d4fb66bd8177ba6625ef9a64aa45899767dde3d36aa425756b11e
 
-papirus_icon_theme_version: "20250501"
-papirus_icon_theme_checksum: 3831a487f813479ad3224fdbfb0c7023f23056899bc78c93737f341aa655558e
-papirus_folders_checksum: b30a6848a00690302accffc050549218b0b114d3178b28bd3a16891817821b06
-papirus_folder_color: palebrown
-
 nerd_fonts_version: v3.4.0
+# Installed family name: BitstromWera Nerd Font.
 nerd_fonts:
-  - name: ComicShannsMono
-    checksum: 23d90d18dae663b7d0dcdb4edd2f5087eecb40b00f046a1f46a9abf3ecb47651
-  - name: FantasqueSansMono
-    checksum: 462b5490475fb8560dded4eb6cdd9cfd0049b800acee329094def095557d0ffd
-  - name: JetBrainsMono
-    checksum: ef552a3e638f25125c6ad4c51176a6adcdce295ab1d2ffacf0db060caf8c1582
-  - name: CommitMono
-    checksum: 44cdabae7708de3548fdd78ed59cdbb1fedbca18e16644047ed4a23623a530ca
+  - name: BitstreamVeraSansMono
+    checksum: 59162ab2d67d39827e497beda03fbe6327d3535d2ee3b1dd7050fdeafe1f9c36

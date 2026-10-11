@@ -4,11 +4,6 @@
   tags:
     - networking
 
-- name: Configure multimedia
-  ansible.builtin.import_playbook: multimedia.yml
-  tags:
-    - multimedia
-
 - name: Install desktop applications
   ansible.builtin.import_playbook: apps.yml
   tags:
@@ -18,11 +13,6 @@
   ansible.builtin.import_playbook: fonts.yml
   tags:
     - fonts
-
-- name: Configure desktop appearance
-  ansible.builtin.import_playbook: appearance.yml
-  tags:
-    - appearance
 
 - name: Configure development Toolbox
   ansible.builtin.import_playbook: dev-env.yml

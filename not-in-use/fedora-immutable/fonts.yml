@@ -10,40 +10,6 @@
       ansible.builtin.import_tasks: tasks/require-fedora-atomic.yml
 
   tasks:
-    - name: Read rpm-ostree deployment state
-      ansible.builtin.command:
-        argv:
-          - rpm-ostree
-          - status
-          - --json
-      register: rpm_ostree_status
-      changed_when: false
-
-    - name: Find retired layered system fonts
-      ansible.builtin.set_fact:
-        retired_layered_system_fonts: >-
-          {{
-            retired_system_font_packages
-            | intersect(
-              (
-                (
-                  (rpm_ostree_status.stdout | from_json).deployments
-                  | selectattr('booted', 'defined')
-                  | selectattr('booted', 'equalto', true)
-                  | first
-                )['requested-packages']
-                | default([])
-              )
-            )
-          }}
-
-    - name: Remove retired layered system fonts
-      ansible.builtin.command:
-        argv: "{{ ['rpm-ostree', 'uninstall'] + retired_layered_system_fonts }}"
-      register: removed_system_fonts
-      when: retired_layered_system_fonts | length > 0
-      changed_when: true
-
     - name: Create the user font directories
       ansible.builtin.file:
         path: "{{ item }}"
@@ -159,11 +125,6 @@
         mode: "0644"
       loop: "{{ nerd_font_installations.results }}"
       when: not item.stat.exists
-
-    - name: Report pending system font removal
-      ansible.builtin.debug:
-        msg: System font removal was staged; reboot when convenient.
-      when: removed_system_fonts is defined and removed_system_fonts.changed
 
   handlers:
     - name: Refresh user font cache
