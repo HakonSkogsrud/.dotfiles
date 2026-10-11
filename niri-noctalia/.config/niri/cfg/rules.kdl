@@ -1,6 +1,6 @@
     window-rule {
-        opacity 0.9 // Default transparency; application overrides follow below
-        draw-border-with-background false // Keep the border background from filling translucent windows
+        opacity 1.0
+        draw-border-with-background false
         geometry-corner-radius 14 // Keep window corners subtly rounded
         clip-to-geometry true
     }
