@@ -1,0 +1,108 @@
+---
+- name: Configure desktop appearance
+  hosts: fedora_immutable
+  become: true
+  vars_files:
+    - vars.yml
+
+  pre_tasks:
+    - name: Validate the Fedora Atomic host
+      ansible.builtin.import_tasks: tasks/require-fedora-atomic.yml
+
+  tasks:
+    - name: Create user appearance directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0755"
+      loop:
+        - "{{ desktop_home }}/.local/share/icons"
+        - "{{ desktop_home }}/.local/bin"
+        - "{{ desktop_home }}/.cache/ansible/icons"
+
+    - name: Check installed Papirus icon theme version
+      ansible.builtin.stat:
+        path: "{{ desktop_home }}/.local/share/icons/.papirus-{{ papirus_icon_theme_version }}-installed"
+      register: papirus_icon_theme_installation
+
+    - name: Remove superseded user-local Papirus themes
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/.local/share/icons/{{ item }}"
+        state: absent
+      loop:
+        - Papirus
+        - Papirus-Dark
+        - Papirus-Light
+      when: not papirus_icon_theme_installation.stat.exists
+
+    - name: Download Papirus icon theme
+      ansible.builtin.get_url:
+        url: "https://github.com/PapirusDevelopmentTeam/papirus-icon-theme/archive/refs/tags/{{ papirus_icon_theme_version }}.tar.gz"
+        dest: "{{ desktop_home }}/.cache/ansible/icons/papirus-icon-theme-{{ papirus_icon_theme_version }}.tar.gz"
+        checksum: "sha256:{{ papirus_icon_theme_checksum }}"
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"
+      when: not papirus_icon_theme_installation.stat.exists
+
+    - name: Install Papirus icon themes
+      ansible.builtin.unarchive:
+        src: "{{ desktop_home }}/.cache/ansible/icons/papirus-icon-theme-{{ papirus_icon_theme_version }}.tar.gz"
+        dest: "{{ desktop_home }}/.local/share/icons"
+        remote_src: true
+        extra_opts:
+          - --strip-components=1
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+      when: not papirus_icon_theme_installation.stat.exists
+
+    - name: Record installed Papirus icon theme version
+      ansible.builtin.file:
+        path: "{{ desktop_home }}/.local/share/icons/.papirus-{{ papirus_icon_theme_version }}-installed"
+        state: touch
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0644"
+      when: not papirus_icon_theme_installation.stat.exists
+
+    - name: Install Papirus folder-color tool
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/PapirusDevelopmentTeam/papirus-folders/master/papirus-folders
+        dest: "{{ desktop_home }}/.local/bin/papirus-folders"
+        checksum: "sha256:{{ papirus_folders_checksum }}"
+        owner: "{{ desktop_user }}"
+        group: "{{ desktop_user }}"
+        mode: "0755"
+
+    - name: Read the current Papirus folder color
+      ansible.builtin.command:
+        argv:
+          - "{{ desktop_home }}/.local/bin/papirus-folders"
+          - --theme
+          - Papirus
+          - --list
+      become_user: "{{ desktop_user }}"
+      become: true
+      environment:
+        HOME: "{{ desktop_home }}"
+        XDG_DATA_HOME: "{{ desktop_home }}/.local/share"
+      register: papirus_folder_colors
+      changed_when: false
+
+    - name: Apply the Papirus folder color
+      ansible.builtin.command:
+        argv:
+          - "{{ desktop_home }}/.local/bin/papirus-folders"
+          - --theme
+          - Papirus
+          - --color
+          - "{{ papirus_folder_color }}"
+      become_user: "{{ desktop_user }}"
+      become: true
+      environment:
+        HOME: "{{ desktop_home }}"
+        XDG_DATA_HOME: "{{ desktop_home }}/.local/share"
+      when: "(' > ' ~ papirus_folder_color) not in papirus_folder_colors.stdout_lines"
+      changed_when: true

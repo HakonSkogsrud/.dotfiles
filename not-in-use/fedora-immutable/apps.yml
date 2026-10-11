@@ -1,6 +1,6 @@
 ---
-- name: Install Silverblue desktop applications
-  hosts: silverblue
+- name: Install Fedora Atomic desktop applications
+  hosts: fedora_immutable
   become: true
   vars_files:
     - vars.yml
@@ -38,24 +38,6 @@
         content: |
           [Context]
           filesystems={{ desktop_home }}/.local/share/fonts:ro;{{ desktop_home }}/.fonts:ro;
-        owner: "{{ desktop_user }}"
-        group: "{{ desktop_user }}"
-        mode: "0644"
-
-    - name: Create the RapidRAW photo directory
-      ansible.builtin.file:
-        path: "{{ desktop_home }}/Photos"
-        state: directory
-        owner: "{{ desktop_user }}"
-        group: "{{ desktop_user }}"
-        mode: "0755"
-
-    - name: Allow RapidRAW to access the photo directory
-      ansible.builtin.copy:
-        dest: "{{ desktop_home }}/.local/share/flatpak/overrides/io.github.CyberTimon.RapidRAW"
-        content: |
-          [Context]
-          filesystems={{ desktop_home }}/Photos;
         owner: "{{ desktop_user }}"
         group: "{{ desktop_user }}"
         mode: "0644"

@@ -1,6 +1,6 @@
 ---
-- name: Configure Silverblue multimedia
-  hosts: silverblue
+- name: Configure Fedora Atomic multimedia
+  hosts: fedora_immutable
   become: true
   vars_files:
     - vars.yml
@@ -78,7 +78,7 @@
       ansible.builtin.set_fact:
         missing_multimedia_packages: >-
           {{
-            (silverblue_multimedia_packages + silverblue_hardware_codec_packages)
+            (fedora_immutable_multimedia_packages + fedora_immutable_hardware_codec_packages)
             | difference(
                 installed_rpm_names.stdout_lines
                 + (rpm_ostree_target_deployment['requested-packages'] | default([]))
@@ -92,7 +92,7 @@
             in (rpm_ostree_target_deployment['requested-packages'] | default([]))
           }}
         installed_ffmpeg_free_packages: >-
-          {{ silverblue_ffmpeg_free_packages | intersect(installed_rpm_names.stdout_lines) }}
+          {{ fedora_immutable_ffmpeg_free_packages | intersect(installed_rpm_names.stdout_lines) }}
 
     - name: Layer missing multimedia codecs
       ansible.builtin.command:

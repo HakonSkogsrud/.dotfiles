@@ -1,6 +1,6 @@
 ---
 - name: Configure desktop fonts
-  hosts: silverblue
+  hosts: fedora_immutable
   become: true
   vars_files:
     - vars.yml

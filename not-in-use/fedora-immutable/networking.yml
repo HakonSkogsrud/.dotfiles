@@ -1,6 +1,6 @@
 ---
-- name: Configure Silverblue networking
-  hosts: silverblue
+- name: Configure Fedora Atomic networking
+  hosts: fedora_immutable
   become: true
   vars_files:
     - vars.yml
@@ -12,7 +12,7 @@
   tasks:
     - name: Layer required networking packages
       community.general.rpm_ostree_pkg:
-        name: "{{ silverblue_network_packages }}"
+        name: "{{ fedora_immutable_network_packages }}"
         state: present
         apply_live: "{{ rpm_ostree_apply_live }}"
       register: rpm_ostree_packages
