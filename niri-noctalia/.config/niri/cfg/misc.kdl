@@ -1,4 +1,14 @@
     prefer-no-csd
+    // Soft white workspace glow, visible only in overview.
+    overview {
+        workspace-shadow {
+            on
+            softness 24
+            spread 8
+            offset x=0 y=0
+            color "#ffffff99"
+        }
+    }
     screenshot-path null
 
     environment {
