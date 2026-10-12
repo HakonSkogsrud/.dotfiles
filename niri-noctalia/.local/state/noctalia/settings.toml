@@ -77,8 +77,9 @@ widget_order = [ "lockscreen-login-box@eDP-1", "lockscreen-login-box@DP-1" ]
 telemetry_enabled = true
 
 [theme]
-builtin = "Eldritch"
-community_palette = "Creamy Forest"
+builtin = "Tokyo-Night"
+community_palette = "GitHub Dark"
+custom_palette = "Nord Night"
 mode = "dark"
 source = "wallpaper"
 wallpaper_scheme = "muted"
@@ -99,13 +100,13 @@ wallpaper_scheme = "muted"
     ]
 
 [wallpaper.default]
-path = "/home/haaksk/Pictures/wallpapers/test.png"
+path = "/home/haaksk/Pictures/wallpapers/nixos/XEoXtwH.png"
 
 [wallpaper.last]
-path = "/home/haaksk/Pictures/wallpapers/test.png"
+path = "/home/haaksk/Pictures/wallpapers/nixos/XEoXtwH.png"
 
 [wallpaper.monitors.DP-1]
 path = "/home/haaksk/Pictures/wallpapers/landscape/wallhaven-e7kpl8.png"
 
 [wallpaper.monitors.eDP-1]
-path = "/home/haaksk/Pictures/wallpapers/test.png"
+path = "/home/haaksk/Pictures/wallpapers/nixos/XEoXtwH.png"

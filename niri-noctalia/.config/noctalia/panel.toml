@@ -1,7 +1,7 @@
 [bar.default]
-radius = 9
-radius_bottom_left = 9
-radius_bottom_right = 9
+radius = 7
+radius_bottom_left = 7
+radius_bottom_right = 7
 margin_ends = 0
 radius_top_left = 0
 radius_top_right = 0
@@ -19,8 +19,8 @@ show_label = false
 show_label = false
 
 [dock]
-radius = 12
-radius_top_left = 12
-radius_top_right = 12
-radius_bottom_left = 12
-radius_bottom_right = 12
+radius = 8
+radius_top_left = 8
+radius_top_right = 8
+radius_bottom_left = 8
+radius_bottom_right = 8

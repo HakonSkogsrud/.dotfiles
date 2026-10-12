@@ -1,5 +1,5 @@
 [shell]
-corner_radius_scale = 0.75
+corner_radius_scale = 0.55
 polkit_agent = true
 
 # Idle timeouts apply on both AC and battery; suspend only on battery.
