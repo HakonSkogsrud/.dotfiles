@@ -1,7 +1,7 @@
     window-rule {
         opacity 1.0
         draw-border-with-background false
-        geometry-corner-radius 10 // Keep window corners subtly rounded
+        geometry-corner-radius 8 // Keep window corners subtly rounded
         clip-to-geometry true
     }
 
