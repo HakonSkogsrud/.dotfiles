@@ -1,0 +1,20 @@
+onboarding = false
+
+[theme]
+name = "terminal"
+auto_switch = false
+
+[ui]
+pane_borders = "always"
+pane_outer_borders = true
+pane_gaps = true
+
+[keys]
+previous_tab = "alt+h"
+next_tab = "alt+l"
+previous_workspace = "alt+k"
+next_workspace = "alt+j"
+focus_pane_left = "ctrl+shift+h"
+focus_pane_down = "ctrl+shift+j"
+focus_pane_up = "ctrl+shift+k"
+focus_pane_right = "ctrl+shift+l"
