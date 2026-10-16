@@ -18,6 +18,10 @@ focus_pane_left = "ctrl+shift+h"
 focus_pane_down = "ctrl+shift+j"
 focus_pane_up = "ctrl+shift+k"
 focus_pane_right = "ctrl+shift+l"
+resize_pane_left = "ctrl+left"
+resize_pane_right = "ctrl+right"
+resize_pane_up = "ctrl+up"
+resize_pane_down = "ctrl+down"
 
 [theme.custom]
 accent = "#9fcaff"

@@ -4,6 +4,9 @@ Linux Herdr configuration. Uses the terminal theme without a generated custom
 palette, plus pane layout and keyboard settings without platform-specific paths.
 macOS uses a separate copy in `mac-work/herdr/.config/herdr/config.toml`.
 
+Both configs bind Ctrl+arrow keys to resize panes without a prefix. Disable any
+conflicting desktop shortcuts, such as Mission Control's Ctrl+arrows on macOS.
+
 From the dotfiles repository root:
 
 ```sh
