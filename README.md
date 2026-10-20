@@ -33,14 +33,14 @@ Choose individual shared packages and Linux apps:
 
 ```sh
 stow --dir=shared --target="$HOME" --simulate nvim opencode codex
-stow --dir=linux-home/common --target="$HOME" --simulate zsh emacs herdr zed ssh vscode obsidian
+stow --dir=linux-home/common --target="$HOME" --simulate zsh emacs tmux lazygit herdr zed ssh vscode obsidian
 ```
 
 Then choose one desktop's packages:
 
 ```sh
 # GNOME
-stow --dir=linux-home/gnome --target="$HOME" --simulate gtk vscode obsidian
+stow --dir=linux-home/gnome --target="$HOME" --simulate ghostty gtk vscode obsidian
 
 # KDE
 stow --dir=linux-home/kde --target="$HOME" --simulate vscode
