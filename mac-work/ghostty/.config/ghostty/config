@@ -1,5 +1,9 @@
 command = /bin/zsh
-macos-option-as-alt = left
+macos-option-as-alt = false
+keybind = alt+h=text:\x1bh
+keybind = alt+j=text:\x1bj
+keybind = alt+k=text:\x1bk
+keybind = alt+l=text:\x1bl
 window-height = 30
 window-width = 110
 window-padding-balance = true
