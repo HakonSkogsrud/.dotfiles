@@ -4,6 +4,7 @@
 ;; 1. PERFORMANCE & FOUNDATION
 ;; ==========================================
 
+
 (setq gc-cons-threshold 100000000
       read-process-output-max (* 4 1024 1024)
       eglot-events-buffer-size 0
@@ -42,15 +43,84 @@
 ;; 2. UI & UX
 ;; ==========================================
 
-(use-package doom-themes
-  :config
-  (mapc #'disable-theme custom-enabled-themes)
-  (load-theme 'doom-sourcerer t))
+;; --- 2. List of Themes to Override ---
+;; Replace these with the theme symbols you want to affect (e.g. doom-one, misterioso, etc.)
+(defvar my-cosmic-themes '(doom-sourcerer misterioso modus-vivendi)
+  "List of theme symbols that should trigger the Cosmic Dark override.")
+
+
+;; --- 3. Override Function ---
+(defun my/apply-cosmic-dark-override (&optional theme &rest _)
+  "Override background and modeline, but ONLY for themes in `my-cosmic-themes`."
+  (interactive)
+  (let ((active-theme (or theme (car custom-enabled-themes))))
+    ;; Check if the loaded theme is in our allowed list (or if run manually)
+    (when (or (called-interactively-p 'any)
+              (memq active-theme my-cosmic-themes))
+      (let ((bg          "#1B1B1B")  ; Main Background
+            (bg-alt      "#282828")  ; Modeline & current line
+            (fg          "#e1e3e8")  ; Text
+            (fg-dim      "#707585")  ; Dimmed text
+            (cosmic-teal "#32b4ac")) ; Accent color
+
+        ;; Main Editor Area & Padding
+        (set-face-attribute 'default nil :background bg :foreground fg)
+        (set-face-attribute 'fringe nil :background bg)
+        (set-face-attribute 'line-number nil :background bg :foreground fg-dim)
+        (set-face-attribute 'line-number-current-line nil :background bg-alt :foreground cosmic-teal :weight 'bold)
+
+        ;; Active Mode-Line
+        (set-face-attribute 'mode-line nil
+                            :background bg-alt
+                            :foreground fg
+                            :box (list :line-width 1 :color cosmic-teal))
+        (set-face-attribute 'mode-line-buffer-id nil
+                            :foreground cosmic-teal
+                            :weight 'bold)
+
+        ;; Inactive Mode-Line
+        (set-face-attribute 'mode-line-inactive nil
+                            :background bg
+                            :foreground fg-dim
+                            :box (list :line-width 1 :color bg-alt))
+
+        ;; Vertical Window Dividers
+        (set-face-attribute 'vertical-border nil :foreground bg-alt)
+        (when (facep 'window-divider)
+          (set-face-attribute 'window-divider nil :foreground bg-alt))))))
+
+;; Automatically trigger on theme switches
+(if (boundp 'enable-theme-functions)
+    (add-hook 'enable-theme-functions #'my/apply-cosmic-dark-override)
+  (advice-add 'load-theme :after #'my/apply-cosmic-dark-override))
+
+(defun my/apply-light-fringe-override (&optional theme &rest _)
+  "Make the light-theme fringe inherit the editor background."
+  (when (eq (or theme (car custom-enabled-themes)) 'modus-operandi)
+    (set-face-attribute 'fringe nil :background 'unspecified)))
+
+(if (boundp 'enable-theme-functions)
+    (add-hook 'enable-theme-functions #'my/apply-light-fringe-override)
+  (advice-add 'load-theme :after #'my/apply-light-fringe-override))
+
+(use-package doom-themes)
+
+;; Trust built-in themes, hashes approved in custom.el, and this reviewed
+;; version of doom-sourcerer. Theme updates require explicit approval.
+(add-to-list 'custom-safe-themes 'default)
+(add-to-list 'custom-safe-themes
+             "0d2c5679b6d087686dcfd4d7e57ed8e8aedcccc7f1a478cd69704c02e4ee36fe")
+
+(use-package auto-dark
+  :init
+  (setq auto-dark-themes           '((doom-sourcerer) (modus-operandi))
+        auto-dark-detection-method 'dbus)
+  :config (auto-dark-mode t))
 
 (cua-mode 1)
-;; Match Alacritty's font family and 12-point size.
-(set-face-attribute 'default nil :family "BitstromWera Nerd Font" :height 120)
-(add-to-list 'default-frame-alist '(font . "BitstromWera Nerd Font-12"))
+(add-to-list 'default-frame-alist
+             `(font . ,(format "FantasqueSansM Nerd Font Mono-%d"
+                               (if (eq system-type 'darwin) 15 13))))
 
 (setq select-active-regions nil
       mouse-drag-copy-region nil)
@@ -411,7 +481,8 @@ PROMPT, allow editing the detected variable before searching."
                 default-directory))))
       (if (file-executable-p venv-python) venv-python "python3")))
 
-  ;; Separate debugger configurations for uv scripts and pytest.
+  ;; Add a brand new, bulletproof configuration specifically for uv projects
+  ;; instead of mutating the built-in lists, which can fail silently.
   (add-to-list 'dape-configs
                `(uv-python
                  modes (python-mode python-ts-mode)
