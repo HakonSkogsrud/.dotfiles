@@ -156,6 +156,9 @@ local function set_hover_keymap(buffer)
 end
 
 function M.setup()
+  vim.api.nvim_create_user_command("GapApplicationValidate", require("work.validate"), {
+    desc = "Render the current Jsonnet file and validate Applications against the cluster CRD",
+  })
   vim.api.nvim_create_user_command("GapApplicationSchemaUpdate", M.update_schema, {
     desc = "Update the cached gap.io/v1 Application CRD schema",
   })

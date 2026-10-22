@@ -19,6 +19,7 @@ require("lazy").setup({
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
     { import = "lazyvim.plugins.extras.lang.terraform", cond = vim.fn.has("macunix") == 1 },
+    { import = "work.plugins", cond = vim.fn.filereadable(vim.fn.stdpath("config") .. "/lua/work/plugins.lua") == 1 },
     -- import/override with your plugins
     { import = "plugins" },
   },
