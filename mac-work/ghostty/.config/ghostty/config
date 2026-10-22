@@ -4,6 +4,7 @@ keybind = alt+h=text:\x1bh
 keybind = alt+j=text:\x1bj
 keybind = alt+k=text:\x1bk
 keybind = alt+l=text:\x1bl
+keybind = ctrl+l=ignore
 window-height = 30
 window-width = 110
 window-padding-balance = true
