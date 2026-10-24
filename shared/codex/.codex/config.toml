@@ -33,3 +33,9 @@ trust_level = "trusted"
 
 [projects."/var/home/haaksk/Downloads"]
 trust_level = "trusted"
+
+[projects."/home/haaksk"]
+trust_level = "trusted"
+
+[projects."/home/haaksk/Workspace/nixos"]
+trust_level = "trusted"
