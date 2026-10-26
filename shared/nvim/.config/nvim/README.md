@@ -7,5 +7,8 @@ Jinja file type detection, and uses the VS Code-inspired color scheme from
 `vscode.nvim`. The Terraform extra provides `terraformls`, Terraform/HCL syntax
 parsers, `terraform fmt`, validation, and `tflint`.
 
+Markdown buffers are rendered inline with `render-markdown.nvim`. Toggle rendering
+with `<leader>um` or `:RenderMarkdown toggle`.
+
 Plugin versions are recorded in `lazy-lock.json`. Update plugins from Neovim
 with `:Lazy update`, then commit the resulting lockfile changes.
