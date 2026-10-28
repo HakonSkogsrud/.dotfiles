@@ -1,6 +1,8 @@
 
 vim.opt.spelllang = { "nb", "en" }
 
+vim.g.lazyvim_python_lsp = "basedpyright"
+
 local function jinja_filetype(path)
   local normalized_path = path:lower()
   if normalized_path:match("%.sh%.j2$") or normalized_path:match("%.bash%.j2$") then
