@@ -1,0 +1,22 @@
+model = "gpt-6-sol"
+model_reasoning_effort = "low"
+approvals_reviewer = "auto_review"
+[tui]
+screen_reader_detection_done = true
+
+[tui.model_availability_nux]
+gpt-6-astra = 4
+
+[projects."/home/haaksk"]
+trust_level = "trusted"
+
+[projects."/home/haaksk/.dotfiles"]
+trust_level = "trusted"
+
+[projects."/home/haaksk/Workspace/serversetup"]
+trust_level = "trusted"
+
+[hooks.state]
+
+[hooks.state."/home/haaksk/.codex/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:712c9393233710e4fdb211d605a497ed2a1fdc15cfbcb1f7c24acd72f838a180"
