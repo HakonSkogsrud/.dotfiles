@@ -1,9 +1,5 @@
 onboarding = false
 
-[theme]
-name = "terminal"
-auto_switch = false
-
 [ui]
 pane_borders = "always"
 pane_outer_borders = true

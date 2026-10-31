@@ -1,7 +1,7 @@
 # Herdr
 
-Linux Herdr configuration. Uses the terminal theme without a generated custom
-palette, plus pane layout and keyboard settings without platform-specific paths.
+Linux Herdr configuration with pane layout and keyboard settings without
+platform-specific paths.
 macOS uses a separate copy in `mac-work/herdr/.config/herdr/config.toml`.
 
 Both configs bind Ctrl+Shift+arrow keys to resize panes without a prefix. Disable
