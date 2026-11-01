@@ -1,7 +1,7 @@
 {
   // ── Window ──────────────────────────────────────────────
   "window.zoomLevel": 0.8,
-  "window.titleBarStyle": "custom",
+  "window.titleBarStyle": "native",
   // ── Editor ──────────────────────────────────────────────
   "editor.fontSize": 13,
   "editor.fontFamily": "JetBrainsMono Nerd Font Mono",
@@ -36,7 +36,6 @@
   "telemetry.feedback.enabled": false,
   "telemetry.editStats.enabled": false,
   "workbench.enableExperiments": false,
-  "redhat.telemetry.enabled": false,
   // ── Git ─────────────────────────────────────────────────
   "git.confirmSync": false,
   "git.autofetch": true,
@@ -49,19 +48,14 @@
   "chat.instructionsFilesLocations": {
     "README.md": true
   },
+  "chat.disableAIFeatures": true,
   "chat.tools.terminal.autoApprove": {
     "git add": true,
     "git commit": true,
     "git push": true
   },
-  "github.copilot.nextEditSuggestions.enabled": true,
-  "github.copilot.enable": {
-    "*": false,
-    "plaintext": false,
-    "markdown": false,
-    "scminput": false
-  },
   // ── Extensions ──────────────────────────────────────────
-  "hediet.vscode-drawio.resizeImages": null,
-  "workbench.colorTheme": "Light Modern"
+  "workbench.colorTheme": "Light Modern",
+  "window.menuBarVisibility": "toggle",
+  "window.customTitleBarVisibility": "never"
 }

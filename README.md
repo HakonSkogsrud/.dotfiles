@@ -8,7 +8,7 @@ shared/                # Cross-platform apps: nvim, opencode, codex
 mac-work/              # Work Mac: nvim overlay, zsh, git, vscode, alacritty, ghostty, herdr, lazygit
 linux-home/common/     # Home Linux: zsh, emacs, herdr, zed, ssh, vscode, obsidian, firefox
 linux-home/gnome/      # GNOME: gtk, vscode, obsidian
-linux-home/kde/        # KDE: vscode
+linux-home/kde/        # KDE: vscode, konsole
 not-in-use/            # Archived configurations
 omarchy/               # Separate, optional Omarchy setup
 ```
@@ -43,7 +43,7 @@ Then choose one desktop's packages:
 stow --dir=linux-home/gnome --target="$HOME" --simulate ghostty gtk vscode obsidian
 
 # KDE
-stow --dir=linux-home/kde --target="$HOME" --simulate vscode
+stow --dir=linux-home/kde --target="$HOME" --simulate vscode konsole
 ```
 
 Linux's common VS Code package owns keybindings; the selected desktop's VS Code
