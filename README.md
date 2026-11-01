@@ -6,7 +6,7 @@ directories, not packages:
 ```text
 shared/                # Cross-platform apps: nvim, opencode, codex
 mac-work/              # Work Mac: nvim overlay, zsh, git, vscode, alacritty, ghostty, herdr, lazygit
-linux-home/common/     # Home Linux: zsh, emacs, herdr, zed, ssh, vscode, obsidian, firefox
+linux-home/common/     # Home Linux: codex skill, zsh, emacs, herdr, zed, ssh, vscode, obsidian, firefox
 linux-home/gnome/      # GNOME: gtk, vscode, obsidian
 linux-home/kde/        # KDE: vscode, konsole
 not-in-use/            # Archived configurations
@@ -33,7 +33,7 @@ Choose individual shared packages and Linux apps:
 
 ```sh
 stow --dir=shared --target="$HOME" --simulate nvim opencode codex
-stow --dir=linux-home/common --target="$HOME" --simulate zsh emacs tmux lazygit herdr zed ssh vscode obsidian
+stow --dir=linux-home/common --target="$HOME" --simulate codex zsh emacs tmux lazygit herdr zed ssh vscode obsidian
 ```
 
 Then choose one desktop's packages:
