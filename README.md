@@ -8,7 +8,7 @@ shared/                # Cross-platform apps: nvim, opencode, codex
 mac-work/              # Work Mac: nvim overlay, zsh, git, vscode, alacritty, ghostty, herdr, lazygit
 linux-home/common/     # Home Linux: codex skill, zsh, emacs, herdr, zed, ssh, vscode, obsidian, firefox
 linux-home/gnome/      # GNOME: gtk, vscode, obsidian
-linux-home/kde/        # KDE: vscode, konsole
+linux-home/kde/        # KDE: vscode, konsole, obsidian
 not-in-use/            # Archived configurations
 omarchy/               # Separate, optional Omarchy setup
 ```
@@ -43,13 +43,18 @@ Then choose one desktop's packages:
 stow --dir=linux-home/gnome --target="$HOME" --simulate ghostty gtk vscode obsidian
 
 # KDE
-stow --dir=linux-home/kde --target="$HOME" --simulate vscode konsole
+stow --dir=linux-home/kde --target="$HOME" --simulate vscode konsole obsidian
 ```
 
 Linux's common VS Code package owns keybindings; the selected desktop's VS Code
 package owns `settings.json`. The common Obsidian package owns plugin lists;
-the GNOME package owns appearance and snippets. There is no active KDE Obsidian
-appearance package yet; the old one remains in `not-in-use`.
+the selected desktop package owns appearance and snippets. KDE uses the default Obsidian theme
+with the `breeze-classic` snippet for light and dark modes, adapted from the archived
+KDE theme. Both KDE apps follow the system light/dark preference automatically.
+VS Code selects `Light+` or `Dark Modern`; Obsidian uses “Adapt to system” and
+the snippet selects its light or dark palette. Dark mode targets `#31363b` window
+chrome with `#232629` editor backgrounds; chrome uses `#2d3439` to compensate
+for the observed rendering shift.
 
 Firefox is an exception to Stow: its chrome files belong inside a discovered
 profile directory. Run `linux-home/common/firefox/install.sh` instead; see its

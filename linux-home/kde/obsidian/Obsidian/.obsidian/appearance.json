@@ -1,0 +1,9 @@
+{
+  "cssTheme": "",
+  "nativeMenus": true,
+  "theme": "system",
+  "enabledCssSnippets": [
+    "breeze-classic"
+  ],
+  "showRibbon": false
+}

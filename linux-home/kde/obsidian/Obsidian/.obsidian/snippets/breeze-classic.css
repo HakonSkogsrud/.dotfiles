@@ -1,0 +1,266 @@
+/* Adapted from not-in-use/obsidian-kde-theme; matches KDE VS Code. Base: Obsidian default. */
+body.theme-light {
+  --background-primary: #ffffff;
+  --background-primary-alt: #ffffff;
+  --background-secondary: #eff0f1;
+  --background-secondary-alt: #eff0f1;
+  --titlebar-background: #eff0f1;
+  --titlebar-background-focused: #eff0f1;
+  --tab-container-background: #eff0f1;
+  --tab-background-active: #ffffff;
+  --ribbon-background: #eff0f1;
+  --status-bar-background: #eff0f1;
+  --text-normal: #232629;
+  --text-muted: #616569;
+  --text-faint: #767a7d;
+  --text-accent: #1478a8;
+  --text-accent-hover: #10658e;
+  --interactive-accent: #3daee9;
+  --interactive-accent-hover: #2b9ed8;
+  --text-on-accent: #232629;
+  --color-accent: #3daee9;
+  --color-accent-hsl: 201, 80%, 58%;
+  --text-selection: #c2e0f5;
+  --background-modifier-border: #d3d7cf;
+  --background-modifier-border-hover: #b9bdbf;
+  --background-modifier-border-focus: #3daee9;
+  --background-modifier-hover: #e6e8ea;
+  --background-modifier-active-hover: #d3d7da;
+  --divider-color: #d3d7cf;
+  --nav-item-background-active: #e0e3e5;
+  --nav-item-background-hover: #e6e8ea;
+  --nav-item-color-active: #232629;
+  --nav-item-radius: 3px;
+  --tab-radius: 0;
+  --tab-radius-active: 0;
+  --tab-outline-width: 0;
+  --input-shadow: none;
+  --input-shadow-hover: none;
+}
+
+.theme-light .titlebar,
+.theme-light .titlebar-inner,
+.theme-light .workspace-ribbon.mod-left,
+.theme-light .workspace-tab-header-container,
+.theme-light .workspace-tabs.mod-top-left-space,
+.theme-light .nav-header {
+  background-color: #eff0f1;
+  box-shadow: none;
+}
+.theme-light .sidebar-toggle-button,
+.theme-light .workspace-ribbon-header {
+  background-color: transparent;
+  box-shadow: none;
+}
+.theme-light .mod-root .workspace-tab-header.is-active {
+  background-color: #ffffff;
+  box-shadow: inset 0 2px #3daee9;
+}
+.theme-light .workspace-tab-header:not(.is-active) {
+  background-color: transparent;
+}
+.theme-light .nav-file-title.is-active {
+  background-color: #e0e3e5;
+  color: #232629;
+}
+.theme-light .nav-files-container:focus-within .nav-file-title.is-active {
+  background-color: #d3d7da;
+}
+.theme-light .status-bar {
+  background-color: #eff0f1;
+  color: #616569;
+  border-color: #d3d7cf;
+  box-shadow: none;
+}
+
+/* Remove the default tab shoulders for a flat, rectangular tab strip. */
+.theme-light .workspace-tab-header::before,
+.theme-light .workspace-tab-header::after {
+  display: none;
+}
+.theme-light .workspace-tab-header,
+.theme-light .workspace-tab-header-inner {
+  border-radius: 0;
+}
+
+/* Keep the tab strip open to the editor below. */
+.theme-light .workspace-tab-header-container {
+  border-bottom: none;
+}
+
+/* Document tabs fill the strip, without floating-tab padding or shoulders. */
+.theme-light .mod-root .workspace-tab-header-container {
+  border-left: 1px solid var(--divider-color);
+  padding-left: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.theme-light .mod-root .workspace-tab-header-container-inner {
+  margin-left: 0;
+  padding-left: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  align-items: stretch;
+}
+.theme-light .mod-root .workspace-tab-header {
+  margin: 0;
+  padding: 0;
+  border-right: 1px solid var(--divider-color);
+  box-shadow: none;
+}
+.theme-light .mod-root .workspace-tab-header-inner {
+  height: 100%;
+  padding: 0 10px;
+  background-color: transparent;
+}
+
+.theme-light .mod-root .workspace-tab-header:first-child {
+  border-left: none;
+}
+
+/* Separate sidebar tools from its content; document tabs stay open below. */
+.theme-light .mod-left-split .workspace-tab-header-container,
+.theme-light .mod-right-split .workspace-tab-header-container {
+  border-bottom: 1px solid var(--divider-color);
+}
+
+/* Keep this after the shared tab reset so the active accent takes precedence. */
+.theme-light .mod-root .workspace-tab-header.is-active {
+  box-shadow: inset 0 2px #3daee9;
+}
+
+/* Breeze Dark: openSUSE/KDE chrome with a darker document surface. */
+/* Compensate observed RGB shift (+4, +2, +2) to target #31363b on screen. */
+body.theme-dark {
+  --background-primary: #232629;
+  --background-primary-alt: #232629;
+  --background-secondary: #2d3439;
+  --background-secondary-alt: #2d3439;
+  --titlebar-background: #2d3439;
+  --titlebar-background-focused: #2d3439;
+  --tab-container-background: #2d3439;
+  --tab-background-active: #232629;
+  --ribbon-background: #2d3439;
+  --status-bar-background: #2d3439;
+  --text-normal: #eff0f1;
+  --text-muted: #bdc3c7;
+  --text-faint: #9da3a8;
+  --text-accent: #3daee9;
+  --text-accent-hover: #72c4ef;
+  --interactive-accent: #3daee9;
+  --interactive-accent-hover: #2b9ed8;
+  --text-on-accent: #232629;
+  --color-accent: #3daee9;
+  --color-accent-hsl: 201, 80%, 58%;
+  --text-selection: #264f63;
+  --background-modifier-border: #4d5257;
+  --background-modifier-border-hover: #697077;
+  --background-modifier-border-focus: #3daee9;
+  --background-modifier-hover: #3d4349;
+  --background-modifier-active-hover: #3d5968;
+  --divider-color: #4d5257;
+  --nav-item-background-active: #3b4248;
+  --nav-item-background-hover: #3d4349;
+  --nav-item-color-active: #eff0f1;
+  --nav-item-radius: 3px;
+  --tab-radius: 0;
+  --tab-radius-active: 0;
+  --tab-outline-width: 0;
+  --input-shadow: none;
+  --input-shadow-hover: none;
+}
+
+.theme-dark .titlebar,
+.theme-dark .titlebar-inner,
+.theme-dark .workspace-ribbon.mod-left,
+.theme-dark .workspace-tab-header-container,
+.theme-dark .workspace-tabs.mod-top-left-space,
+.theme-dark .nav-header {
+  background-color: #2d3439;
+  box-shadow: none;
+}
+.theme-dark .sidebar-toggle-button,
+.theme-dark .workspace-ribbon-header {
+  background-color: transparent;
+  box-shadow: none;
+}
+.theme-dark .mod-root .workspace-tab-header.is-active {
+  background-color: #232629;
+  box-shadow: inset 0 2px #3daee9;
+}
+.theme-dark .workspace-tab-header:not(.is-active) {
+  background-color: transparent;
+}
+.theme-dark .nav-file-title.is-active {
+  background-color: #3b4248;
+  color: #eff0f1;
+}
+.theme-dark .nav-files-container:focus-within .nav-file-title.is-active {
+  background-color: #3d5968;
+}
+.theme-dark .status-bar {
+  background-color: #2d3439;
+  color: #bdc3c7;
+  border-color: #4d5257;
+  box-shadow: none;
+}
+
+/* Remove the default tab shoulders for a flat, rectangular tab strip. */
+.theme-dark .workspace-tab-header::before,
+.theme-dark .workspace-tab-header::after {
+  display: none;
+}
+.theme-dark .workspace-tab-header,
+.theme-dark .workspace-tab-header-inner {
+  border-radius: 0;
+}
+
+/* Keep the tab strip open to the editor below. */
+.theme-dark .workspace-tab-header-container {
+  border-bottom: none;
+}
+
+/* Document tabs fill the strip, without floating-tab padding or shoulders. */
+.theme-dark .mod-root .workspace-tab-header-container {
+  border-left: 1px solid var(--divider-color);
+  padding-left: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.theme-dark .mod-root .workspace-tab-header-container-inner {
+  margin-left: 0;
+  padding-left: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  align-items: stretch;
+}
+.theme-dark .mod-root .workspace-tab-header {
+  margin: 0;
+  padding: 0;
+  border-right: 1px solid var(--divider-color);
+  box-shadow: none;
+}
+.theme-dark .mod-root .workspace-tab-header-inner {
+  height: 100%;
+  padding: 0 10px;
+  background-color: transparent;
+}
+
+.theme-dark .mod-root .workspace-tab-header:first-child {
+  border-left: none;
+}
+
+/* Separate sidebar tools from its content; document tabs stay open below. */
+.theme-dark .mod-left-split .workspace-tab-header-container,
+.theme-dark .mod-right-split .workspace-tab-header-container {
+  border-bottom: 1px solid var(--divider-color);
+}
+
+/* Keep this after the shared tab reset so the active accent takes precedence. */
+.theme-dark .mod-root .workspace-tab-header.is-active {
+  box-shadow: inset 0 2px #3daee9;
+}
