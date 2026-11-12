@@ -47,7 +47,15 @@ stow --dir=linux-home/kde --target="$HOME" --simulate vscode konsole obsidian
 ```
 
 Linux's common VS Code package owns keybindings; the selected desktop's VS Code
-package owns `settings.json`. The common Obsidian package owns plugin lists;
+package owns `settings.json`. Alternatively, use `linux-home/common/vscode-minimal`
+for the KDE-based minimal UI without KDE palette overrides, alongside the common
+`vscode` keybindings package. Install it instead of either desktop's VS Code package:
+
+```sh
+stow --dir=linux-home/common --target="$HOME" --simulate vscode vscode-minimal
+```
+
+The common Obsidian package owns plugin lists;
 the selected desktop package owns appearance and snippets. KDE uses the default Obsidian theme
 with the `breeze-classic` snippet for light and dark modes, adapted from the archived
 KDE theme. Both KDE apps follow the system light/dark preference automatically.
