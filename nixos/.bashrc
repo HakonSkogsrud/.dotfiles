@@ -19,17 +19,7 @@ alias pihole='ssh haaksk@10.0.0.77'
 alias subnet-router='ssh haaksk@10.0.0.78'
 alias almadev='ssh haaksk@10.0.0.211'
 
-# Keep history across sessions and share new commands between terminals.
 HISTSIZE=10000
 HISTFILESIZE=10000
-HISTCONTROL=ignoredups:erasedups
+HISTCONTROL=ignoredups
 shopt -s histappend
-
-_sync_bash_history() {
-  history -a
-  history -n
-}
-
-if [[ " ${PROMPT_COMMAND[*]} " != *"_sync_bash_history"* ]]; then
-  PROMPT_COMMAND+=(_sync_bash_history)
-fi
