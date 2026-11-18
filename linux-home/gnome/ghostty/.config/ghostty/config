@@ -9,5 +9,5 @@ clipboard-paste-protection = false
 font-family = BitstromWera Nerd Font
 font-size = 12
 scrollbar = never
-theme = Adwaita Dark
+theme = light:Adwaita,dark:Adwaita Dark
 term = xterm-256color
