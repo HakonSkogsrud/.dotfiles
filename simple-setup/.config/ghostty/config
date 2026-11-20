@@ -1,7 +1,7 @@
 window-height = 35
 window-width = 110
 window-theme = system
-gtk-titlebar-style = tabs
+gtk-titlebar-style = native
 cursor-style-blink = true
 cursor-style = block
 linux-cgroup = always
