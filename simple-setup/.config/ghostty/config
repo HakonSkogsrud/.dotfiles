@@ -1,0 +1,13 @@
+window-height = 30
+window-width = 110
+window-theme = ghostty
+cursor-style-blink = true
+cursor-style = block
+linux-cgroup = always
+shell-integration = detect
+clipboard-paste-protection = false
+font-family = BitstromWera Nerd Font
+font-size = 12
+scrollbar = never
+theme = light:Adwaita,dark:Adwaita Dark
+term = xterm-256color

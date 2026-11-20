@@ -1,10 +1,11 @@
 # Dotfiles
 
-Each app is an independent Stow package. Package groups are organizational
-directories, not packages:
+Most apps have independent Stow packages. The package groups below are
+organizational directories.
 
 ```text
 shared/                # Cross-platform apps: nvim, opencode, codex
+simple-setup/          # Standalone Linux package: Bash, Emacs, Ghostty, VS Code
 mac-work/              # Work Mac: nvim overlay, zsh, git, vscode, alacritty, ghostty, herdr, lazygit
 linux-home/common/     # Home Linux: codex skill, zsh, emacs, herdr, zed, ssh, vscode, obsidian, firefox
 linux-home/gnome/      # GNOME: gtk, vscode, obsidian
@@ -25,6 +26,16 @@ Preview first; remove `--simulate` to install:
 ```sh
 stow --dir=shared --target="$HOME" --simulate nvim opencode codex
 stow --dir=mac-work --target="$HOME" --simulate nvim zsh git vscode alacritty ghostty herdr lazygit
+```
+
+## Simple Linux setup
+
+Preview the standalone package from the repository root. Remove `--simulate`
+to install it. If Bash, Emacs, Ghostty, or VS Code are already linked from other
+packages, unstow the overlapping packages first.
+
+```sh
+stow --target="$HOME" --simulate simple-setup
 ```
 
 ## Home Linux
