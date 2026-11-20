@@ -1,0 +1,13 @@
+/* 1. Hide the Minimize and Maximize/Restore buttons */
+.titlebar-button.mod-minimize,
+.titlebar-button.mod-maximize,
+div[aria-label="Minimize"],
+div[aria-label="Maximize"],
+div[aria-label="Restore down"] {
+    display: none !important;
+}
+
+/* 2. Fix the gap on the right of the tab bar */
+.is-hidden-frameless:not(.is-fullscreen) .workspace-tabs.mod-top-right-space .workspace-tab-header-container {
+    padding-right: 40px !important; /* Adjust this number to match your close button width */
+}

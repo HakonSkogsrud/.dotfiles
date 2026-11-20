@@ -1,3 +1,5 @@
+;;; .emacs --- Emacs configuration -*- lexical-binding: t; -*-
+
 ;; Appearance
 (setq inhibit-startup-screen t)
 (tool-bar-mode -1)
@@ -68,3 +70,15 @@
 (keymap-global-set "<f5>" #'compile)
 
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages '(doom-themes envrc gnome-dark-style nix-mode)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
