@@ -5,7 +5,7 @@ organizational directories.
 
 ```text
 shared/                # Cross-platform apps: nvim, opencode, codex
-simple-setup/          # Standalone Linux package: Bash, Emacs, Ghostty, VS Code
+simple-setup/          # Standalone Linux package: Bash, Emacs, Ghostty, VSCodium
 mac-work/              # Work Mac: nvim overlay, zsh, git, vscode, alacritty, ghostty, herdr, lazygit
 linux-home/common/     # Home Linux: codex skill, zsh, emacs, herdr, zed, ssh, vscode, obsidian, firefox
 linux-home/gnome/      # GNOME: gtk, vscode, obsidian
@@ -31,7 +31,7 @@ stow --dir=mac-work --target="$HOME" --simulate nvim zsh git vscode alacritty gh
 ## Simple Linux setup
 
 Preview the standalone package from the repository root. Remove `--simulate`
-to install it. If Bash, Emacs, Ghostty, or VS Code are already linked from other
+to install it. If Bash, Emacs, Ghostty, or VSCodium are already linked from other
 packages, unstow the overlapping packages first.
 
 ```sh
