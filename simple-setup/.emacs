@@ -45,24 +45,35 @@
   :config
   (setopt gnome-dark-style-sync t))
 
-(use-package envrc
-  :ensure t
-  :hook (after-init . envrc-global-mode))
+;; (use-package envrc
+;;   :ensure t
+;;   :hook (after-init . envrc-global-mode))
 
-(defun my/nix-compile-command ()
-  (setq-local compile-command
-              "sudo nixos-rebuild switch --flake /home/haaksk/nixos#nixos"))
+;; (defun my/nix-compile-command ()
+;;   (setq-local compile-command
+;;               "sudo nixos-rebuild switch --flake /home/haaksk/nixos#nixos"))
 
-(use-package nix-mode
-  :ensure t
-  :pin melpa
-  :custom (nix-nixfmt-args '("-"))
-  :mode "\\.nix\\'"
-  :hook ((nix-mode . eglot-ensure)
-         (nix-mode . my/nix-compile-command)))
+;; (use-package nix-mode
+;;   :ensure t
+;;   :pin melpa
+;;   :custom (nix-nixfmt-args '("-"))
+;;   :mode "\\.nix\\'"
+;;   :hook ((nix-mode . eglot-ensure)
+;;          (nix-mode . my/nix-compile-command)))
 
 (add-hook 'python-mode-hook #'eglot-ensure)
 (add-hook 'c-mode-hook #'eglot-ensure)
+
+(use-package yaml-mode
+  :ensure t
+  :mode "\\.ya?ml\\'"
+  :custom (yaml-indent-offset 2))
+
+(use-package jinja2-mode
+  :ensure t
+  :mode "\\.j2\\'")
+
+(setq eldoc-echo-area-use-multiline-p nil)
 
 (add-hook 'prog-mode-hook #'completion-preview-mode)
 (global-set-key (kbd "C-<tab>") #'completion-at-point)

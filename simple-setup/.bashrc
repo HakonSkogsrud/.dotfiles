@@ -1,5 +1,4 @@
 alias ls='ls -Alh --group-directories-first --color=auto'
-
 alias lg='lazygit'
 alias venv='source .venv/bin/activate'
 alias vim='nvim'
@@ -23,3 +22,6 @@ HISTSIZE=10000
 HISTFILESIZE=10000
 HISTCONTROL=ignoredups
 shopt -s histappend
+
+export EDITOR="nvim"
+export PATH="/home/haaksk/.local/bin:$PATH"
