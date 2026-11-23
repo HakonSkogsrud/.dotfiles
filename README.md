@@ -6,7 +6,7 @@ organizational directories.
 ```text
 shared/                # Cross-platform apps: nvim, opencode, codex
 simple-setup/          # Standalone Linux package: Bash, Emacs, Ghostty, VSCodium
-mac-work/              # Work Mac: nvim overlay, zsh, git, vscode, alacritty, ghostty, herdr, lazygit
+mac-work/              # Work Mac: nvim overlay, emacs, zsh, git, vscode, alacritty, ghostty, herdr, lazygit
 linux-home/common/     # Home Linux: codex skill, zsh, emacs, herdr, zed, ssh, vscode, obsidian, firefox
 linux-home/gnome/      # GNOME: gtk, vscode, obsidian
 linux-home/kde/        # KDE: vscode, konsole, obsidian
@@ -25,7 +25,7 @@ Preview first; remove `--simulate` to install:
 
 ```sh
 stow --dir=shared --target="$HOME" --simulate nvim opencode codex
-stow --dir=mac-work --target="$HOME" --simulate nvim zsh git vscode alacritty ghostty herdr lazygit
+stow --dir=mac-work --target="$HOME" --simulate nvim emacs zsh git vscode alacritty ghostty herdr lazygit
 ```
 
 ## Simple Linux setup
